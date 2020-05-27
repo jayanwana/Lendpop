@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import withStyles from "@material-ui/styles/withStyles";
 import {AppBar, CssBaseline, Paper, Typography,
   Grid, Slider, Button, Avatar, Box, Badge, Divider,
-  IconButton, List, Drawer, Toolbar, Container,
+  IconButton, List, Drawer, Toolbar, Container, TextField,
 } from "@material-ui/core/";
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
@@ -49,7 +49,14 @@ const useStyles = theme => ({
     display: 'none',
   },
   title: {
-    flexGrow: 1,
+    flexGrow: 0,
+    textAlign: 'left',
+    color: theme.palette.secondary.main
+  },
+  hello: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center'
   },
   drawerPaper: {
     position: 'relative',
@@ -86,9 +93,25 @@ const useStyles = theme => ({
     display: 'flex',
     overflow: 'auto',
     flexDirection: 'column',
+    borderRadius: '10px'
   },
   fixedHeight: {
     height: 240,
+  },
+  gridButton: {
+    borderRadius: "20px",
+    "&:hover": {
+      border: `1px solid ${theme.palette.secondary.main}`,
+      color: theme.palette.secondary.main
+    },
+  },
+  divider: {
+    width: "5rem",
+    margin: 0,
+    alignSelf: "center",
+    "@media screen and (max-width: 800px)": {
+      display: "none"
+    }
   },
 });
 
@@ -99,9 +122,14 @@ class Dashboard extends Component {
       open: true
     }
     this.handleDrawer = this.handleDrawer.bind(this);
+    this.submit = this.submit.bind(this);
   }
   handleDrawer() {
     this.setState({open: !this.state.open})
+  }
+  submit(event) {
+    event.preventDefault()
+    console.log(event);
   }
 
   render() {
@@ -144,7 +172,7 @@ class Dashboard extends Component {
               <ChevronLeftIcon />
             </IconButton>
           </div>
-          <Divider />
+          <Divider/>
           <Typography component="p" color="inherit" noWrap className={classes.title}>
             drawer
           </Typography>
@@ -159,27 +187,70 @@ class Dashboard extends Component {
               {/* Chart */}
               <Grid item xs={12}>
                 <Paper className={fixedHeightPaper}>
-                  <Typography component="p" color="inherit" noWrap className={classes.title}>
-                    div
-                  </Typography>
+                  <Grid container xs={12}>
+                    <Grid className={classes.hello} item xs={12} sm={8}>
+                      <Typography variant="h3" color="inherit" noWrap className={classes.title}>
+                        Hello, Emmanuel!
+                      </Typography>
+                      <Typography variant='body1'>
+                        Welcome to Lendpop, please continue your application.
+                      </Typography>
+                    </Grid>
+                  </Grid>
                   {/* <Chart /> */}
-                </Paper>
+                  </Paper>
               </Grid>
-              {/* Recent Deposits  */}
-              {/* <Grid item xs={12} md={4} lg={3}>
-                <Paper className={fixedHeightPaper}>
-                  <Typography component="p" color="inherit" noWrap className={classes.title}>
-                depo
-                  </Typography>
-                {/* <Deposits />
-                </Paper>
-              </Grid> */}
-              {/* Recent Orders */}
+              <Grid item xs={12}>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} md={3} lg={3}><Button
+                    fullWidth
+                    variant="outlined"
+                    color="primary"
+                    className={classes.gridButton}
+                                                   >Continue my loan application</Button>
+                  </Grid>
+                  <Divider className={classes.divider} orientation="horizontal"/>
+
+                  <Grid item xs={12} md={3} lg={3}><Button
+                    fullWidth
+                    variant="outlined"
+                    className={classes.gridButton}
+                                                   >Approval Documents</Button>
+                  </Grid>
+                  <Divider className={classes.divider} orientation="horizontal"/>
+
+                  <Grid item xs={12} md={3} lg={3}><Button
+                    fullWidth
+                    variant="outlined"
+                    className={classes.gridButton}
+                                                   >Other applications</Button></Grid>
+                </Grid>
+              </Grid>
               <Grid item xs={12}>
                 <Paper className={classes.paper}>
-                  <Typography component="p" color="inherit" noWrap className={classes.title}>
-                    ord
-                  </Typography>
+
+                  <form className={classes.form} onSubmit={this.submit} validate="true">
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        id="outlined-multiline-static"
+                        label="Have Any Questions?"
+                        placeholder="Leave a message"
+                        required
+                        multiline
+                        rows={8}
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Button
+
+                        variant="contained"
+                        color="primary"
+                        className={classes.submit}
+                      >Send</Button>
+                    </Grid>
+                  </form>
                   {/* <Orders /> */}
                 </Paper>
               </Grid>
