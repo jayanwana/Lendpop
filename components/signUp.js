@@ -48,8 +48,24 @@ const useStyles = theme => ({
     marginTop: theme.spacing(1),
   },
   submit: {
+    borderRadius: '20px',
     margin: theme.spacing(3, 0, 2),
   },
+  item2: {
+    textAlign: 'center !important',
+  },
+  sliderLabel: {
+    marginTop: '2rem'
+ },
+  value:{
+    color: theme.palette.secondary.main,
+  },
+  bottom: {
+    padding: "0 2em",
+    border: `1px solid ${theme.palette.secondary.main}`,
+    borderRadius: "35px",
+    marginTop: '2rem'
+  }
 });
 
 function ValueLabelComponent(props) {
@@ -95,14 +111,6 @@ const PrettoSlider = withStyles({
     borderRadius: 4,
   },
 })(Slider);
-
-const Span = <span></span>
-
-const Thumb = styled(Span)({
-  border: "1px solid",
-  borderRadius: "5px",
-  backgroundColor: 'grey'
-})
 
 class SignUp extends Component {
   constructor(props) {
@@ -189,7 +197,7 @@ class SignUp extends Component {
             <Typography>You are a step closer to joining thousands of people who trust us to back their financial needs</Typography>
             <Typography>Already have an account? <Link href="/login"><a>Login</a></Link></Typography>
             <div className={classes.margin} />
-            <form className={classes.form} validate onSubmit={this.submit}>
+            <form className={classes.form} validate={1} onSubmit={this.submit}>
               <TextField
                 variant="outlined"
                 margin="normal"
@@ -225,7 +233,7 @@ class SignUp extends Component {
                 autoFocus
                 onChange={this.handleInputChange}
               />
-              <Typography gutterBottom>How much would you like to lend {this.convertPrincipal(principal)} </Typography>
+              <Typography className={classes.sliderLabel} variant="caption" display="block" gutterBottom>How much would you like to lend <span className={classes.value}>{this.convertPrincipal(principal)}</span> </Typography>
               <PrettoSlider
                 aria-label="pretto slider"
                 name="principal"
@@ -237,7 +245,7 @@ class SignUp extends Component {
                 valueLabelFormat = {this.convertPrincipal}
                 onChange={this.handlePrincipalSlider}
               />
-              <Typography gutterBottom>In how many months would you like to repay {this.convertMonth(period)}</Typography>
+              <Typography className={classes.sliderLabel} variant="caption" display="block" gutterBottom>In how many months would you like to repay<span className={classes.value}> {this.convertMonth(period)}</span></Typography>
               <PrettoSlider
                 aria-label="pretto slider"
                 name="period"
@@ -251,20 +259,13 @@ class SignUp extends Component {
               />
               <div className={classes.margin} />
 
-              <Grid container style={{alignItems: "center"}}>
-                <Grid item xs>
-                  <Box>
-                    <Typography>monthly Payment</Typography>
-                    <span style={{
-                      border: "1px solid",
-                      borderRadius: "5px",
-                      backgroundColor: 'grey',
-                      justifyCon: "center",
-                      fontSize: "0.8rem"
-                    }}>{monthlyPayment}</span>
-                  </Box>
+              <Grid className={classes.bottom} container justify="space-evenly" spacing={2} alignItems="center">
+                <Grid item xs={6}>
+                  <Typography variant="caption" display="block" align="left">Monthly Payment<br/>
+                    <Typography className={classes.value} variant='body1' align="left">{this.convertPrincipal(monthlyPayment)}</Typography>
+                  </Typography>
                 </Grid>
-                <Grid item>
+                <Grid item xs={6} style={{padding: '0'}}>
                   <Button
                     type="submit"
                     fullWidth
