@@ -88,7 +88,7 @@ export default function SignInSide() {
             margin="normal"
             required
             fullWidth
-            id="emailCode"
+            id="outlined-emailCode"
             label="OTP Code"
             name="emailCode"
             autoComplete="Verification Code"

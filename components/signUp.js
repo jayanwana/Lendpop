@@ -195,7 +195,7 @@ class SignUp extends Component {
                 margin="normal"
                 required
                 fullWidth
-                id="firstName"
+                id="outlined-firstName"
                 label="First Name"
                 name="firstName"
                 autoComplete="first name"
@@ -209,8 +209,8 @@ class SignUp extends Component {
                 fullWidth
                 name="lastName"
                 label="Last Name"
-                id="lastName"
-                autoComplete="Last Name"
+                id="outlined-lastName"
+                autoComplete="last name"
                 onChange={this.handleInputChange}
               />
               <TextField
@@ -218,7 +218,7 @@ class SignUp extends Component {
                 margin="normal"
                 required
                 fullWidth
-                id="email"
+                id="outlined-email"
                 label="Email Address"
                 name="email"
                 autoComplete="email"
@@ -271,8 +271,7 @@ class SignUp extends Component {
                     variant="contained"
                     color="primary"
                     className={classes.submit}
-                  >
-                    Continue
+                  > Continue
                   </Button>
                 </Grid>
               </Grid>
