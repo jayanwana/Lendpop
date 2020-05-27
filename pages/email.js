@@ -70,19 +70,8 @@ export default function SignInSide() {
         <Typography component="h1" variant="h5">
           Verify Email
         </Typography>
-        <form className={classes.form} onSubmit={submit} validate>
+        <form className={classes.form} onSubmit={submit} validate={1}>
           <Typography>To verify your email, kindly type in the code sent to you</Typography>
-
-          {/* <TextField
-            autoComplete="otp"
-            name="emailCode"
-            variant="outlined"
-            required
-            fullWidth
-            id="emailCode"
-            label="OTP Code"
-            autoFocus
-          /> */}
           <TextField
             variant="outlined"
             margin="normal"
@@ -92,6 +81,7 @@ export default function SignInSide() {
             label="OTP Code"
             name="emailCode"
             autoComplete="Verification Code"
+            onChange={event => setEmailCode(event.target.value)}
             autoFocus
           />
           <Grid container spacing={2}>
@@ -107,8 +97,7 @@ export default function SignInSide() {
             <Grid item xs={12} sm={6}>
               <Button
                 fullWidth
-                variant="contained"
-                color="primary"
+                variant="outlined"
                 className={classes.submit}
               >Cancel</Button>
             </Grid>
