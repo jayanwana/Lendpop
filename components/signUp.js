@@ -81,7 +81,7 @@ function ValueLabelComponent(props) {
 ValueLabelComponent.propTypes = {
   children: PropTypes.element.isRequired,
   open: PropTypes.bool.isRequired,
-  value: PropTypes.number.isRequired,
+  value: PropTypes.string.isRequired,
 };
 
 const PrettoSlider = withStyles({
@@ -179,6 +179,7 @@ class SignUp extends Component {
       last_name: this.state.lastName,
       email: this.state.email,
     }
+    localStorage.setItem('firstName', this.state.firstName)
     console.log(JSON.stringify(postData));
     Router.push('/email')
   }

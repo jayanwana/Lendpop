@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import Head from 'next/head';
 import Router from 'next/router';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -43,12 +44,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignInSide() {
+export default function EmailVerification(props) {
+  const firstName = localStorage.getItem('firstName')
+
   const classes = useStyles();
 
   const [emailCode, setEmailCode] = useState()
 
-  const submit = (event) => {
+  const submit = event => {
     event.preventDefault();
     console.log(emailCode);
     Router.push('/dashboard');
@@ -60,54 +63,67 @@ export default function SignInSide() {
     // }).catch(error => console.log(error))
   }
 
-  return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Verify Email
-        </Typography>
-        <form className={classes.form} onSubmit={submit} validate={1}>
-          <Typography>To verify your email, kindly type in the code sent to you</Typography>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="outlined-emailCode"
-            label="OTP Code"
-            name="emailCode"
-            autoComplete="Verification Code"
-            onChange={event => setEmailCode(event.target.value)}
-            autoFocus
-          />
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <Button
-                fullWidth
-                type="submit"
-                variant="contained"
-                color="primary"
-                className={classes.submit}
-              > Verify </Button>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Button
-                fullWidth
-                variant="outlined"
-                className={classes.submit}
-              >Cancel</Button>
-            </Grid>
-          </Grid>
-        </form>
-      </div>
-      <Box mt={5}>
-        <Copyright />
-      </Box>
-    </Container>
+  const cancel = event => {
+    if (confirm(`Hello ${firstName}, Are you sure you want to cancel?`)){
+      Router.push('/');
+    } else {
+      console.log('continue');
+    }
+  }
 
+  return (
+    <div>
+      <Head>
+        <title>LendPop: Email Verification</title>
+      </Head>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Verify Email
+          </Typography>
+          <form className={classes.form} onSubmit={submit} validate={1}>
+            <Typography>To verify your email, kindly type in the code sent to you</Typography>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="outlined-emailCode"
+              label="OTP Code"
+              name="emailCode"
+              autoComplete="Verification Code"
+              onChange={event => setEmailCode(event.target.value)}
+              autoFocus
+            />
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <Button
+                  fullWidth
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+                > Verify </Button>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Button
+                  fullWidth
+                  variant="outlined"
+                  onClick={cancel}
+                  className={classes.submit}
+                >Cancel</Button>
+              </Grid>
+            </Grid>
+          </form>
+        </div>
+        <Box mt={5}>
+          <Copyright />
+        </Box>
+      </Container>
+    </div>
   );
 }

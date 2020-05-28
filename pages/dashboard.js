@@ -8,6 +8,8 @@ import {AppBar, CssBaseline, Paper, Typography,
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
+import LoanApplicationForm from '../components/loanApplicationForm';
+import { mainListItems, secondaryListItems } from '../components/listItems';
 import Copyright from '../components/copyright';
 import theme from '../src/theme';
 
@@ -119,10 +121,15 @@ class Dashboard extends Component {
   constructor(props) {
     super (props);
     this.state = {
-      open: true
+      open: true,
+      questions: false,
+      firstName: ''
     }
     this.handleDrawer = this.handleDrawer.bind(this);
     this.submit = this.submit.bind(this);
+  }
+  componentDidMount() {
+    this.setState({ firstName : localStorage.getItem('firstName')})
   }
   handleDrawer() {
     this.setState({open: !this.state.open})
@@ -135,7 +142,7 @@ class Dashboard extends Component {
   render() {
     const { classes } = this.props;
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-    const {open} = this.state;
+    const { open, firstName } = this.state;
     return (
       <div className={classes.root}>
         <CssBaseline />
@@ -173,10 +180,7 @@ class Dashboard extends Component {
             </IconButton>
           </div>
           <Divider/>
-          <Typography component="p" color="inherit" noWrap className={classes.title}>
-            drawer
-          </Typography>
-          {/* <List>{mainListItems}</List> */}
+          <List>{mainListItems}</List>
           <Divider />
           {/* <List>{secondaryListItems}</List> */}
         </Drawer>
@@ -190,7 +194,7 @@ class Dashboard extends Component {
                   <Grid container xs={12}>
                     <Grid className={classes.hello} item xs={12} sm={8}>
                       <Typography variant="h3" color="inherit" noWrap className={classes.title}>
-                        Hello, Emmanuel!
+                        Hello, {firstName? firstName : 'User'}!
                       </Typography>
                       <Typography variant='body1'>
                         Welcome to Lendpop, please continue your application.
@@ -198,7 +202,7 @@ class Dashboard extends Component {
                     </Grid>
                   </Grid>
                   {/* <Chart /> */}
-                  </Paper>
+                </Paper>
               </Grid>
               <Grid item xs={12}>
                 <Grid container spacing={3}>
@@ -226,33 +230,36 @@ class Dashboard extends Component {
                                                    >Other applications</Button></Grid>
                 </Grid>
               </Grid>
+              {this.state.questions &&
+                <Grid item xs={12}>
+                  <Paper className={classes.paper}>
+                    <form className={classes.form} onSubmit={this.submit} validate="true">
+                      <Grid item xs={12}>
+                        <TextField
+                          fullWidth
+                          id="outlined-multiline-static"
+                          label="Have Any Questions?"
+                          placeholder="Leave a message"
+                          required
+                          multiline
+                          rows={8}
+                          variant="outlined"
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Button
+
+                          variant="contained"
+                          color="primary"
+                          className={classes.submit}
+                        >Send</Button>
+                      </Grid>
+                    </form>
+
+                  </Paper>
+                </Grid>}
               <Grid item xs={12}>
-                <Paper className={classes.paper}>
-
-                  <form className={classes.form} onSubmit={this.submit} validate="true">
-                    <Grid item xs={12}>
-                      <TextField
-                        fullWidth
-                        id="outlined-multiline-static"
-                        label="Have Any Questions?"
-                        placeholder="Leave a message"
-                        required
-                        multiline
-                        rows={8}
-                        variant="outlined"
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Button
-
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                      >Send</Button>
-                    </Grid>
-                  </form>
-                  {/* <Orders /> */}
-                </Paper>
+                <LoanApplicationForm/>
               </Grid>
             </Grid>
             <Box pt={4}>

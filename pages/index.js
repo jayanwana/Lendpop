@@ -1,4 +1,5 @@
 import React from 'react';
+import Head from 'next/head';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
@@ -9,8 +10,12 @@ import SignUpComponent from '../components/signUp';
 
 export default function Index() {
   return (
-    <Container>
-      <SignUpComponent/>
-    </Container>
-  );
-}
+    <div>
+      <Head>
+        <title>LendPop</title>
+      </Head>
+      <Container>
+        <SignUpComponent/>
+      </Container>
+    </div>
+  )}
