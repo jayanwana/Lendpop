@@ -47,6 +47,12 @@ const useStyles = theme => ({
   menuButton: {
     marginRight: 36,
   },
+  optionButtons: {
+    "@media screen and (max-width: 600px)":{
+      flexDirection: 'column',
+      justifyContent: 'space-around',
+    }
+  },
   menuButtonHidden: {
     display: 'none',
   },
@@ -109,6 +115,10 @@ const useStyles = theme => ({
   },
   buttonContainer: {
     flex: 1,
+    "@media screen and (max-width: 600px)": {
+      marginTop: '10px'
+    }
+
   },
   divider: {
     width: "40px",
@@ -149,27 +159,6 @@ class Dashboard extends Component {
     return (
       <div className={classes.root}>
         {/* <CssBaseline /> */}
-        {/* <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
-          <Toolbar className={classes.toolbar}>
-            <IconButton
-          edge="start"
-          color="inherit"
-          aria-label="open drawer"
-          onClick={this.handleDrawer}
-          className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
-            >
-          <MenuIcon />
-            </IconButton>
-            <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-          Dashboard
-            </Typography>
-            <IconButton color="inherit">
-          <Badge badgeContent={4} color="secondary">
-          <NotificationsIcon />
-          </Badge>
-            </IconButton>
-          </Toolbar>
-        </AppBar> */}
         <Drawer
           variant="permanent"
           classes={{
@@ -208,7 +197,7 @@ class Dashboard extends Component {
                 </Paper>
               </Grid>
               <Grid item xs={12}>
-                <Grid container spacing={0}>
+                <Grid container className={classes.optionButtons} spacing={0}>
                   <Grid item className={classes.buttonContainer} xs={12} md='auto' lg='auto'><Button
                     fullWidth
                     variant="outlined"
