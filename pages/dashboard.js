@@ -12,6 +12,7 @@ import LoanApplicationForm from '../components/loanApplicationForm';
 import { mainListItems, secondaryListItems } from '../components/listItems';
 import Copyright from '../components/copyright';
 import theme from '../src/theme';
+var localStorage = require('local-storage');
 
 const drawerWidth = 240;
 
@@ -142,7 +143,7 @@ class Dashboard extends Component {
     this.submit = this.submit.bind(this);
   }
   componentDidMount() {
-    this.setState({ firstName : localStorage.getItem('firstName')})
+    this.setState({ firstName : localStorage('firstName')})
   }
   handleDrawer() {
     this.setState({open: !this.state.open})
