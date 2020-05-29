@@ -101,14 +101,17 @@ const useStyles = theme => ({
     height: 240,
   },
   gridButton: {
-    borderRadius: "20px",
+    borderRadius: "10px",
     "&:hover": {
       border: `1px solid ${theme.palette.secondary.main}`,
       color: theme.palette.secondary.main
     },
   },
+  buttonContainer: {
+    flex: 1,
+  },
   divider: {
-    width: "5rem",
+    width: "40px",
     margin: 0,
     alignSelf: "center",
     "@media screen and (max-width: 800px)": {
@@ -205,25 +208,25 @@ class Dashboard extends Component {
                 </Paper>
               </Grid>
               <Grid item xs={12}>
-                <Grid container spacing={3}>
-                  <Grid item xs={12} md={3} lg={3}><Button
+                <Grid container spacing={0}>
+                  <Grid item className={classes.buttonContainer} xs={12} md='auto' lg='auto'><Button
                     fullWidth
                     variant="outlined"
                     color="primary"
                     className={classes.gridButton}
-                                                   >Continue my loan application</Button>
+                                                                                             >Continue my loan application</Button>
                   </Grid>
                   <Divider className={classes.divider} orientation="horizontal"/>
 
-                  <Grid item xs={12} md={3} lg={3}><Button
+                  <Grid className={classes.buttonContainer} item xs={12} md='auto' lg='auto'><Button
                     fullWidth
                     variant="outlined"
                     className={classes.gridButton}
-                                                   >Approval Documents</Button>
+                                                                                             >Approval Documents</Button>
                   </Grid>
                   <Divider className={classes.divider} orientation="horizontal"/>
 
-                  <Grid item xs={12} md={3} lg={3}><Button
+                  <Grid item className={classes.buttonContainer} xs={12} md='auto' lg='auto'><Button
                     fullWidth
                     variant="outlined"
                     className={classes.gridButton}

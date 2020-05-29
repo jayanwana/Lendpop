@@ -74,8 +74,12 @@ const styles = theme => ({
     flexGrow: 0,
     textAlign: 'left',
     color: theme.palette.secondary.main
+<<<<<<< HEAD
+  },
+=======
   }, 
     
+>>>>>>> 428a6985f7fcc7a04e59380d85fe58409f5f3600
   paper: {
     padding: theme.spacing(2),
     display: 'flex',
@@ -227,15 +231,24 @@ class LoanApplicationForm extends Component {
                       <Grid item xs={6}>
                         <Paper className={fixedHeightPaper}>
                           <Typography className= {classes.title} variant="subtitle" >Loan Instructions</Typography>
+<<<<<<< HEAD
+                          <Typography variant="body 2"> is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
+=======
                           <Typography variant="body2"> is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
+>>>>>>> 428a6985f7fcc7a04e59380d85fe58409f5f3600
                             been the industry’s standard dummy text ever since the 1500s, when an unkno
                             wn printer took a galley of type and scrambled it to make a type specimen boo
                             k. It has survived not only five centuries, but also the leap into electronic typese
                             tting, remaining essentially unchanged. It was popularised in the 1960s with the
                             release of Letraset sheets containing Lorem Ipsum passages, and more recen
+<<<<<<< HEAD
+                            tly with desktop publishing software like Aldus PageMaker including versions
+                          of Lorem Ipsum.</Typography>
+=======
                             tly with desktop publishing software like Aldus PageMaker including versions 
                             of Lorem Ipsum.
                           </Typography>
+>>>>>>> 428a6985f7fcc7a04e59380d85fe58409f5f3600
                         </Paper>
                       </Grid>
                       <Grid item xs={6}>
