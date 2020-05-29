@@ -343,7 +343,7 @@ class LoanApplicationForm extends Component {
                        </Grid>
                        </Grid>
                        </form>
-                     
+                     //
                    )}
                   {activeStep === 2 && (
                     <div className={classes.bigContainer}>
