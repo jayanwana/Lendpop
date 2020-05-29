@@ -148,28 +148,28 @@ class Dashboard extends Component {
     const { open, firstName } = this.state;
     return (
       <div className={classes.root}>
-        <CssBaseline />
-        <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
+        {/* <CssBaseline /> */}
+        {/* <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
           <Toolbar className={classes.toolbar}>
             <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="open drawer"
-              onClick={this.handleDrawer}
-              className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
+          edge="start"
+          color="inherit"
+          aria-label="open drawer"
+          onClick={this.handleDrawer}
+          className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
             >
-              <MenuIcon />
+          <MenuIcon />
             </IconButton>
             <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-              Dashboard
+          Dashboard
             </Typography>
             <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
-              </Badge>
+          <Badge badgeContent={4} color="secondary">
+          <NotificationsIcon />
+          </Badge>
             </IconButton>
           </Toolbar>
-        </AppBar>
+        </AppBar> */}
         <Drawer
           variant="permanent"
           classes={{
@@ -188,13 +188,13 @@ class Dashboard extends Component {
           {/* <List>{secondaryListItems}</List> */}
         </Drawer>
         <main className={classes.content}>
-          <div className={classes.appBarSpacer} />
+          {/* <div className={classes.appBarSpacer} /> */}
           <Container maxWidth="lg" className={classes.container}>
             <Grid container spacing={3}>
               {/* Chart */}
               <Grid item xs={12}>
                 <Paper className={fixedHeightPaper}>
-                  <Grid container xs={12}>
+                  <Grid container>
                     <Grid className={classes.hello} item xs={12} sm={8}>
                       <Typography variant="h3" color="inherit" noWrap className={classes.title}>
                         Hello, {firstName? firstName : 'User'}!

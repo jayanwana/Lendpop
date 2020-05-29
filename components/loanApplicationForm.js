@@ -22,6 +22,7 @@ import numeral from "numeral";
 import StepIcon from '@material-ui/core/StepIcon';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
+import states from './statedata.json';
 
 const qs = require("query-string");
 const backgroundShape = require("../public/images/shape.svg");
@@ -34,21 +35,19 @@ const styles = theme => ({
     flexGrow: 1,
     backgroundColor: theme.palette.primary["A100"],
     overflow: "hidden",
-    background: `url(${backgroundShape}) no-repeat`,
     backgroundSize: "cover",
     backgroundPosition: "0 400px",
     marginTop: 10,
-    padding: 20,
-    paddingBottom: 200
+    padding: '20 0',
   },
   grid: {
-    margin: `0 ${theme.spacing(2)}px`
+    margin: 0
   },
   smallContainer: {
-    width: "60%"
+    width: "100%"
   },
   bigContainer: {
-    width: "80%"
+    width: "100%"
   },
   stepContainer: {
     display: "flex",
@@ -82,6 +81,13 @@ const styles = theme => ({
     flexDirection: 'column',
     borderRadius: '10px'
   },
+  formPaper: {
+    margin: 0,
+  },
+  formLabel: {
+    padding: 8,
+    color:theme.palette.secondary.main
+  },
   fixedHeight: {
     height: 240,
   },
@@ -93,13 +99,9 @@ const styles = theme => ({
   },
   formControl: {
     width: "100%",
-
       '& .MuiTextField-root': {
-        margin: theme.spacing(1),
         width: "100%"
       },
-
-
   },
   selectEmpty: {
     marginTop: theme.spacing(2)
@@ -112,7 +114,9 @@ const styles = theme => ({
   flexBar: {
     marginTop: 32,
     display: "flex",
-    justifyContent: "center"
+    justifyContent: "center",
+    alignSelf: "flex-end",
+    width: '40%'
   }
 });
 
@@ -128,16 +132,25 @@ const getSteps = () => {
 
 class LoanApplicationForm extends Component {
   state = {
-    activeStep: 0,
+    activeStep: 1,
     receivingAccount: "Home Account",
     repaimentAccount: "Saving Account",
     termsChecked: false,
-    labelWidth: 0
+    labelWidth: 0,
+    firstName: '',
+    lastName: '',
+    NationalIdNo: '',
+    dob: '',
+    email: '',
+    mobile: '',
+    address: '',
+    city: '',
+    state: '',
+    mobileCheck: false,
+    addressCheck: false
   };
 
-  componentDidMount() {
-    console.log('mounted');
-  }
+  componentDidMount() {}
 
   handleNext = () => {
     this.setState(state => ({
@@ -158,6 +171,7 @@ class LoanApplicationForm extends Component {
   };
 
   handleChange = event => {
+    console.log(event.target.value);
     this.setState({ [event.target.name]: event.target.value });
   };
 
@@ -179,16 +193,26 @@ class LoanApplicationForm extends Component {
   }
 
   goToDashboard = event => {
-
     Router.push({
       pathname: "/dashboard",
     });
   };
 
+  getCity = name => {
+    return states.filter(state => {
+      return state.state.name == name
+    }
+    )
+  }
+
   render() {
+    const handleChange = this.handleChange;
     const { classes } = this.props;
     const steps = getSteps();
-    const { activeStep } = this.state;
+    const { activeStep, firstName, lastName,
+      NationalIdNo, email, dob, mobile,
+      address, city, state, mobileCheck, addressCheck
+    } = this.state;
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
     const Label = <Typography variant="caption">PLEASE CLICK TO AGREE TO THE TERMS AND CONDITIONS</Typography>
     return (
@@ -196,15 +220,14 @@ class LoanApplicationForm extends Component {
         <CssBaseline />
         <div className={classes.root}>
           <Grid container justify="center">
-            <Grid
-              spacing={10}
+            <Grid item xs={12}
               alignItems="center"
               justify="center"
               container
               className={classes.grid}
             >
               <Grid item xs={12}>
-                <Back />
+                {/* <Back /> */}
                 <div className={classes.stepContainer}>
                   <div className={classes.bigContainer}>
                     <Stepper
@@ -222,7 +245,7 @@ class LoanApplicationForm extends Component {
                     </Stepper>
                   </div>
                   {activeStep === 0 && (
-                    <Grid container xs={12} spacing={2}>
+                    <Grid container spacing={2}>
                       <Grid item xs={6}>
                         <Paper className={fixedHeightPaper}>
                           <Typography className= {classes.title} variant="subtitle" >Loan Instructions</Typography>
@@ -257,91 +280,165 @@ class LoanApplicationForm extends Component {
                     </Grid>
                   )}
                   {activeStep === 1 && (
-
-                    <form className={classes.formControl} noValidate autoComplete="off">
-                      <Grid container xs={12} spacing={2}>
-                        <Grid item xs={12} sm={4}>
-                          <TextField
-                            fullWidth
-                            required
-                            id="outlined-required"
-                            label="Required"
-                            defaultValue="Hello World"
-                            variant="outlined"
-                          />
+                    <Paper className={classes.paper} >
+                      <Typography className={classes.formLabel} variant="caption">PERSONAL INFORMATION</Typography>
+                      <form className={classes.formControl} noValidate autoComplete="off">
+                        <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
+                          <Grid item xs={12} sm={4}>
+                            <TextField
+                              fullWidth
+                              required
+                              name="firstName"
+                              id="outlined-required-firstName"
+                              label="First Name"
+                              variant="outlined"
+                              value={firstName}
+                              onChange={handleChange}
+                              placeholder="Enter Firstname"
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={4}>
+                            <TextField
+                              id="outlined-lastName"
+                              label="Last Name"
+                              variant="outlined"
+                              name="lastName"
+                              value={lastName}
+                              onChange={handleChange}
+                              placeholder="Enter Lastname"
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={4}>
+                            <TextField
+                              id="outlined-nin-input"
+                              label="National ID Number"
+                              autoComplete="national-id-number"
+                              variant="outlined"
+                              name="NationalIdNo"
+                              value={NationalIdNo}
+                              onChange={handleChange}
+                              placeholder="Enter National ID Number"
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={4}>
+                            <TextField
+                              id="outlined-dob-input"
+                              label="Date of Birth"
+                              variant="outlined"
+                              type="date"
+                              format="dd/mm/yyyy"
+                              name="dob"
+                              // value={dob}
+                              onChange={handleChange}
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={4}>
+                            <TextField
+                              id="outlined-email"
+                              label="Email Address"
+                              type="email"
+                              variant="outlined"
+                              name="email"
+                              value={email}
+                              onChange={handleChange}
+                              placeholder="Enter Email Address"
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={4}>
+                            <TextField
+                              id="outlined-mobile"
+                              label="Mobile Number"
+                              type="number"
+                              variant="outlined"
+                              name="mobile"
+                              value={mobile}
+                              onChange={handleChange}
+                              placeholder="Enter Mobile Number"
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={8}>
+                            <TextField
+                              id="outlined-address"
+                              label="Physical Address Information"
+                              variant="outlined"
+                              name="address"
+                              value={address}
+                              onChange={handleChange}
+                              placeholder="Enter your home address, please specify street name or use location finder"
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={2}>
+                            <TextField
+                              required
+                              id="outlined-select-currency"
+                              select
+                              label="Current State"
+                              name="state"
+                              value={state}
+                              onChange={handleChange}
+                              variant="outlined"
+                              placeholder="Select State"
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                            >
+                              {states.map((option) => (
+                                <MenuItem key={option.state.id} value={option.state.name}>
+                                  {option.state.name}
+                                </MenuItem>
+                              ))}
+                            </TextField>
+                          </Grid>
+                          <Grid item xs={12} sm={2}>
+                            <TextField
+                              disabled={!state ? true : false}
+                              id="outlined-select-currency-native"
+                              select
+                              label="Current City"
+                              name="city"
+                              value={city}
+                              onChange={handleChange}
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                              helperText="Please select state first"
+                              variant="outlined"
+                            >
+                              {state? (this.getCity(state)[0].state.locals.map((option) => (
+                                <MenuItem key={option.id} value={option.name}>
+                                  {option.name}
+                                </MenuItem>
+                              ))) : (this.getCity('Lagos State')[0].state.locals.map((option) => (
+                                <MenuItem key={option.id} value={option.name}>
+                                  {option.name}
+                                </MenuItem>
+                              )))}
+                            </TextField>
+                          </Grid>
                         </Grid>
-                        <Grid item xs={12} sm={4}>
-                          <TextField
-                            disabled
-                            id="outlined-disabled"
-                            label="Disabled"
-                            defaultValue="Hello World"
-                            variant="outlined"
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={4}>
-                          <TextField
-                            id="outlined-password-input"
-                            label="Password"
-                            type="password"
-                            autoComplete="current-password"
-                            variant="outlined"
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={4}>
-                          <TextField
-                            id="outlined-read-only-input"
-                            label="Read Only"
-                            defaultValue="Hello World"
-                            InputProps={{
-                              readOnly: true,
-                            }}
-                            variant="outlined"
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={4}>
-                          <TextField
-                            id="outlined-number"
-                            label="Number"
-                            type="number"
-                            InputLabelProps={{
-                              shrink: true,
-                            }}
-                            variant="outlined"
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={4}>
-                          <TextField id="outlined-search" label="Search field" type="search" variant="outlined" />
-                        </Grid>
-                        <Grid item xs={12} sm={8}>
-                          <TextField
-                            id="outlined-helperText"
-                            label="Helper text"
-                            defaultValue="Default Value"
-                            helperText="Some important text"
-                            variant="outlined"
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={2}>
-                          <TextField
-                            id="outlined-helperText"
-                            label="Helper text"
-                            defaultValue="Default Value"
-                            helperText="Some important text"
-                            variant="outlined"
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={2}>
-                          <TextField
-                            id="outlined-helperText"
-                            label="Helper text"
-                            defaultValue="Default Value"
-                            helperText="Some important text"
-                            variant="outlined"
-                          />
-                        </Grid>
-                      </Grid>
-                    </form>
+                      </form>
+                    </Paper>
                      //
                   )}
                   {activeStep === 2 && (
@@ -666,6 +763,8 @@ class LoanApplicationForm extends Component {
                   <div className={classes.flexBar}>
                     {activeStep !== 5 && (
                       <Button
+                        fullWidth
+                        variant="outlined"
                         disabled={activeStep === 0}
                         onClick={this.handleBack}
                         className={classes.backButton}
@@ -675,6 +774,7 @@ class LoanApplicationForm extends Component {
                       </Button>
                     )}
                     <Button
+                      fullWidth
                       variant="contained"
                       color="primary"
                       onClick={
