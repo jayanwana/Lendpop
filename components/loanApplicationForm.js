@@ -29,7 +29,6 @@ const backgroundShape = require("../public/images/shape.svg");
 numeral.defaultFormat("0,000");
 
 
-
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -74,12 +73,8 @@ const styles = theme => ({
     flexGrow: 0,
     textAlign: 'left',
     color: theme.palette.secondary.main
-<<<<<<< HEAD
   },
-=======
-  }, 
-    
->>>>>>> 428a6985f7fcc7a04e59380d85fe58409f5f3600
+
   paper: {
     padding: theme.spacing(2),
     display: 'flex',
@@ -98,12 +93,12 @@ const styles = theme => ({
   },
   formControl: {
     width: "100%",
-    
+
       '& .MuiTextField-root': {
         margin: theme.spacing(1),
         width: "100%"
       },
-    
+
 
   },
   selectEmpty: {
@@ -231,24 +226,15 @@ class LoanApplicationForm extends Component {
                       <Grid item xs={6}>
                         <Paper className={fixedHeightPaper}>
                           <Typography className= {classes.title} variant="subtitle" >Loan Instructions</Typography>
-<<<<<<< HEAD
-                          <Typography variant="body 2"> is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
-=======
                           <Typography variant="body2"> is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
->>>>>>> 428a6985f7fcc7a04e59380d85fe58409f5f3600
                             been the industry’s standard dummy text ever since the 1500s, when an unkno
                             wn printer took a galley of type and scrambled it to make a type specimen boo
                             k. It has survived not only five centuries, but also the leap into electronic typese
                             tting, remaining essentially unchanged. It was popularised in the 1960s with the
                             release of Letraset sheets containing Lorem Ipsum passages, and more recen
-<<<<<<< HEAD
                             tly with desktop publishing software like Aldus PageMaker including versions
-                          of Lorem Ipsum.</Typography>
-=======
-                            tly with desktop publishing software like Aldus PageMaker including versions 
                             of Lorem Ipsum.
                           </Typography>
->>>>>>> 428a6985f7fcc7a04e59380d85fe58409f5f3600
                         </Paper>
                       </Grid>
                       <Grid item xs={6}>
@@ -271,93 +257,93 @@ class LoanApplicationForm extends Component {
                     </Grid>
                   )}
                   {activeStep === 1 && (
-                                          
-                       <form className={classes.formControl} noValidate autoComplete="off">
-                         <Grid container xs={12} spacing={2}>
-                       <Grid item xs={12} sm={4}>
-                         <TextField
+
+                    <form className={classes.formControl} noValidate autoComplete="off">
+                      <Grid container xs={12} spacing={2}>
+                        <Grid item xs={12} sm={4}>
+                          <TextField
                             fullWidth
-                           required
-                           id="outlined-required"
-                           label="Required"
-                           defaultValue="Hello World"
-                           variant="outlined"
-                         />
-                         </Grid>
-                         <Grid item xs={12} sm={4}>
-                         <TextField
-                           disabled
-                           id="outlined-disabled"
-                           label="Disabled"
-                           defaultValue="Hello World"
-                           variant="outlined"
-                         />
-                         </Grid>
-                         <Grid item xs={12} sm={4}>
-                         <TextField
-                           id="outlined-password-input"
-                           label="Password"
-                           type="password"
-                           autoComplete="current-password"
-                           variant="outlined"
-                         />
-                          </Grid>
-                         <Grid item xs={12} sm={4}>
-                         <TextField
-                           id="outlined-read-only-input"
-                           label="Read Only"
-                           defaultValue="Hello World"
-                           InputProps={{
-                             readOnly: true,
-                           }}
-                           variant="outlined"
-                         />
-                         </Grid>
-                         <Grid item xs={12} sm={4}>
-                         <TextField
-                           id="outlined-number"
-                           label="Number"
-                           type="number"
-                           InputLabelProps={{
-                             shrink: true,
-                           }}
-                           variant="outlined"
-                         />
-                         </Grid>
-                         <Grid item xs={12} sm={4}>
-                         <TextField id="outlined-search" label="Search field" type="search" variant="outlined" />
-                         </Grid>
-                         <Grid item xs={12} sm={8}>
-                         <TextField
-                           id="outlined-helperText"
-                           label="Helper text"
-                           defaultValue="Default Value"
-                           helperText="Some important text"
-                           variant="outlined"
-                         />
-                       </Grid>
-                       <Grid item xs={12} sm={2}>
-                         <TextField
-                           id="outlined-helperText"
-                           label="Helper text"
-                           defaultValue="Default Value"
-                           helperText="Some important text"
-                           variant="outlined"
-                         />
-                       </Grid>
-                       <Grid item xs={12} sm={2}>
-                         <TextField
-                           id="outlined-helperText"
-                           label="Helper text"
-                           defaultValue="Default Value"
-                           helperText="Some important text"
-                           variant="outlined"
-                         />
-                       </Grid>
-                       </Grid>
-                       </form>
+                            required
+                            id="outlined-required"
+                            label="Required"
+                            defaultValue="Hello World"
+                            variant="outlined"
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                          <TextField
+                            disabled
+                            id="outlined-disabled"
+                            label="Disabled"
+                            defaultValue="Hello World"
+                            variant="outlined"
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                          <TextField
+                            id="outlined-password-input"
+                            label="Password"
+                            type="password"
+                            autoComplete="current-password"
+                            variant="outlined"
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                          <TextField
+                            id="outlined-read-only-input"
+                            label="Read Only"
+                            defaultValue="Hello World"
+                            InputProps={{
+                              readOnly: true,
+                            }}
+                            variant="outlined"
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                          <TextField
+                            id="outlined-number"
+                            label="Number"
+                            type="number"
+                            InputLabelProps={{
+                              shrink: true,
+                            }}
+                            variant="outlined"
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                          <TextField id="outlined-search" label="Search field" type="search" variant="outlined" />
+                        </Grid>
+                        <Grid item xs={12} sm={8}>
+                          <TextField
+                            id="outlined-helperText"
+                            label="Helper text"
+                            defaultValue="Default Value"
+                            helperText="Some important text"
+                            variant="outlined"
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={2}>
+                          <TextField
+                            id="outlined-helperText"
+                            label="Helper text"
+                            defaultValue="Default Value"
+                            helperText="Some important text"
+                            variant="outlined"
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={2}>
+                          <TextField
+                            id="outlined-helperText"
+                            label="Helper text"
+                            defaultValue="Default Value"
+                            helperText="Some important text"
+                            variant="outlined"
+                          />
+                        </Grid>
+                      </Grid>
+                    </form>
                      //
-                   )}
+                  )}
                   {activeStep === 2 && (
                     <div className={classes.bigContainer}>
                       <Paper className={classes.paper}>
