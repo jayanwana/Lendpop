@@ -19,11 +19,16 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import Back from "./common/Back";
 import numeral from "numeral";
+import StepIcon from '@material-ui/core/StepIcon';
+import TextField from '@material-ui/core/TextField';
+import { makeStyles } from '@material-ui/core/styles';
 
 const qs = require("query-string");
 const backgroundShape = require("../public/images/shape.svg");
 
 numeral.defaultFormat("0,000");
+
+
 
 const styles = theme => ({
   root: {
@@ -64,11 +69,17 @@ const styles = theme => ({
   stepper: {
     backgroundColor: "transparent"
   },
+
   title: {
     flexGrow: 0,
     textAlign: 'left',
     color: theme.palette.secondary.main
+<<<<<<< HEAD
   },
+=======
+  }, 
+    
+>>>>>>> 428a6985f7fcc7a04e59380d85fe58409f5f3600
   paper: {
     padding: theme.spacing(2),
     display: 'flex',
@@ -86,7 +97,14 @@ const styles = theme => ({
     marginBottom: 42
   },
   formControl: {
-    width: "100%"
+    width: "100%",
+    
+      '& .MuiTextField-root': {
+        margin: theme.spacing(1),
+        width: "100%"
+      },
+    
+
   },
   selectEmpty: {
     marginTop: theme.spacing(2)
@@ -102,6 +120,12 @@ const styles = theme => ({
     justifyContent: "center"
   }
 });
+
+const CustomStepIcon = withStyles({
+  text: {
+    display: 'none',
+  }
+})(StepIcon)
 
 const getSteps = () => {
   return ["INSTRUCTIONS", "PERSONAL INFO", "DEMOGRAPHICS", "ELIGIBILITY", "AGREEMENT", "OTHER INFO"];
@@ -196,7 +220,7 @@ class LoanApplicationForm extends Component {
                       {steps.map(label => {
                         return (
                           <Step key={label}>
-                            <StepLabel>{label}</StepLabel>
+                            <StepLabel StepIconComponent={CustomStepIcon}>{label}</StepLabel>
                           </Step>
                         );
                       })}
@@ -207,14 +231,24 @@ class LoanApplicationForm extends Component {
                       <Grid item xs={6}>
                         <Paper className={fixedHeightPaper}>
                           <Typography className= {classes.title} variant="subtitle" >Loan Instructions</Typography>
+<<<<<<< HEAD
                           <Typography variant="body 2"> is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
+=======
+                          <Typography variant="body2"> is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
+>>>>>>> 428a6985f7fcc7a04e59380d85fe58409f5f3600
                             been the industry’s standard dummy text ever since the 1500s, when an unkno
                             wn printer took a galley of type and scrambled it to make a type specimen boo
                             k. It has survived not only five centuries, but also the leap into electronic typese
                             tting, remaining essentially unchanged. It was popularised in the 1960s with the
                             release of Letraset sheets containing Lorem Ipsum passages, and more recen
+<<<<<<< HEAD
                             tly with desktop publishing software like Aldus PageMaker including versions
                           of Lorem Ipsum.</Typography>
+=======
+                            tly with desktop publishing software like Aldus PageMaker including versions 
+                            of Lorem Ipsum.
+                          </Typography>
+>>>>>>> 428a6985f7fcc7a04e59380d85fe58409f5f3600
                         </Paper>
                       </Grid>
                       <Grid item xs={6}>
@@ -237,77 +271,93 @@ class LoanApplicationForm extends Component {
                     </Grid>
                   )}
                   {activeStep === 1 && (
-                    <div className={classes.smallContainer}>
-                      <Paper className={classes.paper}>
-                        <div>
-                          <div style={{ marginBottom: 32 }}>
-                            <Typography
-                              variant="subtitle1"
-                              style={{ fontWeight: "bold" }}
-                              gutterBottom
-                            >
-                              Bank information
-                            </Typography>
-                            <Typography variant="body1" gutterBottom>
-                              Select account to receive the money
-                            </Typography>
-                          </div>
-                          <div style={{ marginBottom: 32 }}>
-                            <Typography
-                              style={{ textTransform: "uppercase" }}
-                              color="secondary"
-                              gutterBottom
-                            >
-                              Bank
-                            </Typography>
-                            <Typography variant="h5" gutterBottom>
-                              N26
-                            </Typography>
-                          </div>
-                          <div>
-                            <Typography
-                              style={{
-                                textTransform: "uppercase",
-                                marginBottom: 20
-                              }}
-                              color="secondary"
-                              gutterBottom
-                            >
-                              Receiving account
-                            </Typography>
-                            <FormControl
-                              variant="outlined"
-                              className={classes.formControl}
-                            >
-                              <Select
-                                value={this.state.receivingAccount}
-                                onChange={this.handleChange}
-                                input={
-                                  <OutlinedInput
-                                    labelWidth={this.state.labelWidth}
-                                    name="receivingAccount"
-                                  />
-                                }
-                              >
-                                <MenuItem value="">
-                                  <em></em>
-                                </MenuItem>
-                                <MenuItem value={"0297 00988200918"}>
-                                  First account
-                                </MenuItem>
-                                <MenuItem value={"0235 00235233332"}>
-                                  Second account
-                                </MenuItem>
-                                <MenuItem value={"1256 00864222212"}>
-                                  Third account
-                                </MenuItem>
-                              </Select>
-                            </FormControl>
-                          </div>
-                        </div>
-                      </Paper>
-                    </div>
-                  )}
+                                          
+                       <form className={classes.formControl} noValidate autoComplete="off">
+                         <Grid container xs={12} spacing={2}>
+                       <Grid item xs={12} sm={4}>
+                         <TextField
+                            fullWidth
+                           required
+                           id="outlined-required"
+                           label="Required"
+                           defaultValue="Hello World"
+                           variant="outlined"
+                         />
+                         </Grid>
+                         <Grid item xs={12} sm={4}>
+                         <TextField
+                           disabled
+                           id="outlined-disabled"
+                           label="Disabled"
+                           defaultValue="Hello World"
+                           variant="outlined"
+                         />
+                         </Grid>
+                         <Grid item xs={12} sm={4}>
+                         <TextField
+                           id="outlined-password-input"
+                           label="Password"
+                           type="password"
+                           autoComplete="current-password"
+                           variant="outlined"
+                         />
+                          </Grid>
+                         <Grid item xs={12} sm={4}>
+                         <TextField
+                           id="outlined-read-only-input"
+                           label="Read Only"
+                           defaultValue="Hello World"
+                           InputProps={{
+                             readOnly: true,
+                           }}
+                           variant="outlined"
+                         />
+                         </Grid>
+                         <Grid item xs={12} sm={4}>
+                         <TextField
+                           id="outlined-number"
+                           label="Number"
+                           type="number"
+                           InputLabelProps={{
+                             shrink: true,
+                           }}
+                           variant="outlined"
+                         />
+                         </Grid>
+                         <Grid item xs={12} sm={4}>
+                         <TextField id="outlined-search" label="Search field" type="search" variant="outlined" />
+                         </Grid>
+                         <Grid item xs={12} sm={8}>
+                         <TextField
+                           id="outlined-helperText"
+                           label="Helper text"
+                           defaultValue="Default Value"
+                           helperText="Some important text"
+                           variant="outlined"
+                         />
+                       </Grid>
+                       <Grid item xs={12} sm={2}>
+                         <TextField
+                           id="outlined-helperText"
+                           label="Helper text"
+                           defaultValue="Default Value"
+                           helperText="Some important text"
+                           variant="outlined"
+                         />
+                       </Grid>
+                       <Grid item xs={12} sm={2}>
+                         <TextField
+                           id="outlined-helperText"
+                           label="Helper text"
+                           defaultValue="Default Value"
+                           helperText="Some important text"
+                           variant="outlined"
+                         />
+                       </Grid>
+                       </Grid>
+                       </form>
+                     //
+                   )}
                   {activeStep === 2 && (
                     <div className={classes.bigContainer}>
                       <Paper className={classes.paper}>
