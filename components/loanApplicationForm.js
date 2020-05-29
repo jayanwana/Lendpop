@@ -22,6 +22,7 @@ import numeral from "numeral";
 import StepIcon from '@material-ui/core/StepIcon';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
+import states from './statedata.json';
 
 const qs = require("query-string");
 const backgroundShape = require("../public/images/shape.svg");
@@ -29,27 +30,25 @@ const backgroundShape = require("../public/images/shape.svg");
 numeral.defaultFormat("0,000");
 
 
-
 const styles = theme => ({
   root: {
     flexGrow: 1,
     backgroundColor: theme.palette.primary["A100"],
     overflow: "hidden",
-    background: `url(${backgroundShape}) no-repeat`,
     backgroundSize: "cover",
     backgroundPosition: "0 400px",
     marginTop: 10,
-    padding: 20,
-    paddingBottom: 200
+    padding: '20 0',
+    width: "100%"
   },
   grid: {
-    margin: `0 ${theme.spacing(2)}px`
+    margin: 0
   },
   smallContainer: {
-    width: "60%"
+    width: "100%"
   },
   bigContainer: {
-    width: "80%"
+    width: "100%"
   },
   stepContainer: {
     display: "flex",
@@ -74,18 +73,34 @@ const styles = theme => ({
     flexGrow: 0,
     textAlign: 'left',
     color: theme.palette.secondary.main
-<<<<<<< HEAD
   },
-=======
-  }, 
-    
->>>>>>> 428a6985f7fcc7a04e59380d85fe58409f5f3600
+
   paper: {
     padding: theme.spacing(2),
     display: 'flex',
     overflow: 'auto',
     flexDirection: 'column',
-    borderRadius: '10px'
+    borderRadius: '10px',
+    width: '100%'
+  },
+  successPaper: {
+    backgroundColor: theme.palette.primary.main,
+    justifyContent: 'space-around'
+  },
+  successText: {
+    margin: '5px 0'
+  },
+  formPaper: {
+    margin: 0,
+  },
+  formLabel: {
+    padding: 8,
+    fontSize: '1rem',
+    color:theme.palette.secondary.main
+  },
+  formCaption:{
+    padding: 8,
+    fontSize: '0.8rem',
   },
   fixedHeight: {
     height: 240,
@@ -98,13 +113,9 @@ const styles = theme => ({
   },
   formControl: {
     width: "100%",
-    
       '& .MuiTextField-root': {
-        margin: theme.spacing(1),
         width: "100%"
       },
-    
-
   },
   selectEmpty: {
     marginTop: theme.spacing(2)
@@ -117,7 +128,9 @@ const styles = theme => ({
   flexBar: {
     marginTop: 32,
     display: "flex",
-    justifyContent: "center"
+    justifyContent: "center",
+    alignSelf: "flex-end",
+    width: '40%'
   }
 });
 
@@ -133,16 +146,33 @@ const getSteps = () => {
 
 class LoanApplicationForm extends Component {
   state = {
-    activeStep: 0,
-    receivingAccount: "Home Account",
-    repaimentAccount: "Saving Account",
+    activeStep: 3,
     termsChecked: false,
-    labelWidth: 0
+    labelWidth: 0,
+    firstName: '',
+    lastName: '',
+    NationalIdNo: '',
+    dob: '',
+    email: '',
+    mobile: '',
+    address: '',
+    city: '',
+    state: '',
+    gender: '',
+    education: '',
+    ethnicity:'',
+    questions:'',
+    mobileCheck: false,
+    addressCheck: false,
+    gracePeriod: '',
+    hascreditScore: false,
+    creditScore: '',
+    repaymentPlan: '',
+    bankName: '',
+    accountNumber: '',
   };
 
-  componentDidMount() {
-    console.log('mounted');
-  }
+  componentDidMount() {}
 
   handleNext = () => {
     this.setState(state => ({
@@ -167,14 +197,15 @@ class LoanApplicationForm extends Component {
   };
 
   handleTerms = event => {
-    this.setState({ termsChecked: event.target.checked });
+    console.log(event.target.name);
+    this.setState({ [event.target.name]: event.target.checked });
   };
 
   stepActions() {
-    if (this.state.activeStep === 3) {
+    if (this.state.activeStep === 4) {
       return "Accept";
     }
-    if (this.state.activeStep === 4) {
+    if (this.state.activeStep === 3) {
       return "Send";
     }
     if (this.state.activeStep === 5) {
@@ -184,32 +215,45 @@ class LoanApplicationForm extends Component {
   }
 
   goToDashboard = event => {
-
     Router.push({
       pathname: "/dashboard",
     });
   };
 
+  getCity = name => {
+    return states.filter(state => {
+      return state.state.name == name
+    }
+    )
+  }
+
   render() {
+    const edulist = ['None', 'Primary', 'Secondary', 'Diploma', 'Bachelors', 'Masters', 'Doctorate']
+    const cslist = [1, 2, 3, 4, 5]
+    const handleChange = this.handleChange;
     const { classes } = this.props;
     const steps = getSteps();
-    const { activeStep } = this.state;
+    const { activeStep, firstName, lastName, gracePeriod, hascreditScore, creditScore,
+      NationalIdNo, email, dob, mobile, gender, education, ethnicity, questions,
+      address, city, state, mobileCheck, addressCheck, repaymentPlan, bankName,
+      accountNumber,
+    } = this.state;
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+    const successPaper = clsx(classes.paper, classes.successPaper);
     const Label = <Typography variant="caption">PLEASE CLICK TO AGREE TO THE TERMS AND CONDITIONS</Typography>
     return (
       <React.Fragment>
         <CssBaseline />
         <div className={classes.root}>
           <Grid container justify="center">
-            <Grid
-              spacing={10}
+            <Grid item xs={12}
               alignItems="center"
               justify="center"
               container
               className={classes.grid}
             >
               <Grid item xs={12}>
-                <Back />
+                {/* <Back /> */}
                 <div className={classes.stepContainer}>
                   <div className={classes.bigContainer}>
                     <Stepper
@@ -227,28 +271,19 @@ class LoanApplicationForm extends Component {
                     </Stepper>
                   </div>
                   {activeStep === 0 && (
-                    <Grid container xs={12} spacing={2}>
+                    <Grid container spacing={2}>
                       <Grid item xs={6}>
                         <Paper className={fixedHeightPaper}>
-                          <Typography className= {classes.title} variant="subtitle" >Loan Instructions</Typography>
-<<<<<<< HEAD
-                          <Typography variant="body 2"> is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
-=======
+                          <Typography className= {classes.title} variant="subtitle2" >Loan Instructions</Typography>
                           <Typography variant="body2"> is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
->>>>>>> 428a6985f7fcc7a04e59380d85fe58409f5f3600
                             been the industry’s standard dummy text ever since the 1500s, when an unkno
                             wn printer took a galley of type and scrambled it to make a type specimen boo
                             k. It has survived not only five centuries, but also the leap into electronic typese
                             tting, remaining essentially unchanged. It was popularised in the 1960s with the
                             release of Letraset sheets containing Lorem Ipsum passages, and more recen
-<<<<<<< HEAD
                             tly with desktop publishing software like Aldus PageMaker including versions
-                          of Lorem Ipsum.</Typography>
-=======
-                            tly with desktop publishing software like Aldus PageMaker including versions 
                             of Lorem Ipsum.
                           </Typography>
->>>>>>> 428a6985f7fcc7a04e59380d85fe58409f5f3600
                         </Paper>
                       </Grid>
                       <Grid item xs={6}>
@@ -258,6 +293,7 @@ class LoanApplicationForm extends Component {
                             <FormControlLabel
                               control={
                                 <Checkbox
+                                  name="termsChecked"
                                   checked={this.state.termsChecked}
                                   onChange={this.handleTerms}
                                   value="check"
@@ -271,278 +307,447 @@ class LoanApplicationForm extends Component {
                     </Grid>
                   )}
                   {activeStep === 1 && (
-                                          
-                       <form className={classes.formControl} noValidate autoComplete="off">
-                         <Grid container xs={12} spacing={2}>
-                       <Grid item xs={12} sm={4}>
-                         <TextField
-                            fullWidth
-                           required
-                           id="outlined-required"
-                           label="Required"
-                           defaultValue="Hello World"
-                           variant="outlined"
-                         />
-                         </Grid>
-                         <Grid item xs={12} sm={4}>
-                         <TextField
-                           disabled
-                           id="outlined-disabled"
-                           label="Disabled"
-                           defaultValue="Hello World"
-                           variant="outlined"
-                         />
-                         </Grid>
-                         <Grid item xs={12} sm={4}>
-                         <TextField
-                           id="outlined-password-input"
-                           label="Password"
-                           type="password"
-                           autoComplete="current-password"
-                           variant="outlined"
-                         />
-                          </Grid>
-                         <Grid item xs={12} sm={4}>
-                         <TextField
-                           id="outlined-read-only-input"
-                           label="Read Only"
-                           defaultValue="Hello World"
-                           InputProps={{
-                             readOnly: true,
-                           }}
-                           variant="outlined"
-                         />
-                         </Grid>
-                         <Grid item xs={12} sm={4}>
-                         <TextField
-                           id="outlined-number"
-                           label="Number"
-                           type="number"
-                           InputLabelProps={{
-                             shrink: true,
-                           }}
-                           variant="outlined"
-                         />
-                         </Grid>
-                         <Grid item xs={12} sm={4}>
-                         <TextField id="outlined-search" label="Search field" type="search" variant="outlined" />
-                         </Grid>
-                         <Grid item xs={12} sm={8}>
-                         <TextField
-                           id="outlined-helperText"
-                           label="Helper text"
-                           defaultValue="Default Value"
-                           helperText="Some important text"
-                           variant="outlined"
-                         />
-                       </Grid>
-                       <Grid item xs={12} sm={2}>
-                         <TextField
-                           id="outlined-helperText"
-                           label="Helper text"
-                           defaultValue="Default Value"
-                           helperText="Some important text"
-                           variant="outlined"
-                         />
-                       </Grid>
-                       <Grid item xs={12} sm={2}>
-                         <TextField
-                           id="outlined-helperText"
-                           label="Helper text"
-                           defaultValue="Default Value"
-                           helperText="Some important text"
-                           variant="outlined"
-                         />
-                       </Grid>
-                       </Grid>
-                       </form>
-                     //
-                   )}
-                  {activeStep === 2 && (
-                    <div className={classes.bigContainer}>
-                      <Paper className={classes.paper}>
-                        <div className={classes.topInfo}>
-                          <div>
-                            <Typography
-                              variant="subtitle1"
-                              style={{ fontWeight: "bold" }}
-                              gutterBottom
-                            >
-                              Details
-                            </Typography>
-                            <Typography variant="body1" gutterBottom>
-                              We need some details about any information
-                            </Typography>
-                          </div>
-                          <div>
-                            <Button
+                    <Paper className={classes.paper} >
+                      <Typography className={classes.formLabel} variant="caption">PERSONAL INFORMATION</Typography>
+                      <form className={classes.formControl} noValidate autoComplete="off">
+                        <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
+                          <Grid item xs={12} sm={4}>
+                            <TextField
+                              fullWidth
+                              required
+                              name="firstName"
+                              id="outlined-required-firstName"
+                              label="First Name"
                               variant="outlined"
-                              size="large"
-                              className={classes.outlinedButtom}
-                            >
-                              Edit
-                            </Button>
-                          </div>
-                        </div>
-                        <div className={classes.borderColumn}>
-                          <Grid
-                            item
-                            container
-                            xs={12}
-                            style={{ marginBottom: 32 }}
-                          >
-                            <Grid item xs={6}>
-                              <Typography
-                                style={{ textTransform: "uppercase" }}
-                                color="secondary"
-                                gutterBottom
-                              >
-                                Amount
-                              </Typography>
-                              <Typography variant="h5" gutterBottom>
-                                {/* {parsed
-                                  ? numeral(parsed.amount).format()
-                                : "75,000"}{" "} */}
-                                "75,000"  DKK
-                              </Typography>
-                            </Grid>
-                            <Grid item xs={6}>
-                              <Typography
-                                style={{ textTransform: "uppercase" }}
-                                color="secondary"
-                                gutterBottom
-                              >
-                                Total fees
-                              </Typography>
-                              <Typography variant="h5" gutterBottom>
-                                0 DKK
-                              </Typography>
-                            </Grid>
-                          </Grid>
-                          <Grid item container xs={12}>
-                            <Grid item xs={6}>
-                              <Typography
-                                style={{ textTransform: "uppercase" }}
-                                color="secondary"
-                                gutterBottom
-                              >
-                                Total price
-                              </Typography>
-                              <Typography variant="h5" gutterBottom>
-                                {/* {parsed
-                                  ? numeral(parsed.interest).format()
-                                : "6,600"}{" "} */}
-                                6,600  USD
-                              </Typography>
-                            </Grid>
-                            <Grid item xs={6}>
-                              <Typography
-                                style={{ textTransform: "uppercase" }}
-                                color="secondary"
-                                gutterBottom
-                              >
-                                Total cost
-                              </Typography>
-                              <Typography variant="h5" gutterBottom>
-                                {/* {parsed
-                                  ? numeral(parsed.cost).format()
-                                : "81,600"}{" "} */}
-                                81,600  USD
-                              </Typography>
-                            </Grid>
-                          </Grid>
-                        </div>
-                        <Grid item container xs={12}>
-                          <Grid
-                            item
-                            container
-                            xs={12}
-                            style={{ marginBottom: 32 }}
-                          >
-                            <Grid item xs={6}>
-                              <Typography
-                                style={{ textTransform: "uppercase" }}
-                                color="secondary"
-                                gutterBottom
-                              >
-                                How often
-                              </Typography>
-                              <Typography variant="h5" gutterBottom>
-                                Once a month
-                              </Typography>
-                            </Grid>
-                          </Grid>
-                          <Grid item xs={6}>
-                            <Typography
-                              style={{ textTransform: "uppercase" }}
-                              color="secondary"
-                              gutterBottom
-                            >
-                              When to start
-                            </Typography>
-                            <Typography variant="h5" gutterBottom>
-                              01 February 2019
-                            </Typography>
-                          </Grid>
-                          <Grid item xs={6}>
-                            <Typography
-                              style={{ textTransform: "uppercase" }}
-                              color="secondary"
-                              gutterBottom
-                            >
-                              When it ends?
-                            </Typography>
-                            <Typography variant="h5" gutterBottom>
-                              01 May 2019
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                        <Grid item container xs={12} style={{ marginTop: 24 }}>
-                          <Grid item xs={6}>
-                            <Typography
-                              style={{
-                                textTransform: "uppercase",
-                                marginBottom: 20
+                              value={firstName}
+                              onChange={handleChange}
+                              placeholder="Enter Firstname"
+                              InputLabelProps={{
+                                shrink: true,
                               }}
-                              color="secondary"
-                              gutterBottom
-                            >
-                              Destination account
-                            </Typography>
-                            <FormControl
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={4}>
+                            <TextField
+                              id="outlined-lastName"
+                              label="Last Name"
                               variant="outlined"
-                              className={classes.formControl}
+                              name="lastName"
+                              value={lastName}
+                              onChange={handleChange}
+                              placeholder="Enter Lastname"
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={4}>
+                            <TextField
+                              id="outlined-nin-input"
+                              label="National ID Number"
+                              autoComplete="national-id-number"
+                              variant="outlined"
+                              name="NationalIdNo"
+                              value={NationalIdNo}
+                              onChange={handleChange}
+                              placeholder="Enter National ID Number"
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={4}>
+                            <TextField
+                              id="outlined-dob-input"
+                              label="Date of Birth"
+                              variant="outlined"
+                              type="date"
+                              format="dd/mm/yyyy"
+                              name="dob"
+                              // value={dob}
+                              onChange={handleChange}
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={4}>
+                            <TextField
+                              id="outlined-email"
+                              label="Email Address"
+                              type="email"
+                              variant="outlined"
+                              name="email"
+                              value={email}
+                              onChange={handleChange}
+                              placeholder="Enter Email Address"
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={4}>
+                            <TextField
+                              id="outlined-mobile"
+                              label="Mobile Number"
+                              type="number"
+                              variant="outlined"
+                              name="mobile"
+                              value={mobile}
+                              onChange={handleChange}
+                              placeholder="Enter Mobile Number"
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                            />
+                          </Grid>
+                          <Grid item xs={12} style={{padding: 0}}>
+                            <Grid item xs={12} sm={4} style={{float: "right"}}>
+                              <FormGroup row>
+                                <FormControlLabel
+                                  style={{marginTop: '-15px', marginLeft:0, marginRight:0}}
+                                  control={
+                                    <Checkbox
+                                      name="mobileCheck"
+                                      checked={this.state.mobileCheck}
+                                      onChange={this.handleTerms}
+                                      value="check"
+                                    />
+                                  }
+                                  label={<Typography variant='body2' style={{fontSize: '0.5rem'}}>
+                                    By clicking the button you opt in for sms notification
+                                    of offerings sms charges apply
+                                  </Typography>}
+                                />
+                              </FormGroup>
+                            </Grid>
+                          </Grid>
+                          <Grid item xs={12} sm={8}>
+                            <TextField
+                              id="outlined-address"
+                              label="Physical Address Information"
+                              variant="outlined"
+                              name="address"
+                              value={address}
+                              onChange={handleChange}
+                              placeholder="Enter your home address, please specify street name or use location finder"
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={2}>
+                            <TextField
+                              required
+                              id="outlined-select-state"
+                              select
+                              label="Current State"
+                              name="state"
+                              value={state}
+                              onChange={handleChange}
+                              variant="outlined"
+                              placeholder="Select State"
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
                             >
-                              <Select
-                                value={this.state.repaimentAccount}
-                                onChange={this.handleChange}
-                                input={
-                                  <OutlinedInput
-                                    labelWidth={this.state.labelWidth}
-                                    name="repaimentAccount"
-                                  />
-                                }
-                              >
-                                <MenuItem value="">
-                                  <em></em>
+                              {states.map((option) => (
+                                <MenuItem key={option.state.id} value={option.state.name}>
+                                  {option.state.name}
                                 </MenuItem>
-                                <MenuItem value={"0297 00988200918"}>
-                                  Account one
+                              ))}
+                            </TextField>
+                          </Grid>
+                          <Grid item xs={12} sm={2}>
+                            <TextField
+                              disabled={!state ? true : false}
+                              id="outlined-select-city"
+                              select
+                              label="Current City"
+                              name="city"
+                              value={city}
+                              onChange={handleChange}
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                              variant="outlined"
+                            >
+                              {state? (this.getCity(state)[0].state.locals.map((option) => (
+                                <MenuItem key={option.id} value={option.name}>
+                                  {option.name}
                                 </MenuItem>
-                                <MenuItem value={"0235 00235233332"}>
-                                  Account two
+                              ))) : (this.getCity('Lagos State')[0].state.locals.map((option) => (
+                                <MenuItem key={option.id} value={option.name}>
+                                  {option.name}
                                 </MenuItem>
-                                <MenuItem value={"1256 00864222212"}>
-                                  Other account
-                                </MenuItem>
-                              </Select>
-                            </FormControl>
+                              )))}
+                            </TextField>
+                          </Grid>
+                          <Grid item xs={12} style={{padding: 0}}>
+                            <Grid item xs={12} sm={4} style={{float: "left"}}>
+                              <FormGroup row>
+                                <FormControlLabel
+                                  style={{marginTop: '-15px', marginLeft:0, marginRight:0}}
+                                  control={
+                                    <Checkbox
+                                      name="addressCheck"
+                                      checked={this.state.addressCheck}
+                                      onChange={this.handleTerms}
+                                      value="check"
+                                    />
+                                  }
+                                  label={<Typography variant='body2' style={{fontSize: '0.5rem'}}>
+                                    Please indicate if your address has changed in the past
+                                    3 years.
+                                  </Typography>}
+                                />
+                              </FormGroup>
+                            </Grid>
                           </Grid>
                         </Grid>
-                      </Paper>
-                    </div>
+                      </form>
+                    </Paper>
+                     //
+                  )}
+                  {activeStep === 2 && (
+                    <Paper className={classes.paper}>
+                      <Typography className={classes.formLabel} variant="caption">DEMOGRAPHICS</Typography>
+                      <form className={classes.formControl} noValidate autoComplete="off">
+                        <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
+                          <Grid item xs={12} sm={4}>
+                            <TextField
+                              required
+                              id="outlined-select-gender"
+                              select
+                              label="Gender"
+                              name="gender"
+                              value={gender}
+                              onChange={handleChange}
+                              variant="outlined"
+                              placeholder="Please pick your gender"
+                              InputLabelProps={{
+                                shrink: true,
+                              }}>
+                              <MenuItem key='male' value='male'>
+                                Male
+                              </MenuItem>
+                              <MenuItem key='female' value='female'>
+                                Female
+                              </MenuItem>
+                            </TextField>
+                          </Grid>
+                          <Grid item xs={12} sm={4}>
+                            <TextField
+                              id="outlined-select-education"
+                              select
+                              label="Education"
+                              placeholder="Education"
+                              name="education"
+                              value={education}
+                              onChange={handleChange}
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                              variant="outlined"
+                            >
+                              {edulist.map((level) => (
+                                <MenuItem key={level} value={level}>
+                                  {level}
+                                </MenuItem>
+                              ))}
+                            </TextField>
+                          </Grid>
+                          <Grid item xs={12} sm={4}>
+                            <TextField
+                              fullWidth
+                              required
+                              name="ethnicity"
+                              id="outlined-ethnicity"
+                              label="Ethnicity"
+                              variant="outlined"
+                              value={ethnicity}
+                              onChange={handleChange}
+                              placeholder="Enter Ethnicity"
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                            />
+                          </Grid>
+                          <Grid item xs={12}>
+                            <TextField
+                              fullWidth
+                              id="outlined-multiline-static"
+                              label="Have Any Questions?"
+                              placeholder="Leave a message"
+                              multiline
+                              rows={4}
+                              variant="outlined"
+                              name="questions"
+                              value={questions}
+                              onChange={handleChange}
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                            />
+                          </Grid>
+                        </Grid>
+                      </form>
+                    </Paper>
                   )}
                   {activeStep === 3 && (
+                    <Paper className={classes.paper}>
+                      <Typography className={classes.formLabel} variant="caption">ELIGIBILITY</Typography>
+                      <Paper className={successPaper}>
+                        <Typography className={classes.successText} variant='body2'>Congratulations!!</Typography>
+                        <Typography className={classes.successText} variant='body2'>You have prequalified for the loan of $3000 your repayment plan would be $55 to $155 over a period of 16 months.</Typography>
+                        <Typography className={classes.successText} variant='body2'>Would you like to proceed?</Typography>
+                      </Paper>
+                      <form className={classes.formControl} noValidate autoComplete="off">
+                        <Grid container spacing={2} style={{margin: '20px 0', width: '100%'}}>
+                          <Grid item xs={12} sm={4}>
+                            <TextField
+                              required
+                              id="outlined-select-gender"
+                              select
+                              label="Eligibility for grace period"
+                              name="gracePeriod"
+                              value={gracePeriod}
+                              onChange={handleChange}
+                              variant="outlined"
+                              InputLabelProps={{
+                                shrink: true,
+                              }}>
+                              <MenuItem key='long' value='long'>
+                                Long
+                              </MenuItem>
+                              <MenuItem key='short' value='short'>
+                                Short
+                              </MenuItem>
+                            </TextField>
+                          </Grid>
+                          <Grid item xs={12} sm={4}>
+                            <TextField
+                              id="outlined-select-education"
+                              select
+                              label="Do you have a credit score?"
+                              name="hascreditScore"
+                              value={hascreditScore}
+                              onChange={handleChange}
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                              variant="outlined"
+                            >
+                              <MenuItem key='1' value={true}>
+                                Yes
+                              </MenuItem>
+                              <MenuItem key='0' value={false}>
+                                No
+                              </MenuItem>
+                            </TextField>
+                          </Grid>
+                          <Grid item xs={12} sm={4}>
+                            <TextField
+                              fullWidth
+                              disabled={!hascreditScore? true : false}
+                              name="creditScore"
+                              id="outlined-creditScore"
+                              label="If yes, please provide your credit score"
+                              variant="outlined"
+                              value={creditScore}
+                              onChange={handleChange}
+                              placeholder="Enter Credit Score"
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                            />
+                          </Grid>
+                        </Grid>
+                        <Typography className={classes.formCaption} variant='caption'>
+                          DEBIT & RECONCILIATION AUTHORIZATION
+                        </Typography>
+                        <Grid container spacing={2} style={{margin: '20px 0', width: '100%'}}>
+                          <Grid item xs={12} sm={4}>
+                            <TextField
+                              id="outlined-select-repayment-plan"
+                              select
+                              label="How would you like to repay your loan?"
+                              name="repaymentPlan"
+                              value={repaymentPlan}
+                              onChange={handleChange}
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                              variant="outlined"
+                            >
+                              <MenuItem key='1' value={true}>
+                                Yes
+                              </MenuItem>
+                              <MenuItem key='0' value={false}>
+                                No
+                              </MenuItem>
+                            </TextField>
+                          </Grid>
+                          <Grid item xs={12} sm={4}>
+                            <TextField
+                              id="outlined-select-bank-name"
+                              select
+                              label="Bank Name"
+                              placeholder="Enter Bank Name"
+                              name="bankName"
+                              value={bankName}
+                              onChange={handleChange}
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                              variant="outlined"
+                            >
+                              {edulist.map((level) => (
+                                <MenuItem key={level} value={level}>
+                                  {level}
+                                </MenuItem>
+                              ))}
+                            </TextField>
+                          </Grid>
+                          <Grid item xs={12} sm={4}>
+                            <TextField
+                              fullWidth
+                              required
+                              type="number"
+                              name="accountNumber"
+                              id="outlined-accountNumber"
+                              label="Account Number"
+                              variant="outlined"
+                              value={accountNumber}
+                              onChange={handleChange}
+                              placeholder="Enter Account Number"
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                            />
+                          </Grid>
+                          <Grid item xs={12}>
+                            <TextField
+                              fullWidth
+                              id="outlined-multiline-static"
+                              label="Have Any Questions?"
+                              placeholder="Leave a message"
+                              multiline
+                              rows={4}
+                              variant="outlined"
+                              name="questions"
+                              value={questions}
+                              onChange={handleChange}
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                            />
+                          </Grid>
+                        </Grid>
+                      </form>
+                    </Paper>
+                  )}
+                  {activeStep === 4 && (
                     <div className={classes.bigContainer}>
                       <Paper className={classes.paper}>
                         <div style={{ marginBottom: 24 }}>
@@ -635,26 +840,6 @@ class LoanApplicationForm extends Component {
                       </Paper>
                     </div>
                   )}
-                  {activeStep === 4 && (
-                    <div className={classes.smallContainer}>
-                      <Paper className={classes.paper}>
-                        <Grid item container xs={12}>
-                          <Grid item xs={12}>
-                            <Typography
-                              variant="subtitle1"
-                              style={{ fontWeight: "bold" }}
-                              gutterBottom
-                            >
-                              Sign & confirm
-                            </Typography>
-                            <Typography variant="body1" gutterBottom>
-                              Sign and confirm your agreement
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </Paper>
-                    </div>
-                  )}
                   {(activeStep === 5 || activeStep === 6) && (
                     <div className={classes.smallContainer}>
                       <Paper className={classes.paper}>
@@ -662,15 +847,23 @@ class LoanApplicationForm extends Component {
                           <Grid item xs={12}>
                             <Typography variant="subtitle1" gutterBottom>
                               Congratulations{" "}
-                              <span role="img" aria-label="conrats emoji">
-                                🎉
+                              <span >
+                                {firstName}!!!
                               </span>
                             </Typography>
                             <Typography variant="body1" gutterBottom>
-                              We have now a positive response
+                              Congratulations!
+                            </Typography>
+                            <Typography variant="body1" gutterBottom>
+                              An email has been sent to you with your loan application ID.
+                              If you wish to make enquiries about your loan,
+                              please send an email to borrow@lendpop.com.
+                            </Typography>
+                            <Typography variant="body1" gutterBottom>
+                              Your dashboard is ready for you to review your loan history
                             </Typography>
                             <Button fullWidth variant="outlined">
-                              Download the service invoice or whatever
+                              Back to Dashboard
                             </Button>
                           </Grid>
                         </Grid>
@@ -680,6 +873,8 @@ class LoanApplicationForm extends Component {
                   <div className={classes.flexBar}>
                     {activeStep !== 5 && (
                       <Button
+                        fullWidth
+                        variant="outlined"
                         disabled={activeStep === 0}
                         onClick={this.handleBack}
                         className={classes.backButton}
@@ -689,6 +884,7 @@ class LoanApplicationForm extends Component {
                       </Button>
                     )}
                     <Button
+                      fullWidth
                       variant="contained"
                       color="primary"
                       onClick={
