@@ -146,7 +146,7 @@ const getSteps = () => {
 
 class LoanApplicationForm extends Component {
   state = {
-    activeStep: 3,
+    activeStep: 0,
     termsChecked: false,
     labelWidth: 0,
     firstName: '',
