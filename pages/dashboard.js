@@ -129,6 +129,7 @@ const useStyles = theme => ({
     }
   },
 });
+const localStorage = window.localStorage;
 
 class Dashboard extends Component {
   constructor(props) {

@@ -19,6 +19,7 @@ import theme from '../src/theme';
 import { withStyles, styled } from '@material-ui/core/styles';
 import Copyright from './copyright';
 
+const localStorage = window.localStorage;
 const useStyles = theme => ({
   root: {
     height: '100vh',

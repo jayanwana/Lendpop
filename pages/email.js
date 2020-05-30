@@ -18,7 +18,7 @@ import Api from '../utils/axios.service';
 import theme from '../src/theme';
 import Copyright from '../components/copyright';
 
-
+const localStorage = window.localStorage;
 const useStyles = makeStyles((theme) => ({
   root: {
     height: '100vh',
