@@ -13,6 +13,7 @@ import { mainListItems, secondaryListItems } from '../components/listItems';
 import Copyright from '../components/copyright';
 import theme from '../src/theme';
 
+const localStorage = require('local-storage')
 const drawerWidth = 240;
 
 const useStyles = theme => ({
@@ -129,7 +130,7 @@ const useStyles = theme => ({
     }
   },
 });
-const localStorage = window.localStorage;
+
 
 class Dashboard extends Component {
   constructor(props) {
@@ -143,7 +144,7 @@ class Dashboard extends Component {
     this.submit = this.submit.bind(this);
   }
   componentDidMount() {
-    this.setState({ firstName : localStorage.getItem('firstName')})
+    this.setState({ firstName : localStorage('firstName') ? localStorage('firstName') : ''})
   }
   handleDrawer() {
     this.setState({open: !this.state.open})

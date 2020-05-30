@@ -10,6 +10,7 @@
     "axios": "^0.19.2",
     "clsx": "latest",
     "date-fns": "^2.14.0",
+    "local-storage": "^2.0.0",
     "next": "latest",
     "next-images": "^1.4.0",
     "numeral": "^2.0.6",

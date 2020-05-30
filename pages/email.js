@@ -18,7 +18,7 @@ import Api from '../utils/axios.service';
 import theme from '../src/theme';
 import Copyright from '../components/copyright';
 
-const localStorage = window.localStorage;
+const localStorage = require('local-storage')
 const useStyles = makeStyles((theme) => ({
   root: {
     height: '100vh',
@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function EmailVerification(props) {
-  const firstName = localStorage.getItem('firstName')
+  const firstName = localStorage('firstName') ? localStorage('firstName') : 'User'
 
   const classes = useStyles();
 

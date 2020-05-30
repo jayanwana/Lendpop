@@ -19,7 +19,7 @@ import theme from '../src/theme';
 import { withStyles, styled } from '@material-ui/core/styles';
 import Copyright from './copyright';
 
-const localStorage = window.localStorage;
+const localStorage = require('local-storage')
 const useStyles = theme => ({
   root: {
     height: '100vh',
@@ -180,7 +180,7 @@ class SignUp extends Component {
       last_name: this.state.lastName,
       email: this.state.email,
     }
-    localStorage.setItem('firstName', this.state.firstName)
+    localStorage('firstName', this.state.firstName)
     console.log(JSON.stringify(postData));
     Router.push('/email')
   }
