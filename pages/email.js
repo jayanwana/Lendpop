@@ -17,7 +17,8 @@ import Container from '@material-ui/core/Container';
 import Api from '../utils/axios.service';
 import theme from '../src/theme';
 import Copyright from '../components/copyright';
-var localStorage = require('local-storage');
+
+const localStorage = require('local-storage')
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,7 +46,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function EmailVerification(props) {
-  const firstName = localStorage('firstName')
+
+  const firstName = localStorage('firstName') ? localStorage('firstName') : 'User'
 
   const classes = useStyles();
 

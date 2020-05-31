@@ -14,6 +14,7 @@ import Copyright from '../components/copyright';
 import theme from '../src/theme';
 var localStorage = require('local-storage');
 
+const localStorage = require('local-storage')
 const drawerWidth = 240;
 
 const useStyles = theme => ({
@@ -131,6 +132,7 @@ const useStyles = theme => ({
   },
 });
 
+
 class Dashboard extends Component {
   constructor(props) {
     super (props);
@@ -143,7 +145,7 @@ class Dashboard extends Component {
     this.submit = this.submit.bind(this);
   }
   componentDidMount() {
-    this.setState({ firstName : localStorage('firstName')})
+    this.setState({ firstName : localStorage('firstName') ? localStorage('firstName') : ''})
   }
   handleDrawer() {
     this.setState({open: !this.state.open})

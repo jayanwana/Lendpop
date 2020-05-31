@@ -20,6 +20,7 @@ import { withStyles, styled } from '@material-ui/core/styles';
 import Copyright from './copyright';
 var localStorage = require('local-storage');
 
+const localStorage = require('local-storage')
 const useStyles = theme => ({
   root: {
     height: '100vh',
