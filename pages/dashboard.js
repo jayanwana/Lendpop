@@ -12,7 +12,6 @@ import LoanApplicationForm from '../components/loanApplicationForm';
 import { mainListItems, secondaryListItems } from '../components/listItems';
 import Copyright from '../components/copyright';
 import theme from '../src/theme';
-var localStorage = require('local-storage');
 
 const localStorage = require('local-storage')
 const drawerWidth = 240;

@@ -18,7 +18,6 @@ import Typography from '@material-ui/core/Typography';
 import theme from '../src/theme';
 import { withStyles, styled } from '@material-ui/core/styles';
 import Copyright from './copyright';
-var localStorage = require('local-storage');
 
 const localStorage = require('local-storage')
 const useStyles = theme => ({
