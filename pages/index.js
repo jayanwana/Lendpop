@@ -14,8 +14,6 @@ export default function Index() {
       <Head>
         <title>LendPop</title>
       </Head>
-      <Container>
-        <SignUpComponent/>
-      </Container>
+      <SignUpComponent/>
     </div>
   )}
