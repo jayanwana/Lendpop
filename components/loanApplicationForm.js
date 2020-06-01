@@ -67,10 +67,14 @@ const styles = theme => ({
     margin: theme.spacing(1)
   },
   stepper: {
-    backgroundColor: "transparent"
+    backgroundColor: "transparent",
+    "@media screen and (max-width: 600px)":{
+      display: "none"
+    }
   },
 
   title: {
+    fontSize: "1rem",
     flexGrow: 0,
     textAlign: 'left',
     color: theme.palette.secondary.main
@@ -104,7 +108,7 @@ const styles = theme => ({
     fontSize: '0.8rem',
   },
   fixedHeight: {
-    height: 240,
+    height: 250,
   },
   topInfo: {
     display: "flex",
@@ -131,7 +135,10 @@ const styles = theme => ({
     display: "flex",
     justifyContent: "center",
     alignSelf: "flex-end",
-    width: '40%'
+    width: '40%',
+    "@media screen and (max-width: 600px)":{
+      marginRight: '15px'
+    }
   }
 });
 
@@ -151,7 +158,7 @@ class LoanApplicationForm extends Component {
     termsChecked: false,
     banks: [],
     labelWidth: 0,
-    firstName: '',
+    firstName: this.props.firstName,
     lastName: '',
     NationalIdNo: '',
     dob: '',
@@ -280,35 +287,62 @@ class LoanApplicationForm extends Component {
                     <Grid container spacing={2}>
                       <Grid item sm={12} md={6}>
                         <Paper className={fixedHeightPaper}>
-                          <Typography className= {classes.title} variant="subtitle2" >Loan Instructions</Typography>
-                          <Typography variant="body2"> is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
-                            been the industry’s standard dummy text ever since the 1500s, when an unkno
-                            wn printer took a galley of type and scrambled it to make a type specimen boo
-                            k. It has survived not only five centuries, but also the leap into electronic typese
-                            tting, remaining essentially unchanged. It was popularised in the 1960s with the
-                            release of Letraset sheets containing Lorem Ipsum passages, and more recen
-                            tly with desktop publishing software like Aldus PageMaker including versions
-                            of Lorem Ipsum.
+                          <Typography className= {classes.title} variant="subtitle1" >Loan Application Instructions</Typography>
+                          <Typography variant="body2">
+                            Welcome to the lendpop application portal {firstName},
+                          </Typography>
+                          <Typography variant="body2">
+                            we will walk you through the easy process as you continue your application.
+                          </Typography>
+                          <Typography variant="body2">
+                            Please have the following documents avalable:
+                          </Typography>
+                          <ul>
+                            <li>Basic information about yourself, your business</li>
+                            <li>For business loans, specify correctly your RCN, tax clearance identication</li>
+                            <li>A picture of you for your loan profile</li>
+                          </ul>
+                          <Typography variant="body2">
+                            Your application is automatically saved as you go through the process
+                          </Typography>
+                          <Typography variant="body2">
+                            For inquiries please send an email to borrow@lendpop.com
                           </Typography>
                         </Paper>
                       </Grid>
                       <Grid item sm={12} md={6}>
                         <Paper className={fixedHeightPaper}>
-                          <Typography variant="h2">Some more legal Bs</Typography>
-                          <FormGroup row>
-                            <FormControlLabel
-                              control={
-                                <Checkbox
-                                  name="termsChecked"
-                                  checked={this.state.termsChecked}
-                                  onChange={this.handleTerms}
-                                  value="check"
-                                />
-                              }
-                              label={Label}
-                            />
-                          </FormGroup>
+                          <Typography className= {classes.title} variant="subtitle1" >Application requirements</Typography>
+                          <Typography variant="body2">
+                            The following are specific requirements for applying for POP lending
+                          </Typography>
+                          <ul>
+                            <li>Read instructions</li>
+                            <li>Provide all other personal information</li>
+                            <li>Employment history </li>
+                            <li>BVN </li>
+                            <li>Bank details</li>
+                            <li>Documents for account statements</li>
+                          </ul>
+
+                          <Typography variant="body2">
+                            Click next to proceed to the next stage of your LendPOP application
+                          </Typography>
+
                         </Paper>
+                        <FormGroup row>
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                name="termsChecked"
+                                checked={this.state.termsChecked}
+                                onChange={this.handleTerms}
+                                value="check"
+                              />
+                            }
+                            label={Label}
+                          />
+                        </FormGroup>
                       </Grid>
                     </Grid>
                   )}
@@ -894,7 +928,7 @@ class LoanApplicationForm extends Component {
                       variant="contained"
                       color="primary"
                       onClick={
-                        activeStep !== 5 ? this.handleNext : this.goToDashboard
+                        activeStep !== 5 ? this.handleNext : this.props.handler
                       }
                       size="large"
                       disabled={
