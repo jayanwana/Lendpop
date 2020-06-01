@@ -23,7 +23,7 @@ const localStorage = require('local-storage')
 const useStyles = theme => ({
   root: {
     height: '100vh',
-    backgroundImage: 'url(https://source.unsplash.com/random)',
+    backgroundImage: 'url(' + `${require('../public/images/ssig-up.png')}` + ')',
     backgroundRepeat: 'no-repeat',
     backgroundColor:
       theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
@@ -31,10 +31,12 @@ const useStyles = theme => ({
     backgroundPosition: 'center',
   },
   paperroot: {
-    height: '90%',
-    marginLeft: '30px',
-    alignSelf: 'center',
-    borderRadius: '10px'
+    "@media screen and (min-width: 600px)": {
+      height: '90%',
+      marginLeft: '30px',
+      alignSelf: 'center',
+      borderRadius: '10px'
+    }
   },
   paper: {
     margin: '2rem 32px',
@@ -43,6 +45,7 @@ const useStyles = theme => ({
     alignItems: 'center',
     textAlign: "left",
     fontSize: "0.6rem",
+    alignItems: 'flex-start'
   },
   avatar: {
     margin: theme.spacing(1),
@@ -55,7 +58,6 @@ const useStyles = theme => ({
   },
   submit: {
     borderRadius: '20px',
-    margin: theme.spacing(3, 0, 2),
   },
   sliderLabel: {
     marginTop: '1rem'
@@ -67,7 +69,7 @@ const useStyles = theme => ({
     padding: "0 2em",
     border: `1px solid ${theme.palette.secondary.main}`,
     borderRadius: "35px",
-    marginTop: '2rem'
+    marginTop: '1rem'
   }
 });
 
@@ -193,9 +195,9 @@ class SignUp extends Component {
     return (
       <Grid container component="main" className={classes.root}>
         <CssBaseline />
-        <Grid className={classes.paperroot} item xs={12} sm={8} md={5} lg={4} component={Paper} elevation={6} square>
+        <Grid className={classes.paperroot} item xs={12} sm={6} md={4} lg={4} component={Paper} elevation={6} square>
           <div className={classes.paper}>
-            <Typography component="h4" variant="h5">
+            <Typography component="h4" variant="h5" style={{color: theme.palette.secondary.main}}>
               Sign up
             </Typography>
             <Typography>You are a step closer to joining thousands of people who trust us to back their financial needs</Typography>
