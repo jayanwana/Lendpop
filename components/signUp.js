@@ -32,7 +32,7 @@ const useStyles = theme => ({
   },
   paperroot: {
     "@media screen and (min-width: 600px)": {
-      height: '90%',
+      height: 'auto',
       marginLeft: '30px',
       alignSelf: 'center',
       borderRadius: '10px'
