@@ -18,13 +18,11 @@ import Typography from '@material-ui/core/Typography';
 import theme from '../src/theme';
 import { withStyles, styled } from '@material-ui/core/styles';
 import Copyright from './copyright';
-var localStorage = require('local-storage');
 
+const localStorage = require('local-storage')
 const useStyles = theme => ({
   root: {
     height: '100vh',
-  },
-  image: {
     backgroundImage: 'url(https://source.unsplash.com/random)',
     backgroundRepeat: 'no-repeat',
     backgroundColor:
@@ -32,13 +30,19 @@ const useStyles = theme => ({
     backgroundSize: 'cover',
     backgroundPosition: 'center',
   },
+  paperroot: {
+    height: '90%',
+    marginLeft: '30px',
+    alignSelf: 'center',
+    borderRadius: '10px'
+  },
   paper: {
-    margin: theme.spacing(8, 4),
+    margin: '2rem 32px',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     textAlign: "left",
-    fontSize: "0.6rem"
+    fontSize: "0.6rem",
   },
   avatar: {
     margin: theme.spacing(1),
@@ -47,16 +51,14 @@ const useStyles = theme => ({
   form: {
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(1),
+    flexShrink: 1
   },
   submit: {
     borderRadius: '20px',
     margin: theme.spacing(3, 0, 2),
   },
-  item2: {
-    textAlign: 'center !important',
-  },
   sliderLabel: {
-    marginTop: '2rem'
+    marginTop: '1rem'
  },
   value:{
     color: theme.palette.secondary.main,
@@ -191,7 +193,7 @@ class SignUp extends Component {
     return (
       <Grid container component="main" className={classes.root}>
         <CssBaseline />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+        <Grid className={classes.paperroot} item xs={12} sm={8} md={5} lg={4} component={Paper} elevation={6} square>
           <div className={classes.paper}>
             <Typography component="h4" variant="h5">
               Sign up
@@ -210,7 +212,11 @@ class SignUp extends Component {
                 name="firstName"
                 autoComplete="first name"
                 autoFocus
+                size="small"
                 onChange={this.handleInputChange}
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
               <TextField
                 variant="outlined"
@@ -221,7 +227,11 @@ class SignUp extends Component {
                 label="Last Name"
                 id="outlined-lastName"
                 autoComplete="last name"
+                size="small"
                 onChange={this.handleInputChange}
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
               <TextField
                 variant="outlined"
@@ -233,7 +243,11 @@ class SignUp extends Component {
                 name="email"
                 autoComplete="email"
                 autoFocus
+                size="small"
                 onChange={this.handleInputChange}
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
               <Typography className={classes.sliderLabel} variant="caption" display="block" gutterBottom>How much would you like to lend <span className={classes.value}>{this.convertPrincipal(principal)}</span> </Typography>
               <PrettoSlider
@@ -284,7 +298,6 @@ class SignUp extends Component {
             </form>
           </div>
         </Grid>
-        <Grid item xs={false} sm={4} md={7} className={classes.image} />
       </Grid>
     )
     }

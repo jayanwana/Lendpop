@@ -10,6 +10,7 @@
     "axios": "^0.19.2",
     "clsx": "latest",
     "date-fns": "^2.14.0",
+    "local-storage": "^2.0.0",
     "next": "latest",
     "next-images": "^1.4.0",
     "numeral": "^2.0.6",
@@ -20,8 +21,9 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start",
-    "post-update": "echo \"codesandbox preview only, need an update\" && yarn upgrade --latest"
+    "start": "next start -p $PORT",
+    "post-update": "echo \"codesandbox preview only, need an update\" && yarn upgrade --latest",
+    "heroku-postbuild": "npm run build"
   },
   "devDependencies": {
     "babel-plugin-import": "^1.13.0",

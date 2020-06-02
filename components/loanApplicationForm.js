@@ -22,6 +22,7 @@ import numeral from "numeral";
 import StepIcon from '@material-ui/core/StepIcon';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
+import Paystack from '../utils/axios.paystack';
 import states from './statedata.json';
 
 const qs = require("query-string");
@@ -146,8 +147,9 @@ const getSteps = () => {
 
 class LoanApplicationForm extends Component {
   state = {
-    activeStep: 3,
+    activeStep: 0,
     termsChecked: false,
+    banks: [],
     labelWidth: 0,
     firstName: '',
     lastName: '',
@@ -172,7 +174,12 @@ class LoanApplicationForm extends Component {
     accountNumber: '',
   };
 
-  componentDidMount() {}
+  componentDidMount() {
+    Paystack.banks().then(response => {
+      this.setState({banks: response.data.data})
+      console.log(this.state.banks);
+    }).catch(error => console.log(error))
+  }
 
   handleNext = () => {
     this.setState(state => ({
@@ -223,8 +230,7 @@ class LoanApplicationForm extends Component {
   getCity = name => {
     return states.filter(state => {
       return state.state.name == name
-    }
-    )
+    })
   }
 
   render() {
@@ -236,7 +242,7 @@ class LoanApplicationForm extends Component {
     const { activeStep, firstName, lastName, gracePeriod, hascreditScore, creditScore,
       NationalIdNo, email, dob, mobile, gender, education, ethnicity, questions,
       address, city, state, mobileCheck, addressCheck, repaymentPlan, bankName,
-      accountNumber,
+      accountNumber, banks,
     } = this.state;
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
     const successPaper = clsx(classes.paper, classes.successPaper);
@@ -272,7 +278,7 @@ class LoanApplicationForm extends Component {
                   </div>
                   {activeStep === 0 && (
                     <Grid container spacing={2}>
-                      <Grid item xs={6}>
+                      <Grid item sm={12} md={6}>
                         <Paper className={fixedHeightPaper}>
                           <Typography className= {classes.title} variant="subtitle2" >Loan Instructions</Typography>
                           <Typography variant="body2"> is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
@@ -286,7 +292,7 @@ class LoanApplicationForm extends Component {
                           </Typography>
                         </Paper>
                       </Grid>
-                      <Grid item xs={6}>
+                      <Grid item sm={12} md={6}>
                         <Paper className={fixedHeightPaper}>
                           <Typography variant="h2">Some more legal Bs</Typography>
                           <FormGroup row>
@@ -680,11 +686,11 @@ class LoanApplicationForm extends Component {
                               }}
                               variant="outlined"
                             >
-                              <MenuItem key='1' value={true}>
-                                Yes
+                              <MenuItem key='1' value="Bank">
+                                Bank
                               </MenuItem>
-                              <MenuItem key='0' value={false}>
-                                No
+                              <MenuItem key='0' value="Card">
+                                Card
                               </MenuItem>
                             </TextField>
                           </Grid>
@@ -702,9 +708,9 @@ class LoanApplicationForm extends Component {
                               }}
                               variant="outlined"
                             >
-                              {edulist.map((level) => (
-                                <MenuItem key={level} value={level}>
-                                  {level}
+                              {banks.map((bank) => (
+                                <MenuItem key={bank.id} value={bank.name}>
+                                  {bank.name}
                                 </MenuItem>
                               ))}
                             </TextField>
