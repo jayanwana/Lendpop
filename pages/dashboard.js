@@ -5,6 +5,10 @@ import {AppBar, CssBaseline, Paper, Typography,
   Grid, Slider, Button, Avatar, Box, Badge, Divider,
   IconButton, List, Drawer, Toolbar, Container, TextField,
 } from "@material-ui/core/";
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItem from '@material-ui/core/ListItem';
+import DashboardIcon from '@material-ui/icons/Dashboard';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
@@ -13,11 +17,13 @@ import { mainListItems, secondaryListItems } from '../components/listItems';
 import Copyright from '../components/copyright';
 import theme from '../src/theme';
 
+const localStorage = require('local-storage')
 const drawerWidth = 240;
 
 const useStyles = theme => ({
   root: {
     display: 'flex',
+    backgroundColor: "rgba(131, 210, 217, 0.05)"
   },
   toolbar: {
     paddingRight: 24, // keep right padding when drawer closed
@@ -129,24 +135,32 @@ const useStyles = theme => ({
     }
   },
 });
-const localStorage = window.localStorage;
+
 
 class Dashboard extends Component {
   constructor(props) {
     super (props);
     this.state = {
-      open: true,
-      questions: false,
+      open: false,
+      questions: true,
       firstName: ''
     }
     this.handleDrawer = this.handleDrawer.bind(this);
     this.submit = this.submit.bind(this);
+    this.continueApplication = this.continueApplication.bind(this);
+    this.reset = this.reset.bind(this);
   }
   componentDidMount() {
-    this.setState({ firstName : localStorage.getItem('firstName')})
+    this.setState({ firstName : localStorage('firstName') ? localStorage('firstName') : ''})
+  }
+  continueApplication(){
+    this.setState({questions: !this.state.questions})
   }
   handleDrawer() {
     this.setState({open: !this.state.open})
+  }
+  reset(){
+    this.setState({questions: true})
   }
   submit(event) {
     event.preventDefault()
@@ -169,11 +183,19 @@ class Dashboard extends Component {
         >
           <div className={classes.toolbarIcon}>
             <IconButton onClick={this.handleDrawer}>
+              {open && <img src={require('../public/images/lend-pop.png')} />}
               <ChevronLeftIcon />
             </IconButton>
           </div>
           <Divider/>
-          <List>{mainListItems}</List>
+          <List>
+            <ListItem button onClick={this.reset}>
+              <ListItemIcon>
+                <DashboardIcon />
+              </ListItemIcon>
+              <ListItemText primary="Dashboard" />
+            </ListItem>
+          </List>
           <Divider />
           {/* <List>{secondaryListItems}</List> */}
         </Drawer>
@@ -204,6 +226,7 @@ class Dashboard extends Component {
                     variant="outlined"
                     color="primary"
                     className={classes.gridButton}
+                    onClick={this.continueApplication}
                                                                                              >Continue my loan application</Button>
                   </Grid>
                   <Divider className={classes.divider} orientation="horizontal"/>
@@ -220,7 +243,7 @@ class Dashboard extends Component {
                     fullWidth
                     variant="outlined"
                     className={classes.gridButton}
-                                                   >Other applications</Button></Grid>
+                                                                                             >Other applications</Button></Grid>
                 </Grid>
               </Grid>
               {this.state.questions &&
@@ -245,15 +268,16 @@ class Dashboard extends Component {
                           variant="contained"
                           color="primary"
                           className={classes.submit}
+                          style={{marginTop: '10px'}}
                         >Send</Button>
                       </Grid>
                     </form>
 
                   </Paper>
                 </Grid>}
-              <Grid item xs={12}>
-                <LoanApplicationForm/>
-              </Grid>
+              {!this.state.questions && <Grid item xs={12}>
+                <LoanApplicationForm firstName={firstName} handler={this.continueApplication}/>
+              </Grid>}
             </Grid>
             <Box pt={4}>
               <Copyright />

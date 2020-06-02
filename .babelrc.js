@@ -1,4 +1,4 @@
-// const env = require('./env-config')
+const env = require('./env-config')
 const options = {
   "libraryName": "@material-ui/core",
   "ssr": false,
@@ -6,7 +6,7 @@ const options = {
 }
 module.exports = {
   presets: ['next/babel'],
-  "plugins": [["import", options]]
+  "plugins": [['transform-define', env]]
   // plugins: [['transform-define', env, "styled-jsx/babel"]],
 }
 
