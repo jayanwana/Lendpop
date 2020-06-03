@@ -143,7 +143,9 @@ class Dashboard extends Component {
     this.state = {
       open: false,
       questions: true,
-      firstName: ''
+      firstName: '',
+      lastName: '',
+      email: ''
     }
     this.handleDrawer = this.handleDrawer.bind(this);
     this.submit = this.submit.bind(this);
@@ -151,7 +153,11 @@ class Dashboard extends Component {
     this.reset = this.reset.bind(this);
   }
   componentDidMount() {
-    this.setState({ firstName : localStorage('firstName') ? localStorage('firstName') : ''})
+    this.setState({
+      firstName : localStorage('firstName') ? localStorage('firstName') : '',
+      lastName : localStorage('lastName') ? localStorage('lastName') : '',
+      email : localStorage('email') ? localStorage('email') : '',
+    })
   }
   continueApplication(){
     this.setState({questions: !this.state.questions})
@@ -170,7 +176,7 @@ class Dashboard extends Component {
   render() {
     const { classes } = this.props;
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-    const { open, firstName } = this.state;
+    const { open, firstName, email, lastName } = this.state;
     return (
       <div className={classes.root}>
         {/* <CssBaseline /> */}
@@ -276,7 +282,11 @@ class Dashboard extends Component {
                   </Paper>
                 </Grid>}
               {!this.state.questions && <Grid item xs={12}>
-                <LoanApplicationForm firstName={firstName} handler={this.continueApplication}/>
+                <LoanApplicationForm
+                  firstName={firstName}
+                  lastName={lastName}
+                  email={email}
+                  handler={this.continueApplication}/>
               </Grid>}
             </Grid>
             <Box pt={4}>

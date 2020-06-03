@@ -17,6 +17,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import theme from '../src/theme';
 import { withStyles, styled } from '@material-ui/core/styles';
+import Api from '../utils/axios.service';
 import Copyright from './copyright';
 
 const localStorage = require('local-storage')
@@ -184,8 +185,14 @@ class SignUp extends Component {
       last_name: this.state.lastName,
       email: this.state.email,
     }
-    localStorage('firstName', this.state.firstName)
-    console.log(JSON.stringify(postData));
+    for (let key in this.state) {
+      console.log(key);
+      if (['principal', 'period', 'monthlyPayment'].includes(key)){continue}
+      localStorage(key, this.state[key])
+    }
+    // Api.register(JSON.stringify(postData)).then(response => {
+    //   Router.push('/email');
+    // }).catch(error => console.log(error))
     Router.push('/email')
   }
 
@@ -251,7 +258,7 @@ class SignUp extends Component {
                   shrink: true,
                 }}
               />
-              <Typography className={classes.sliderLabel} variant="caption" display="block" gutterBottom>How much would you like to lend <span className={classes.value}>{this.convertPrincipal(principal)}</span> </Typography>
+              <Typography className={classes.sliderLabel} variant="caption" display="block" gutterBottom>How much would you like to borrow? <span className={classes.value}>{this.convertPrincipal(principal)}</span> </Typography>
               <PrettoSlider
                 aria-label="pretto slider"
                 name="principal"

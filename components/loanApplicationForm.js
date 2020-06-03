@@ -25,6 +25,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Paystack from '../utils/axios.paystack';
 import states from './statedata.json';
 
+const localStorage = require('local-storage')
 const qs = require("query-string");
 const backgroundShape = require("../public/images/shape.svg");
 
@@ -156,13 +157,12 @@ class LoanApplicationForm extends Component {
   state = {
     activeStep: 0,
     termsChecked: false,
-    banks: [],
     labelWidth: 0,
     firstName: this.props.firstName,
-    lastName: '',
+    lastName: this.props.lastName,
     NationalIdNo: '',
     dob: '',
-    email: '',
+    email: this.props.email,
     mobile: '',
     address: '',
     city: '',
@@ -179,13 +179,22 @@ class LoanApplicationForm extends Component {
     repaymentPlan: '',
     bankName: '',
     accountNumber: '',
+    banks: []
   };
 
   componentDidMount() {
+    const formData = JSON.parse(localStorage('state'))
+    if (formData){this.setState({...formData})};
     Paystack.banks().then(response => {
       this.setState({banks: response.data.data})
-      console.log(this.state.banks);
     }).catch(error => console.log(error))
+  }
+
+  componentDidUpdate() {
+    const data = {...this.state}
+    delete data.banks
+    console.log(data);
+    localStorage('state', JSON.stringify(data))
   }
 
   handleNext = () => {
@@ -220,7 +229,7 @@ class LoanApplicationForm extends Component {
       return "Accept";
     }
     if (this.state.activeStep === 3) {
-      return "Send";
+      return "Submit";
     }
     if (this.state.activeStep === 5) {
       return "Done";
@@ -404,7 +413,7 @@ class LoanApplicationForm extends Component {
                               type="date"
                               format="dd/mm/yyyy"
                               name="dob"
-                              // value={dob}
+                              value={dob}
                               onChange={handleChange}
                               InputLabelProps={{
                                 shrink: true,
