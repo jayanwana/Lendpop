@@ -11,6 +11,7 @@
     "clsx": "latest",
     "date-fns": "^2.14.0",
     "local-storage": "^2.0.0",
+    "material-ui-dropzone": "^3.1.0",
     "next": "latest",
     "next-images": "^1.4.0",
     "numeral": "^2.0.6",
