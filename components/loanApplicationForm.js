@@ -17,14 +17,16 @@ import Checkbox from "@material-ui/core/Checkbox";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import Back from "./common/Back";
-import numeral from "numeral";
 import StepIcon from '@material-ui/core/StepIcon';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
+import {DropzoneArea} from 'material-ui-dropzone'
+import Back from "./common/Back";
+import numeral from "numeral";
 import Paystack from '../utils/axios.paystack';
 import states from './statedata.json';
 
+const localStorage = require('local-storage')
 const qs = require("query-string");
 const backgroundShape = require("../public/images/shape.svg");
 
@@ -67,10 +69,14 @@ const styles = theme => ({
     margin: theme.spacing(1)
   },
   stepper: {
-    backgroundColor: "transparent"
+    backgroundColor: "transparent",
+    "@media screen and (max-width: 600px)":{
+      display: "none"
+    }
   },
 
   title: {
+    fontSize: "1rem",
     flexGrow: 0,
     textAlign: 'left',
     color: theme.palette.secondary.main
@@ -104,7 +110,7 @@ const styles = theme => ({
     fontSize: '0.8rem',
   },
   fixedHeight: {
-    height: 240,
+    height: 250,
   },
   topInfo: {
     display: "flex",
@@ -131,7 +137,10 @@ const styles = theme => ({
     display: "flex",
     justifyContent: "center",
     alignSelf: "flex-end",
-    width: '40%'
+    width: '40%',
+    "@media screen and (max-width: 600px)":{
+      marginRight: '15px'
+    }
   }
 });
 
@@ -149,13 +158,12 @@ class LoanApplicationForm extends Component {
   state = {
     activeStep: 0,
     termsChecked: false,
-    banks: [],
     labelWidth: 0,
-    firstName: '',
-    lastName: '',
+    firstName: this.props.firstName,
+    lastName: this.props.lastName,
     NationalIdNo: '',
     dob: '',
-    email: '',
+    email: this.props.email,
     mobile: '',
     address: '',
     city: '',
@@ -163,6 +171,9 @@ class LoanApplicationForm extends Component {
     gender: '',
     education: '',
     ethnicity:'',
+    employeeReference: '',
+    employeeNumber: '',
+    salary: '',
     questions:'',
     mobileCheck: false,
     addressCheck: false,
@@ -172,13 +183,24 @@ class LoanApplicationForm extends Component {
     repaymentPlan: '',
     bankName: '',
     accountNumber: '',
+    banks: [],
+    files: []
   };
 
   componentDidMount() {
+    const formData = JSON.parse(localStorage('state'))
+    if (formData){this.setState({...formData})};
     Paystack.banks().then(response => {
       this.setState({banks: response.data.data})
-      console.log(this.state.banks);
     }).catch(error => console.log(error))
+  }
+
+  componentDidUpdate() {
+    const data = {...this.state}
+    delete data.banks
+    delete data.files
+    console.log(data);
+    localStorage('state', JSON.stringify(data))
   }
 
   handleNext = () => {
@@ -213,7 +235,7 @@ class LoanApplicationForm extends Component {
       return "Accept";
     }
     if (this.state.activeStep === 3) {
-      return "Send";
+      return "Submit";
     }
     if (this.state.activeStep === 5) {
       return "Done";
@@ -233,16 +255,21 @@ class LoanApplicationForm extends Component {
     })
   }
 
+  handleSave(files) {
+        this.setState({files: files,});
+    }
+
+
+
   render() {
-    const edulist = ['None', 'Primary', 'Secondary', 'Diploma', 'Bachelors', 'Masters', 'Doctorate']
-    const cslist = [1, 2, 3, 4, 5]
+    const edulist = ['None', 'Primary', 'Secondary', 'Diploma', 'Bachelors', 'Masters', 'Doctorate'];
     const handleChange = this.handleChange;
     const { classes } = this.props;
     const steps = getSteps();
     const { activeStep, firstName, lastName, gracePeriod, hascreditScore, creditScore,
       NationalIdNo, email, dob, mobile, gender, education, ethnicity, questions,
       address, city, state, mobileCheck, addressCheck, repaymentPlan, bankName,
-      accountNumber, banks,
+      accountNumber, banks, employeeReference, employeeNumber, salary,
     } = this.state;
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
     const successPaper = clsx(classes.paper, classes.successPaper);
@@ -280,35 +307,62 @@ class LoanApplicationForm extends Component {
                     <Grid container spacing={2}>
                       <Grid item sm={12} md={6}>
                         <Paper className={fixedHeightPaper}>
-                          <Typography className= {classes.title} variant="subtitle2" >Loan Instructions</Typography>
-                          <Typography variant="body2"> is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
-                            been the industry’s standard dummy text ever since the 1500s, when an unkno
-                            wn printer took a galley of type and scrambled it to make a type specimen boo
-                            k. It has survived not only five centuries, but also the leap into electronic typese
-                            tting, remaining essentially unchanged. It was popularised in the 1960s with the
-                            release of Letraset sheets containing Lorem Ipsum passages, and more recen
-                            tly with desktop publishing software like Aldus PageMaker including versions
-                            of Lorem Ipsum.
+                          <Typography className= {classes.title} variant="subtitle1" >Loan Application Instructions</Typography>
+                          <Typography variant="body2">
+                            Welcome to the lendpop application portal {firstName},
+                          </Typography>
+                          <Typography variant="body2">
+                            we will walk you through the easy process as you continue your application.
+                          </Typography>
+                          <Typography variant="body2">
+                            Please have the following documents avalable:
+                          </Typography>
+                          <ul>
+                            <li>Basic information about yourself, your business</li>
+                            <li>For business loans, specify correctly your RCN, tax clearance identication</li>
+                            <li>A picture of you for your loan profile</li>
+                          </ul>
+                          <Typography variant="body2">
+                            Your application is automatically saved as you go through the process
+                          </Typography>
+                          <Typography variant="body2">
+                            For inquiries please send an email to borrow@lendpop.com
                           </Typography>
                         </Paper>
                       </Grid>
                       <Grid item sm={12} md={6}>
                         <Paper className={fixedHeightPaper}>
-                          <Typography variant="h2">Some more legal Bs</Typography>
-                          <FormGroup row>
-                            <FormControlLabel
-                              control={
-                                <Checkbox
-                                  name="termsChecked"
-                                  checked={this.state.termsChecked}
-                                  onChange={this.handleTerms}
-                                  value="check"
-                                />
-                              }
-                              label={Label}
-                            />
-                          </FormGroup>
+                          <Typography className= {classes.title} variant="subtitle1" >Application requirements</Typography>
+                          <Typography variant="body2">
+                            The following are specific requirements for applying for POP lending
+                          </Typography>
+                          <ul>
+                            <li>Read instructions</li>
+                            <li>Provide all other personal information</li>
+                            <li>Employment history </li>
+                            <li>BVN </li>
+                            <li>Bank details</li>
+                            <li>Documents for account statements</li>
+                          </ul>
+
+                          <Typography variant="body2">
+                            Click next to proceed to the next stage of your LendPOP application
+                          </Typography>
+
                         </Paper>
+                        <FormGroup row>
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                name="termsChecked"
+                                checked={this.state.termsChecked}
+                                onChange={this.handleTerms}
+                                value="check"
+                              />
+                            }
+                            label={Label}
+                          />
+                        </FormGroup>
                       </Grid>
                     </Grid>
                   )}
@@ -370,7 +424,7 @@ class LoanApplicationForm extends Component {
                               type="date"
                               format="dd/mm/yyyy"
                               name="dob"
-                              // value={dob}
+                              value={dob}
                               onChange={handleChange}
                               InputLabelProps={{
                                 shrink: true,
@@ -579,6 +633,55 @@ class LoanApplicationForm extends Component {
                               }}
                             />
                           </Grid>
+                          <Grid item xs={12} sm={4}>
+                            <TextField
+                              fullWidth
+                              required
+                              name="employeeReference"
+                              id="outlined-employee-reference"
+                              label="Employee Reference"
+                              variant="outlined"
+                              value={employeeReference}
+                              onChange={handleChange}
+                              placeholder="Enter Employee Reference"
+                              InputLabelProps={{
+                                  shrink: true,
+                              }}
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={4}>
+                            <TextField
+                              fullWidth
+                              required
+                              name="employeeNumber"
+                              id="outlined-employee-number"
+                              label="Employee Number"
+                              variant="outlined"
+                              value={employeeNumber}
+                              onChange={handleChange}
+                              placeholder="Enter Employee Number"
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={4}>
+                            <TextField
+                              fullWidth
+                              required
+                              name="salary"
+                              id="outlined-salary"
+                              label="Salary"
+                              variant="outlined"
+                              type="number"
+                              value={salary}
+                              onChange={handleChange}
+                              placeholder="Enter Monthly Salary Amount"
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                            />
+                          </Grid>
                           <Grid item xs={12}>
                             <TextField
                               fullWidth
@@ -623,11 +726,17 @@ class LoanApplicationForm extends Component {
                               InputLabelProps={{
                                 shrink: true,
                               }}>
-                              <MenuItem key='long' value='long'>
-                                Long
+                              <MenuItem key='1 week' value='1 week'>
+                                1 Week
                               </MenuItem>
-                              <MenuItem key='short' value='short'>
-                                Short
+                              <MenuItem key='2 weeks' value='2 weeks'>
+                                2 Weeks
+                              </MenuItem>
+                              <MenuItem key='3 weeks' value='3 weeks'>
+                                3 Weeks
+                              </MenuItem>
+                              <MenuItem key='1 Month' value='1 Month'>
+                                1 Month
                               </MenuItem>
                             </TextField>
                           </Grid>
@@ -730,6 +839,29 @@ class LoanApplicationForm extends Component {
                               InputLabelProps={{
                                 shrink: true,
                               }}
+                            />
+                          </Grid>
+                        </Grid>
+                        <Typography className={classes.formCaption} variant='caption'>
+                          LIST OF DOCUMENTS TO UPLOAD
+                        </Typography>
+                        <Grid container spacing={2} style={{margin: '20px 0', width: '100%'}}>
+                          <Grid item xs={12} sm={4}>
+                            <Paper style={{backgroundColor: '#ececec', padding: '8px'}}>
+                              <ul>
+                                <li>A passport photograph</li>
+                                <li>Bank statement</li>
+                                <li>Letter of employment</li>
+                              </ul>
+                            </Paper>
+                          </Grid>
+                          <Grid item xs={12} sm={4}>
+                            <DropzoneArea
+                              onSave={this.handleSave.bind(this)}
+                              filesLimit={3}
+                              acceptedFiles={['image/jpeg', 'image/png', 'application/pdf']}
+                              showPreviews={true}
+                              maxFileSize={5000000}
                             />
                           </Grid>
                           <Grid item xs={12}>
@@ -894,7 +1026,7 @@ class LoanApplicationForm extends Component {
                       variant="contained"
                       color="primary"
                       onClick={
-                        activeStep !== 5 ? this.handleNext : this.goToDashboard
+                        activeStep !== 5 ? this.handleNext : this.props.handler
                       }
                       size="large"
                       disabled={
