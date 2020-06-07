@@ -172,10 +172,10 @@ class SignUp extends Component {
   calculateMonthlyPayment() {
     const period = this.state.period
     const principal = this.state.principal
-    const rate = 0.1
+    const rate = 0.3
     const interest = principal*rate*(period/12)
     const total = principal + interest
-    const monthlyPayment = Math.ceil(total/(period*1000))*1000
+    const monthlyPayment = total/(period)
     this.setState({monthlyPayment})
   }
 

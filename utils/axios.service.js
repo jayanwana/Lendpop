@@ -9,8 +9,12 @@ class LendPopApi {
     return axios.post("/register", data)
   }
 
+  otpGeneration(data) {
+    return axios.post('/generate/otp', data)
+  }
+
   verification(data) {
-    return axios.post("/email", data)
+    return axios.post("/validate/otp", data)
   }
 
   password(data) {

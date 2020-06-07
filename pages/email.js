@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Head from 'next/head';
 import Router from 'next/router';
 import Avatar from '@material-ui/core/Avatar';
@@ -47,21 +47,34 @@ const useStyles = makeStyles((theme) => ({
 
 export default function EmailVerification(props) {
   const firstName = sessionstorage.getItem('firstName') ? sessionstorage.getItem('firstName') : 'User'
+  const email = sessionstorage.getItem('email')
 
   const classes = useStyles();
 
   const [emailCode, setEmailCode] = useState()
+
+  useEffect(() => {
+    if (email){
+      const postData = {email: email};
+      Api.otpGeneration(JSON.stringify(postData))
+      .then(response => console.log(response))
+      .catch(error => console.log(error))
+  } else {
+    Router.push('/signUp')
+  }
+}, [])
 
   const submit = event => {
     event.preventDefault();
     console.log(emailCode);
     // Router.push('/dashboard');
     const postData = {
-      email: emailCode
+      email: email,
+      otp: emailCode
     }
     Api.verification(JSON.stringify(postData)).then(response => {
       console.log(response)
-      Router.push('/createPassword');
+      return Router.push('/createPassword');
     }).catch(error => console.log(error))
   }
 
