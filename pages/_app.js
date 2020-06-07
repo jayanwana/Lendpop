@@ -27,7 +27,7 @@ export default function MyApp(props) {
     <React.Fragment>
       <Head>
         <title>InstaKash</title>
-        {/* <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"/> */}
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
         <link rel="icon" href={ico} />
       </Head>
