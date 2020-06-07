@@ -20,11 +20,12 @@ import { withStyles, styled } from '@material-ui/core/styles';
 import Api from '../utils/axios.service';
 import Copyright from './copyright';
 
-const localStorage = require('local-storage')
+const localStorage = require('local-storage');
+const sessionstorage = require('sessionstorage');
 const useStyles = theme => ({
   root: {
     height: '100vh',
-    backgroundImage: 'url(' + `${require('../public/images/ssig-up.png')}` + ')',
+    backgroundImage: 'url(' + `${require('../public/images/InstaKash-background.jpg')}` + ')',
     backgroundRepeat: 'no-repeat',
     backgroundColor:
       theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
@@ -125,7 +126,7 @@ class SignUp extends Component {
       firstName: '',
       lastName: '',
       email: '',
-      principal: 1600000,
+      principal: 5000,
       period: 6,
       monthlyPayment: ''
     }
@@ -139,6 +140,7 @@ class SignUp extends Component {
   }
   componentDidMount() {
     this.calculateMonthlyPayment()
+    console.log(Router.route);
   }
 
   handleInputChange(event) {
@@ -160,7 +162,7 @@ class SignUp extends Component {
   }
 
   convertPrincipal(value) {
-    return `NGN ${value.toLocaleString()}`
+    return `SAR ${value.toLocaleString()}`
   }
 
   convertMonth(value) {
@@ -180,7 +182,7 @@ class SignUp extends Component {
   submit(event) {
     event.preventDefault();
     const postData = {
-      amount: this.state.principal,
+      amount: `${this.state.principal}`,
       first_name: this.state.firstName,
       last_name: this.state.lastName,
       email: this.state.email,
@@ -188,12 +190,11 @@ class SignUp extends Component {
     for (let key in this.state) {
       console.log(key);
       if (['principal', 'period', 'monthlyPayment'].includes(key)){continue}
-      localStorage(key, this.state[key])
+      sessionstorage.setItem(key, this.state[key])
     }
-    // Api.register(JSON.stringify(postData)).then(response => {
-    //   Router.push('/email');
-    // }).catch(error => console.log(error))
-    Router.push('/email')
+    Api.register(JSON.stringify(postData)).then(response => {
+      Router.push('/email');
+    }).catch(error => console.log(error.response))
   }
 
   render() {
@@ -263,8 +264,8 @@ class SignUp extends Component {
                 aria-label="pretto slider"
                 name="principal"
                 value={principal}
-                min={150000} max={5000000}
-                step={50000}
+                min={1000} max={10000}
+                step={500}
                 valueLabelDisplay = "auto"
                 ValueLabelComponent={ValueLabelComponent}
                 valueLabelFormat = {this.convertPrincipal}

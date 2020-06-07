@@ -19,6 +19,7 @@ import theme from '../src/theme';
 import Copyright from '../components/copyright';
 
 const localStorage = require('local-storage')
+const sessionstorage = require('sessionstorage');
 const useStyles = makeStyles((theme) => ({
   root: {
     height: '100vh',
@@ -49,8 +50,10 @@ export default function Login(props) {
 
   const classes = useStyles();
 
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('')
 
   const submit = event => {
     event.preventDefault();
@@ -62,8 +65,16 @@ export default function Login(props) {
     }
     Api.login(JSON.stringify(postData)).then(response => {
       console.log(response)
-      Router.push('/dashboard');
-    }).catch(error => console.log(error))
+      sessionStorage.setItem('state', JSON.stringify(response.data.data))
+      Router.push('/dashboard',);
+    }).catch(error => {
+      if (error.response && error.response.status === 401 ){
+        setErrorMessage(error.response.data.description);
+        setError(true)}
+      else {
+        console.log(error)
+      }
+    })
   }
 
   const cancel = event => {
@@ -77,7 +88,7 @@ export default function Login(props) {
   return (
     <div>
       <Head>
-        <title>LendPop Login</title>
+        <title>InstaKash Login</title>
       </Head>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -91,6 +102,7 @@ export default function Login(props) {
           <form className={classes.form} onSubmit={submit} validate={1}>
             {/* <Typography></Typography> */}
             <TextField
+              error={error}
               variant="outlined"
               margin="normal"
               required
@@ -101,12 +113,15 @@ export default function Login(props) {
               placeholder="Email"
               autoComplete="email"
               onChange={event => setEmail(event.target.value)}
+              value={email}
               autoFocus
               InputLabelProps={{
                 shrink: true,
               }}
             />
             <TextField
+              error={error}
+              helperText={error ? errorMessage : ''}
               variant="outlined"
               margin="normal"
               required
@@ -118,6 +133,7 @@ export default function Login(props) {
               placeholder="Password"
               autoComplete="password"
               onChange={event => setPassword(event.target.value)}
+              value={password}
               InputLabelProps={{
                 shrink: true,
               }}

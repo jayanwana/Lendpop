@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import Head from 'next/head';
 import clsx from 'clsx';
 import withStyles from "@material-ui/styles/withStyles";
 import {AppBar, CssBaseline, Paper, Typography,
@@ -16,8 +17,11 @@ import LoanApplicationForm from '../components/loanApplicationForm';
 import { mainListItems, secondaryListItems } from '../components/listItems';
 import Copyright from '../components/copyright';
 import theme from '../src/theme';
+import Router from 'next/router';
 
-const localStorage = require('local-storage')
+
+const localStorage = require('local-storage');
+const sessionstorage = require('sessionstorage');
 const drawerWidth = 240;
 
 const useStyles = theme => ({
@@ -152,12 +156,28 @@ class Dashboard extends Component {
     this.continueApplication = this.continueApplication.bind(this);
     this.reset = this.reset.bind(this);
   }
+
+  static async getInitialProps({query}) {
+    return {query}
+  }
+
   componentDidMount() {
+    let state = sessionstorage.getItem('state')
+    if(state){
+      state = JSON.parse(state)
+      console.log(state);
+      this.setState({
+        firstName: state.first_name,
+        lastName: state.last_name,
+        email: state.email
+      })
+    } else {
     this.setState({
-      firstName : localStorage('firstName') ? localStorage('firstName') : '',
-      lastName : localStorage('lastName') ? localStorage('lastName') : '',
-      email : localStorage('email') ? localStorage('email') : '',
+      firstName : sessionStorage.getItem('firstName') ? sessionStorage.getItem('firstName') : '',
+      lastName : sessionStorage.getItem('lastName') ? sessionStorage.getItem('lastName') : '',
+      email : sessionStorage.getItem('email') ? sessionStorage.getItem('email') : '',
     })
+    console.log(Router.query)}
   }
   continueApplication(){
     this.setState({questions: !this.state.questions})
@@ -179,6 +199,9 @@ class Dashboard extends Component {
     const { open, firstName, email, lastName } = this.state;
     return (
       <div className={classes.root}>
+        <Head>
+          <title>InstaKash: Dashboard</title>
+        </Head>
         {/* <CssBaseline /> */}
         <Drawer
           variant="permanent"
@@ -189,7 +212,7 @@ class Dashboard extends Component {
         >
           <div className={classes.toolbarIcon}>
             <IconButton onClick={this.handleDrawer}>
-              {open && <img src={require('../public/images/lend-pop.png')} />}
+              {open && <img src={require('../public/images/instakash-logo.png')} style={{width: '180px', height: '50px'}}/>}
               <ChevronLeftIcon />
             </IconButton>
           </div>
@@ -218,7 +241,7 @@ class Dashboard extends Component {
                         Hello, {firstName? firstName : 'User'}!
                       </Typography>
                       <Typography variant='body1'>
-                        Welcome to Lendpop, please continue your application.
+                        Welcome to InstaKash, please continue your application.
                       </Typography>
                     </Grid>
                   </Grid>
@@ -232,24 +255,26 @@ class Dashboard extends Component {
                     variant="outlined"
                     color="primary"
                     className={classes.gridButton}
-                    onClick={this.continueApplication}
-                                                                                             >Continue my loan application</Button>
+                    onClick={this.continueApplication}>
+                    <span style={{whiteSpace: 'nowrap'}}>Continue my loan application</span>
+                  </Button>
                   </Grid>
                   <Divider className={classes.divider} orientation="horizontal"/>
 
                   <Grid className={classes.buttonContainer} item xs={12} md='auto' lg='auto'><Button
                     fullWidth
                     variant="outlined"
-                    className={classes.gridButton}
-                                                                                             >Approval Documents</Button>
+                    className={classes.gridButton}>
+                  Approval Documents</Button>
                   </Grid>
                   <Divider className={classes.divider} orientation="horizontal"/>
 
                   <Grid item className={classes.buttonContainer} xs={12} md='auto' lg='auto'><Button
                     fullWidth
                     variant="outlined"
-                    className={classes.gridButton}
-                                                                                             >Other applications</Button></Grid>
+                    className={classes.gridButton}>
+                  Other applications</Button>
+                  </Grid>
                 </Grid>
               </Grid>
               {this.state.questions &&

@@ -18,7 +18,8 @@ import Api from '../utils/axios.service';
 import theme from '../src/theme';
 import Copyright from '../components/copyright';
 
-const localStorage = require('local-storage')
+const localStorage = require('local-storage');
+const sessionstorage = require('sessionstorage');
 const useStyles = makeStyles((theme) => ({
   root: {
     height: '100vh',
@@ -45,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function EmailVerification(props) {
-  const firstName = localStorage('firstName') ? localStorage('firstName') : 'User'
+  const firstName = sessionstorage.getItem('firstName') ? sessionstorage.getItem('firstName') : 'User'
 
   const classes = useStyles();
 
@@ -54,13 +55,14 @@ export default function EmailVerification(props) {
   const submit = event => {
     event.preventDefault();
     console.log(emailCode);
-    Router.push('/dashboard');
-    // const postData = {
-    //   email: emailCode
-    // }
-    // Api.verification(JSON.stringify(postData)).then(response => {
-    //   Router.push('/dashboard');
-    // }).catch(error => console.log(error))
+    // Router.push('/dashboard');
+    const postData = {
+      email: emailCode
+    }
+    Api.verification(JSON.stringify(postData)).then(response => {
+      console.log(response)
+      Router.push('/createPassword');
+    }).catch(error => console.log(error))
   }
 
   const cancel = event => {
@@ -74,7 +76,7 @@ export default function EmailVerification(props) {
   return (
     <div>
       <Head>
-        <title>LendPop: Email Verification</title>
+        <title>InstaKash: Email Verification</title>
       </Head>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -86,7 +88,7 @@ export default function EmailVerification(props) {
             Verify Email
           </Typography>
           <form className={classes.form} onSubmit={submit} validate={1}>
-            <Typography>To verify your email, kindly type in the code sent to you</Typography>
+            <Typography>To verify your email, kindly type in the OTP code sent to your email.</Typography>
             <TextField
               variant="outlined"
               margin="normal"

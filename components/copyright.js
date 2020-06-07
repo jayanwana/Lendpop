@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
       <MLink color="inherit" href="#">
-        LendPOP
+        InstaKash
       </MLink>{' '}
       {new Date().getFullYear()}
       {'.'}
