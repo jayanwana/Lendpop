@@ -12,7 +12,7 @@ export default function Index() {
   return (
     <div>
       <Head>
-        <title>LendPop</title>
+        <title>InstaKash SignUp</title>
       </Head>
       <SignUpComponent/>
     </div>
