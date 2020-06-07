@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Head from 'next/head';
 import Router from 'next/router';
 import Avatar from '@material-ui/core/Avatar';
@@ -54,6 +54,10 @@ export default function Login(props) {
   const [password1, setPassword1] = useState('');
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('')
+
+  useEffect(() => {
+    if (!email) {Router.push('/')}
+  }, [])
 
   const submit = event => {
     event.preventDefault();
