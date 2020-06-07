@@ -1,13 +1,13 @@
 import React, {useState} from 'react';
 import Head from 'next/head';
 import Router from 'next/router';
-import Link from 'next/link';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
+import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -46,27 +46,27 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Login(props) {
-  const firstName = localStorage('firstName') ? localStorage('firstName') : 'User'
+  const email = sessionstorage.getItem('email')
 
   const classes = useStyles();
 
-  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [password1, setPassword1] = useState('');
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('')
 
   const submit = event => {
     event.preventDefault();
+    if (password === password1){
     console.log(email, password);
     // Router.push('/dashboard');
     const postData = {
       email: email,
       password: password
-    }
-    Api.login(JSON.stringify(postData)).then(response => {
-      console.log(response)
-      sessionStorage.setItem('state', JSON.stringify(response.data.data))
-      Router.push('/dashboard',);
+    };
+    Api.password(JSON.stringify(postData)).then(response => {
+      console.log(response);
+      return Router.push('/dashboard');
     }).catch(error => {
       if (error.response && error.response.status === 401 ){
         setErrorMessage(error.response.data.description);
@@ -75,6 +75,9 @@ export default function Login(props) {
         console.log(error)
       }
     })
+  } else {
+      setErrorMessage("Passwords do not match");
+      setError(true)}
   }
 
   const cancel = event => {
@@ -88,7 +91,7 @@ export default function Login(props) {
   return (
     <div>
       <Head>
-        <title>InstaKash Login</title>
+        <title>InstaKash Password</title>
       </Head>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -97,7 +100,7 @@ export default function Login(props) {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Login
+            Create a Password
           </Typography>
           <form className={classes.form} onSubmit={submit} validate={1}>
             {/* <Typography></Typography> */}
@@ -107,13 +110,14 @@ export default function Login(props) {
               margin="normal"
               required
               fullWidth
-              id="outlined-email"
-              label="Email"
-              name="email"
-              placeholder="Email"
-              autoComplete="email"
-              onChange={event => setEmail(event.target.value)}
-              value={email}
+              type="password"
+              id="outlined-password"
+              label="Password"
+              name="password"
+              placeholder="Enter Password"
+              autoComplete="password"
+              onChange={event => setPassword(event.target.value)}
+              value={password}
               autoFocus
               InputLabelProps={{
                 shrink: true,
@@ -127,13 +131,13 @@ export default function Login(props) {
               required
               fullWidth
               type="password"
-              id="outlined-password"
+              id="outlined-password1"
               label="Password"
-              name="password"
-              placeholder="Password"
+              name="password1"
+              placeholder="Re-enter Password"
               autoComplete="password"
-              onChange={event => setPassword(event.target.value)}
-              value={password}
+              onChange={event => setPassword1(event.target.value)}
+              value={password1}
               InputLabelProps={{
                 shrink: true,
               }}
@@ -146,7 +150,7 @@ export default function Login(props) {
                   variant="contained"
                   color="primary"
                   className={classes.submit}
-                > Login </Button>
+                > Submit </Button>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Button
@@ -158,7 +162,6 @@ export default function Login(props) {
               </Grid>
             </Grid>
           </form>
-          <Typography>Don't have an account? <Link href="/"><a>Sign Up!</a></Link></Typography>
         </div>
         <Box mt={5}>
           <Copyright />

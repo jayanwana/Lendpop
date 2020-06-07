@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Head from 'next/head';
 import Router from 'next/router';
 import Avatar from '@material-ui/core/Avatar';
@@ -18,8 +18,13 @@ import Api from '../utils/axios.service';
 import theme from '../src/theme';
 import Copyright from '../components/copyright';
 
+<<<<<<< HEAD
 const localStorage = require('local-storage')
 
+=======
+const localStorage = require('local-storage');
+const sessionstorage = require('sessionstorage');
+>>>>>>> d4fe7e64f42300a40160bafb75d01616eb33ef57
 const useStyles = makeStyles((theme) => ({
   root: {
     height: '100vh',
@@ -46,23 +51,41 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function EmailVerification(props) {
+<<<<<<< HEAD
 
   const firstName = localStorage('firstName') ? localStorage('firstName') : 'User'
+=======
+  const firstName = sessionstorage.getItem('firstName') ? sessionstorage.getItem('firstName') : 'User'
+  const email = sessionstorage.getItem('email')
+>>>>>>> d4fe7e64f42300a40160bafb75d01616eb33ef57
 
   const classes = useStyles();
 
   const [emailCode, setEmailCode] = useState()
 
+  useEffect(() => {
+    if (email){
+      const postData = {email: email};
+      Api.otpGeneration(JSON.stringify(postData))
+      .then(response => console.log(response))
+      .catch(error => console.log(error))
+  } else {
+    Router.push('/signUp')
+  }
+}, [])
+
   const submit = event => {
     event.preventDefault();
     console.log(emailCode);
-    Router.push('/dashboard');
-    // const postData = {
-    //   email: emailCode
-    // }
-    // Api.verification(JSON.stringify(postData)).then(response => {
-    //   Router.push('/dashboard');
-    // }).catch(error => console.log(error))
+    // Router.push('/dashboard');
+    const postData = {
+      email: email,
+      otp: emailCode
+    }
+    Api.verification(JSON.stringify(postData)).then(response => {
+      console.log(response)
+      return Router.push('/createPassword');
+    }).catch(error => console.log(error))
   }
 
   const cancel = event => {
@@ -76,7 +99,7 @@ export default function EmailVerification(props) {
   return (
     <div>
       <Head>
-        <title>LendPop: Email Verification</title>
+        <title>InstaKash: Email Verification</title>
       </Head>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -88,7 +111,7 @@ export default function EmailVerification(props) {
             Verify Email
           </Typography>
           <form className={classes.form} onSubmit={submit} validate={1}>
-            <Typography>To verify your email, kindly type in the code sent to you</Typography>
+            <Typography>To verify your email, kindly type in the OTP code sent to your email.</Typography>
             <TextField
               variant="outlined"
               margin="normal"

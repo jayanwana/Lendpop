@@ -188,7 +188,7 @@ class LoanApplicationForm extends Component {
   };
 
   componentDidMount() {
-    const formData = JSON.parse(localStorage('state'))
+    const formData = JSON.parse(localStorage('formstate'))
     if (formData){this.setState({...formData})};
     Paystack.banks().then(response => {
       this.setState({banks: response.data.data})
@@ -200,7 +200,7 @@ class LoanApplicationForm extends Component {
     delete data.banks
     delete data.files
     console.log(data);
-    localStorage('state', JSON.stringify(data))
+    localStorage('formstate', JSON.stringify(data))
   }
 
   handleNext = () => {
@@ -309,7 +309,7 @@ class LoanApplicationForm extends Component {
                         <Paper className={fixedHeightPaper}>
                           <Typography className= {classes.title} variant="subtitle1" >Loan Application Instructions</Typography>
                           <Typography variant="body2">
-                            Welcome to the lendpop application portal {firstName},
+                            Welcome to the InstaKash application portal {firstName},
                           </Typography>
                           <Typography variant="body2">
                             we will walk you through the easy process as you continue your application.
@@ -326,7 +326,7 @@ class LoanApplicationForm extends Component {
                             Your application is automatically saved as you go through the process
                           </Typography>
                           <Typography variant="body2">
-                            For inquiries please send an email to borrow@lendpop.com
+                            For inquiries please send an email to borrow@InstaKash.com
                           </Typography>
                         </Paper>
                       </Grid>
@@ -346,7 +346,7 @@ class LoanApplicationForm extends Component {
                           </ul>
 
                           <Typography variant="body2">
-                            Click next to proceed to the next stage of your LendPOP application
+                            Click next to proceed to the next stage of your InstaKash application
                           </Typography>
 
                         </Paper>
@@ -995,7 +995,7 @@ class LoanApplicationForm extends Component {
                             <Typography variant="body1" gutterBottom>
                               An email has been sent to you with your loan application ID.
                               If you wish to make enquiries about your loan,
-                              please send an email to borrow@lendpop.com.
+                              please send an email to borrow@InstaKash.com.
                             </Typography>
                             <Typography variant="body1" gutterBottom>
                               Your dashboard is ready for you to review your loan history
@@ -1009,7 +1009,7 @@ class LoanApplicationForm extends Component {
                     </div>
                   )}
                   <div className={classes.flexBar}>
-                    {activeStep !== 5 && (
+                    {activeStep !== 6 && (
                       <Button
                         fullWidth
                         variant="outlined"
@@ -1031,8 +1031,7 @@ class LoanApplicationForm extends Component {
                       size="large"
                       disabled={
                         this.state.activeStep === 0 && !this.state.termsChecked
-                      }
-                    >
+                      }>
                       {this.stepActions()}
                     </Button>
                   </div>

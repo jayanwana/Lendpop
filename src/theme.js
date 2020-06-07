@@ -14,7 +14,7 @@ const theme = createMuiTheme({
   typography: {
     // Use the system font instead of the default Roboto font.
     fontFamily: [
-      '"Gelion-Regular"',
+      '"Palanquin"',
       'sans-serif'
     ].join(',')
   }

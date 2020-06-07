@@ -14,10 +14,12 @@
     "material-ui-dropzone": "^3.1.0",
     "next": "latest",
     "next-images": "^1.4.0",
+    "next-page-transitions": "^1.0.0-beta.2",
     "numeral": "^2.0.6",
     "prop-types": "latest",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "sessionstorage": "^0.1.0"
   },
   "scripts": {
     "dev": "next",
