@@ -4,8 +4,8 @@ const Loader = () => (
   <div className="loader">
     <style jsx>{`
       .loader {
-        border: 8px solid #f3f3f3; /* Light grey */
-        border-top: 8px solid #3498db; /* Blue */
+        border: 8px solid #83d2d9;
+        border-top: 8px solid #1ac4c4; 
         border-radius: 50%;
         width: 80px;
         height: 80px;
