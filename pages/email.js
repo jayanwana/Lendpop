@@ -18,13 +18,8 @@ import Api from '../utils/axios.service';
 import theme from '../src/theme';
 import Copyright from '../components/copyright';
 
-<<<<<<< HEAD
-const localStorage = require('local-storage')
-
-=======
 const localStorage = require('local-storage');
 const sessionstorage = require('sessionstorage');
->>>>>>> d4fe7e64f42300a40160bafb75d01616eb33ef57
 const useStyles = makeStyles((theme) => ({
   root: {
     height: '100vh',
@@ -51,13 +46,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function EmailVerification(props) {
-<<<<<<< HEAD
-
-  const firstName = localStorage('firstName') ? localStorage('firstName') : 'User'
-=======
   const firstName = sessionstorage.getItem('firstName') ? sessionstorage.getItem('firstName') : 'User'
   const email = sessionstorage.getItem('email')
->>>>>>> d4fe7e64f42300a40160bafb75d01616eb33ef57
 
   const classes = useStyles();
 

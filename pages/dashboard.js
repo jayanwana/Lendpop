@@ -27,6 +27,8 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import LoanApplicationForm from '../components/loanApplicationForm';
 import { mainListItems, secondaryListItems } from '../components/listItems';
+import LinkOutlinedIcon from '@material-ui/icons/LinkOutlined';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Copyright from '../components/copyright';
 import theme from '../src/theme';
 import Router from 'next/router';
@@ -141,6 +143,9 @@ const useStyles = theme => ({
       marginTop: '10px'
     }
 
+  },
+  buttonGroup: {
+    marginTop: '50px'
   },
   divider: {
     width: "40px",
@@ -281,6 +286,14 @@ class Dashboard extends Component {
                       <Typography variant='body1'>
                         Welcome to InstaKash, please continue your application.
                       </Typography>
+                      <ButtonGroup className={classes.buttonGroup} aria-label="outlined primary button group">
+                        <Button>Refer your friends and get N1,000</Button>
+                        <Button >https://member.instakash.com/api/landing/&pc=5053&sid=CID137</Button>
+                        <Button variant="outlined"
+                          color="primary"
+                          className={classes.root}
+                          endIcon={<LinkOutlinedIcon/>} />
+                      </ButtonGroup>                      
                     </Grid>
                   </Grid>
                   {/* <Chart /> */}
