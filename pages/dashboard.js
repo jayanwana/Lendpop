@@ -30,6 +30,7 @@ import { mainListItems, secondaryListItems } from '../components/listItems';
 import LinkOutlinedIcon from '@material-ui/icons/LinkOutlined';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Copyright from '../components/copyright';
+import PreviousLoans from '../components/previousLoans';
 import theme from '../src/theme';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
@@ -166,6 +167,8 @@ class Dashboard extends Component {
       loaded: false,
       open: false,
       questions: true,
+      application: false,
+      showHistory: false,
       firstName: '',
       lastName: '',
       email: ''
@@ -174,11 +177,8 @@ class Dashboard extends Component {
     this.submit = this.submit.bind(this);
     this.continueApplication = this.continueApplication.bind(this);
     this.reset = this.reset.bind(this);
+    this.showHistory = this.showHistory.bind(this);
     this.logout = this.logout.bind(this);
-  }
-
-  static async getInitialProps({query}) {
-    return {query}
   }
 
   componentDidMount() {
@@ -211,13 +211,30 @@ class Dashboard extends Component {
   }
 
   continueApplication(){
-    this.setState({questions: !this.state.questions})
+    this.setState({
+      questions: false,
+      showHistory: false,
+      application: true
+    })
   }
+
+  showHistory(){
+    this.setState({
+      questions:false,
+      application: false,
+      showHistory: true,
+    })
+  }
+
   handleDrawer() {
     this.setState({open: !this.state.open})
   }
   reset(){
-    this.setState({questions: true})
+    this.setState({
+      showHistory: false,
+      application: false,
+      questions: true
+    })
   }
   submit(event) {
     event.preventDefault()
@@ -269,6 +286,7 @@ class Dashboard extends Component {
               <ListItemText primary="Logout" />
             </ListItem>
           </List>
+          <Divider />
           {/* <List>{secondaryListItems}</List> */}
         </Drawer>
         <main className={classes.content}>
@@ -323,7 +341,8 @@ class Dashboard extends Component {
                   <Grid item className={classes.buttonContainer} xs={12} md='auto' lg='auto'><Button
                     fullWidth
                     variant="outlined"
-                    className={classes.gridButton}>
+                    className={classes.gridButton}
+                    onClick={this.showHistory}>
                   Other applications</Button>
                   </Grid>
                 </Grid>
@@ -357,13 +376,19 @@ class Dashboard extends Component {
 
                   </Paper>
                 </Grid>}
-              {!this.state.questions && <Grid item xs={12}>
-                <LoanApplicationForm
-                  firstName={firstName}
-                  lastName={lastName}
-                  email={email}
-                  handler={this.continueApplication}/>
-              </Grid>}
+              {this.state.application &&
+                <Grid item xs={12}>
+                  <LoanApplicationForm
+                    firstName={firstName}
+                    lastName={lastName}
+                    email={email}
+                    handler={this.continueApplication}/>
+                </Grid>}
+              {this.state.showHistory &&
+                <Grid item xs={12}>
+                  <PreviousLoans email={email}/>
+                </Grid>
+              }
             </Grid>
             <Box pt={4}>
               <Copyright />

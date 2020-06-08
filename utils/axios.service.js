@@ -20,6 +20,10 @@ class LendPopApi {
   password(data) {
     return axios.post("/password", data)
   }
+
+  history(data) {
+    return axios.post('/history', data)
+  }
 }
 
 export default new LendPopApi();
