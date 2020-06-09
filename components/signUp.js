@@ -190,7 +190,7 @@ class SignUp extends Component {
       first_name: this.state.firstName,
       last_name: this.state.lastName,
       email: this.state.email,
-      tenure: this.state.period
+      tenure: `${this.state.period}`
     }
     console.log(postData)
     for (let key in this.state) {
