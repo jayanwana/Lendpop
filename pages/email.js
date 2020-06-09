@@ -14,6 +14,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Api from '../utils/axios.service';
 import theme from '../src/theme';
 import Copyright from '../components/copyright';
@@ -52,6 +53,9 @@ export default function EmailVerification(props) {
   const classes = useStyles();
 
   const [emailCode, setEmailCode] = useState()
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('')
 
   useEffect(() => {
     if (email){
@@ -66,6 +70,7 @@ export default function EmailVerification(props) {
 
   const submit = event => {
     event.preventDefault();
+    setLoading(true)
     console.log(emailCode);
     // Router.push('/dashboard');
     const postData = {
@@ -75,7 +80,17 @@ export default function EmailVerification(props) {
     Api.verification(JSON.stringify(postData)).then(response => {
       console.log(response)
       return Router.push('/createPassword');
-    }).catch(error => console.log(error))
+    }).catch(error => {
+      console.log(error)
+      if (error.response && error.response.status === 401 || error.response.status === 400){
+        setErrorMessage(error.response.data.description);
+        setError(true)
+        setLoading(false)
+      } else {
+        console.log(error.response)
+        setLoading(false)
+      }
+    })
   }
 
   const cancel = event => {
@@ -103,6 +118,8 @@ export default function EmailVerification(props) {
           <form className={classes.form} onSubmit={submit} validate={1}>
             <Typography>To verify your email, kindly type in the OTP code sent to your email.</Typography>
             <TextField
+              error={error}
+              helperText={error ? errorMessage : ''}
               variant="outlined"
               margin="normal"
               required
@@ -122,7 +139,10 @@ export default function EmailVerification(props) {
                   variant="contained"
                   color="primary"
                   className={classes.submit}
-                > Verify </Button>
+                  disabled={loading}
+                >
+                  {loading ? <CircularProgress size={24}/> : 'Verify'}
+                </Button>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Button

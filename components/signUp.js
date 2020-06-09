@@ -15,6 +15,7 @@ import Slider from '@material-ui/core/Slider';
 import Tooltip from '@material-ui/core/Tooltip';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import theme from '../src/theme';
 import { withStyles, styled } from '@material-ui/core/styles';
 import Api from '../utils/axios.service';
@@ -128,7 +129,8 @@ class SignUp extends Component {
       email: '',
       principal: 5000,
       period: 6,
-      monthlyPayment: ''
+      monthlyPayment: '',
+      loading: false
     }
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handlePrincipalSlider = this.handlePrincipalSlider.bind(this);
@@ -138,6 +140,7 @@ class SignUp extends Component {
     this.calculateMonthlyPayment = this.calculateMonthlyPayment.bind(this);
     this.submit =this.submit.bind(this);
   }
+
   componentDidMount() {
     this.calculateMonthlyPayment()
     console.log(Router.route);
@@ -181,20 +184,25 @@ class SignUp extends Component {
 
   submit(event) {
     event.preventDefault();
+    this.setState({loading: true})
     const postData = {
-      amount: `${this.state.principal}`,
+      amount: this.state.principal,
       first_name: this.state.firstName,
       last_name: this.state.lastName,
       email: this.state.email,
+      tenure: this.state.period
     }
+    console.log(postData)
     for (let key in this.state) {
-      console.log(key);
-      if (['principal', 'period', 'monthlyPayment'].includes(key)){continue}
+      if (['period', 'monthlyPayment', 'loading'].includes(key)){continue}
       sessionstorage.setItem(key, this.state[key])
     }
     Api.register(JSON.stringify(postData)).then(response => {
       Router.push('/email');
-    }).catch(error => console.log(error.response))
+    }).catch(error => {
+      console.log(error.response);
+      this.setState({loading: false})
+    })
   }
 
   render() {
@@ -298,7 +306,9 @@ class SignUp extends Component {
                     variant="contained"
                     color="primary"
                     className={classes.submit}
-                  > Continue
+                    disabled={this.state.loading}
+                  >
+                    {this.state.loading ? <CircularProgress size={24}/> : 'Continue'}
                   </Button>
                 </Grid>
               </Grid>

@@ -14,6 +14,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Api from '../utils/axios.service';
 import theme from '../src/theme';
 import Copyright from '../components/copyright';
@@ -54,6 +55,7 @@ export default function Login(props) {
   const [password1, setPassword1] = useState('');
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('')
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if (!email) {Router.push('/')}
@@ -63,7 +65,7 @@ export default function Login(props) {
     event.preventDefault();
     if (password === password1){
     console.log(email, password);
-    // Router.push('/dashboard');
+    setLoading(true)
     const postData = {
       email: email,
       password: password
@@ -74,9 +76,11 @@ export default function Login(props) {
     }).catch(error => {
       if (error.response && error.response.status === 401 ){
         setErrorMessage(error.response.data.description);
+        setLoading(false)
         setError(true)}
       else {
         console.log(error)
+        setLoading(false)
       }
     })
   } else {
@@ -154,7 +158,10 @@ export default function Login(props) {
                   variant="contained"
                   color="primary"
                   className={classes.submit}
-                > Submit </Button>
+                  disabled={loading}
+                >
+                  {loading ? <CircularProgress size={24}/> : 'Submit'}
+                </Button>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Button
