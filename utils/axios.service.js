@@ -24,6 +24,15 @@ class LendPopApi {
   history(data) {
     return axios.post('/history', data)
   }
+
+  kycUpdate(data) {
+    return axios.post('/kyc/update', data)
+  }
+
+  loanApplication(data) {
+    return axios.post('/apply', data)
+  }
+
 }
 
 export default new LendPopApi();
