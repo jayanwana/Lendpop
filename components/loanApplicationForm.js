@@ -461,6 +461,7 @@ class LoanApplicationForm extends Component {
                               }}
                             />
                           </Grid>
+                          
                           <Grid item xs={12} style={{padding: 0}}>
                             <Grid item xs={12} sm={4} style={{float: "right"}}>
                               <FormGroup row>
@@ -481,6 +482,55 @@ class LoanApplicationForm extends Component {
                                 />
                               </FormGroup>
                             </Grid>
+                          </Grid>
+                          <Grid item xs={12} sm={4}>
+                            <TextField
+                              fullWidth
+                              required
+                              name="employeeReference"
+                              id="outlined-employee-reference"
+                              label="Employee Reference"
+                              variant="outlined"
+                              value={employeeReference}
+                              onChange={handleChange}
+                              placeholder="Enter Employee Reference"
+                              InputLabelProps={{
+                                  shrink: true,
+                              }}
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={4}>
+                            <TextField
+                              fullWidth
+                              required
+                              name="employeeNumber"
+                              id="outlined-employee-number"
+                              label="Employee Number"
+                              variant="outlined"
+                              value={employeeNumber}
+                              onChange={handleChange}
+                              placeholder="Enter Employee Number"
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={4}>
+                            <TextField
+                              fullWidth
+                              required
+                              name="salary"
+                              id="outlined-salary"
+                              label="Salary"
+                              variant="outlined"
+                              type="number"
+                              value={salary}
+                              onChange={handleChange}
+                              placeholder="Enter Monthly Salary Amount"
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                            />
                           </Grid>
                           <Grid item xs={12} sm={8}>
                             <TextField
@@ -633,55 +683,7 @@ class LoanApplicationForm extends Component {
                               }}
                             />
                           </Grid>
-                          <Grid item xs={12} sm={4}>
-                            <TextField
-                              fullWidth
-                              required
-                              name="employeeReference"
-                              id="outlined-employee-reference"
-                              label="Employee Reference"
-                              variant="outlined"
-                              value={employeeReference}
-                              onChange={handleChange}
-                              placeholder="Enter Employee Reference"
-                              InputLabelProps={{
-                                  shrink: true,
-                              }}
-                            />
-                          </Grid>
-                          <Grid item xs={12} sm={4}>
-                            <TextField
-                              fullWidth
-                              required
-                              name="employeeNumber"
-                              id="outlined-employee-number"
-                              label="Employee Number"
-                              variant="outlined"
-                              value={employeeNumber}
-                              onChange={handleChange}
-                              placeholder="Enter Employee Number"
-                              InputLabelProps={{
-                                shrink: true,
-                              }}
-                            />
-                          </Grid>
-                          <Grid item xs={12} sm={4}>
-                            <TextField
-                              fullWidth
-                              required
-                              name="salary"
-                              id="outlined-salary"
-                              label="Salary"
-                              variant="outlined"
-                              type="number"
-                              value={salary}
-                              onChange={handleChange}
-                              placeholder="Enter Monthly Salary Amount"
-                              InputLabelProps={{
-                                shrink: true,
-                              }}
-                            />
-                          </Grid>
+
                           <Grid item xs={12}>
                             <TextField
                               fullWidth
