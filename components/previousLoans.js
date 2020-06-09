@@ -146,7 +146,7 @@ class PreviousLoans extends Component {
                       <Grid item xs={12} sm={6}>
                         <Typography variant='body1'>Loan Amount: {` SAR ${loan.amount}`}</Typography>
                         <Typography variant='body1'>Loan Duration: {` ${loan.loan_duration}`}</Typography>
-                        <Typography variant='body1'>Status: <span style={{color: loan.status==='APPROVED' ? 'green' :'red'}}>
+                        <Typography variant='body1'>Status: <span style={{color: loan.status==='AUTHORIZED' ? 'green' :'red'}}>
                           {`  ${loan.status}`}
                         </span>
                         </Typography>

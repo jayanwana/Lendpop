@@ -34,6 +34,7 @@ import PreviousLoans from '../components/previousLoans';
 import theme from '../src/theme';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
+import ReferButton from '../components/referButton'
 
 const localStorage = require('local-storage');
 const sessionstorage = require('sessionstorage');
@@ -229,6 +230,7 @@ class Dashboard extends Component {
   handleDrawer() {
     this.setState({open: !this.state.open})
   }
+
   reset(){
     this.setState({
       showHistory: false,
@@ -236,6 +238,7 @@ class Dashboard extends Component {
       questions: true
     })
   }
+
   submit(event) {
     event.preventDefault()
     console.log(event);
@@ -295,23 +298,24 @@ class Dashboard extends Component {
             <Grid container spacing={3}>
               {/* Chart */}
               <Grid item xs={12}>
-                <Paper className={fixedHeightPaper}>
+                <Paper className={fixedHeightPaper} style={{justifyContent: 'center'}}>
                   <Grid container>
                     <Grid className={classes.hello} item xs={12} sm={8}>
                       <Typography variant="h3" color="inherit" noWrap className={classes.title}>
                         Hello, {firstName? firstName : 'User'}!
                       </Typography>
-                      <Typography variant='body1'>
+                      <Typography variant='body1' styles={{marginTop:"5px"}}>
                         Welcome to InstaKash, please continue your application.
                       </Typography>
-                      <ButtonGroup className={classes.buttonGroup} aria-label="outlined primary button group">
+                      {/* <ButtonGroup className={classes.buttonGroup} aria-label="outlined primary button group">
                         <Button>Refer your friends and get N1,000</Button>
-                        <Button >https://member.instakash.com/api/landing/&pc=5053&sid=CID137</Button>
+                        <Button disabled={true} >https://member.instakash.com/api/landing/&pc=5053&sid=CID137</Button>
                         <Button variant="outlined"
                           color="primary"
                           className={classes.root}
                           endIcon={<LinkOutlinedIcon/>} />
-                      </ButtonGroup>                      
+                      </ButtonGroup> */}
+                      <ReferButton/>
                     </Grid>
                   </Grid>
                   {/* <Chart /> */}
