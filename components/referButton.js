@@ -30,8 +30,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ReferButton() {
+export default function ReferButton(props) {
   const classes = useStyles();
+
+  const copyToClipboard = (text) => {
+    console.log('text', text)
+    var textField = document.createElement('textarea')
+    textField.innerText = text
+    document.body.appendChild(textField)
+    textField.select()
+    document.execCommand('copy')
+    textField.remove()
+  }
 
   return (
     <Paper component="form" className={classes.root}>
@@ -49,7 +59,13 @@ export default function ReferButton() {
         <SearchIcon />
         </IconButton>
       <Divider className={classes.divider} orientation="vertical" /> */}
-      <Button color="primary" className={classes.iconButton} variant='contained' aria-label="copy">
+      <Button
+        color="primary"
+        className={classes.iconButton}
+        variant='contained'
+        onClick={() => copyToClipboard(props.link)}
+        aria-label="Copy link"
+      >
         <LinkOutlinedIcon/>
       </Button>
       {/* </React.Fragment> */}
