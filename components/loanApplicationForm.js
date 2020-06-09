@@ -19,11 +19,13 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import StepIcon from '@material-ui/core/StepIcon';
 import TextField from '@material-ui/core/TextField';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/core/styles';
 import {DropzoneArea} from 'material-ui-dropzone'
 import Back from "./common/Back";
 import numeral from "numeral";
 import Paystack from '../utils/axios.paystack';
+import Api from '../utils/axios.service';
 import states from './statedata.json';
 
 const localStorage = require('local-storage')
@@ -132,6 +134,14 @@ const styles = theme => ({
     paddingBottom: 24,
     marginBottom: 24
   },
+  buttonProgress: {
+    color: theme.palette.secondary.main,
+    // position: 'absolute',
+    // top: '50%',
+    // left: '50%',
+    // marginTop: -12,
+    // marginLeft: -12,
+  },
   flexBar: {
     marginTop: 32,
     display: "flex",
@@ -156,6 +166,7 @@ const getSteps = () => {
 
 class LoanApplicationForm extends Component {
   state = {
+    loading: false,
     activeStep: 0,
     termsChecked: false,
     labelWidth: 0,
@@ -199,7 +210,6 @@ class LoanApplicationForm extends Component {
     const data = {...this.state}
     delete data.banks
     delete data.files
-    console.log(data);
     localStorage('formstate', JSON.stringify(data))
   }
 
@@ -227,7 +237,7 @@ class LoanApplicationForm extends Component {
 
   handleTerms = event => {
     console.log(event.target.name);
-    this.setState({ [event.target.name]: event.target.checked });
+    this.setState({ [event.target.name]: event.target.checked, loading: false });
   };
 
   stepActions() {
@@ -259,7 +269,52 @@ class LoanApplicationForm extends Component {
         this.setState({files: files,});
     }
 
+  clear = () => {
+    localStorage.clear()
+  }
 
+  submit = event => {
+    event.preventDefault()
+    this.setState({loading:true})
+    const kycForm = {
+      first_name: this.state.firstName,
+      last_name: this.state.lastName,
+      email: this.state.email,
+      national_id: this.state.NationalIdNo,
+      salary: this.state.salary,
+      employee_reference: this.state.employeeReference,
+      employee_number: this.state.employeeNumber,
+      gender: this.state.gender,
+      bank: this.state.bankName,
+      mobile: this.state.mobile,
+      dob: this.state.dob,
+      initial_amount: this.props.initialAmount,
+      "address": this.state.address,
+      "account_number": this.state.accountNumber
+    }
+    Api.kycUpdate(JSON.stringify(kycForm)).then((response) => {
+      console.log(response);
+      // this.clear();
+      return response.data.data
+    }).then(data => {
+      console.log(data)
+      const apiData = {
+        "email": data.email,
+        "amount": data.initial_amount,
+        "loan_cos": "1",
+        "loan_tenure": '8',
+      }
+      return apiData })
+      // .then(data => {
+      // Api.loanApplication(JSON.stringify(data))})
+      .then((response) => {
+        console.log(response);
+        this.setState({loading:false})
+        this.handleNext();
+    }).catch(error => {
+      console.log(error);
+    })
+  }
 
   render() {
     const edulist = ['None', 'Primary', 'Secondary', 'Diploma', 'Bachelors', 'Masters', 'Doctorate'];
@@ -269,7 +324,7 @@ class LoanApplicationForm extends Component {
     const { activeStep, firstName, lastName, gracePeriod, hascreditScore, creditScore,
       NationalIdNo, email, dob, mobile, gender, education, ethnicity, questions,
       address, city, state, mobileCheck, addressCheck, repaymentPlan, bankName,
-      accountNumber, banks, employeeReference, employeeNumber, salary,
+      accountNumber, banks, employeeReference, employeeNumber, salary, loading,
     } = this.state;
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
     const successPaper = clsx(classes.paper, classes.successPaper);
@@ -1021,19 +1076,32 @@ class LoanApplicationForm extends Component {
                         Back
                       </Button>
                     )}
-                    <Button
+                    {this.state.activeStep === 4 ?
+                      (<React.Fragment>
+                        <Button
+                          fullWidth
+                          variant="contained"
+                          color="primary"
+                          onClick={this.submit}
+                          disabled={loading}
+                        >
+                          {loading ? <CircularProgress size={24} className={classes.buttonProgress}/> : 'ACCEPT'}
+                        </Button>
+                      </React.Fragment>
+                      )
+                    : (<Button
                       fullWidth
                       variant="contained"
                       color="primary"
                       onClick={
-                        activeStep !== 5 ? this.handleNext : this.props.handler
+                        activeStep !== 5 ? this.handleNext : this.goToDashboard
                       }
                       size="large"
                       disabled={
-                        this.state.activeStep === 0 && !this.state.termsChecked
-                      }>
-                      {this.stepActions()}
-                    </Button>
+                          this.state.activeStep === 0 && !this.state.termsChecked
+                        }>
+                        {this.stepActions()}
+                      </Button>)}
                   </div>
                 </div>
               </Grid>

@@ -28,7 +28,6 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import LoanApplicationForm from '../components/loanApplicationForm';
 import { mainListItems, secondaryListItems } from '../components/listItems';
 import LinkOutlinedIcon from '@material-ui/icons/LinkOutlined';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Copyright from '../components/copyright';
 import PreviousLoans from '../components/previousLoans';
 import theme from '../src/theme';
@@ -74,6 +73,7 @@ const useStyles = theme => ({
     marginRight: 36,
   },
   optionButtons: {
+    flexWrap: 'nowrap',
     "@media screen and (max-width: 600px)":{
       flexDirection: 'column',
       justifyContent: 'space-around',
@@ -146,9 +146,6 @@ const useStyles = theme => ({
     }
 
   },
-  buttonGroup: {
-    marginTop: '50px'
-  },
   divider: {
     width: "40px",
     margin: 0,
@@ -170,6 +167,7 @@ class Dashboard extends Component {
       questions: true,
       application: false,
       showHistory: false,
+      initial_amount: '',
       firstName: '',
       lastName: '',
       email: ''
@@ -194,13 +192,15 @@ class Dashboard extends Component {
       this.setState({
         firstName: state.first_name,
         lastName: state.last_name,
-        email: state.email
+        email: state.email,
+        initial_amount: state.initial_amount
       })
     } else if (sessionStorage.getItem('email')) {
     this.setState({
       firstName : sessionStorage.getItem('firstName') ? sessionStorage.getItem('firstName') : '',
       lastName : sessionStorage.getItem('lastName') ? sessionStorage.getItem('lastName') : '',
       email : sessionStorage.getItem('email') ? sessionStorage.getItem('email') : '',
+      initial_amount : sessionStorage.getItem('principal') ? sessionStorage.getItem('principal') : '',
     })
     } else {
     Router.push('/login')
@@ -307,15 +307,7 @@ class Dashboard extends Component {
                       <Typography variant='body1' styles={{marginTop:"5px"}}>
                         Welcome to InstaKash, please continue your application.
                       </Typography>
-                      {/* <ButtonGroup className={classes.buttonGroup} aria-label="outlined primary button group">
-                        <Button>Refer your friends and get N1,000</Button>
-                        <Button disabled={true} >https://member.instakash.com/api/landing/&pc=5053&sid=CID137</Button>
-                        <Button variant="outlined"
-                          color="primary"
-                          className={classes.root}
-                          endIcon={<LinkOutlinedIcon/>} />
-                      </ButtonGroup> */}
-                      <ReferButton/>
+                      <ReferButton link='https://member.instakash.com/api/landing/&pc=5053&sid=CID137'/>
                     </Grid>
                   </Grid>
                   {/* <Chart /> */}
@@ -338,7 +330,7 @@ class Dashboard extends Component {
                     fullWidth
                     variant="outlined"
                     className={classes.gridButton}>
-                  Approval Documents</Button>
+                    <span style={{whiteSpace: 'nowrap'}}>Approval Documents</span></Button>
                   </Grid>
                   <Divider className={classes.divider} orientation="horizontal"/>
 
@@ -347,7 +339,7 @@ class Dashboard extends Component {
                     variant="outlined"
                     className={classes.gridButton}
                     onClick={this.showHistory}>
-                  Other applications</Button>
+                    <span style={{whiteSpace: 'nowrap'}}>Other applications</span></Button>
                   </Grid>
                 </Grid>
               </Grid>
@@ -386,7 +378,10 @@ class Dashboard extends Component {
                     firstName={firstName}
                     lastName={lastName}
                     email={email}
-                    handler={this.continueApplication}/>
+                    handler={this.continueApplication}
+                    initialAmount={this.state.initial_amount}
+                  />
+
                 </Grid>}
               {this.state.showHistory &&
                 <Grid item xs={12}>
