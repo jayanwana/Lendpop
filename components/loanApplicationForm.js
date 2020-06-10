@@ -1001,7 +1001,7 @@ class LoanApplicationForm extends Component {
                       <Typography className={classes.formLabel} variant="caption">SOCIAL MEDIA HANDLE</Typography>
                       <form className={classes.formControl} noValidate autoComplete="off">
                         <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
-                        <Grid item xs={12} sm={4} >  
+                        <Grid item xs={12} sm={6} >  
                         <div>                       
                           <TextField
                             className={classes.margin}
@@ -1074,7 +1074,7 @@ class LoanApplicationForm extends Component {
                               id="outlined-required-firstName"
                               label="First Name"
                               variant="outlined"
-                              value={null}
+                              value={" "}
                               onChange={handleChange}
                               placeholder="Enter Firstname"
                               InputLabelProps={{
@@ -1089,7 +1089,7 @@ class LoanApplicationForm extends Component {
                               label="Last Name"
                               variant="outlined"
                               name="lastName"
-                              value={null}
+                              value={" "}
                               onChange={handleChange}
                               placeholder="Enter Lastname"
                               InputLabelProps={{
@@ -1104,7 +1104,7 @@ class LoanApplicationForm extends Component {
                               type="email"
                               variant="outlined"
                               name="email"
-                              value={null}
+                              value={" "}
                               onChange={handleChange}
                               placeholder="Enter Contact Email Address"
                               InputLabelProps={{
@@ -1119,7 +1119,7 @@ class LoanApplicationForm extends Component {
                               type="number"
                               variant="outlined"
                               name="mobile"
-                              value={null}
+                              value={" "}
                               onChange={handleChange}
                               placeholder="Enter Mobile Number"
                               InputLabelProps={{
@@ -1141,7 +1141,7 @@ class LoanApplicationForm extends Component {
                               id="outlined-required-firstName"
                               label="First Name"
                               variant="outlined"
-                              value={null}
+                              value={" "}
                               onChange={handleChange}
                               placeholder="Enter Firstname"
                               InputLabelProps={{
@@ -1156,7 +1156,7 @@ class LoanApplicationForm extends Component {
                               label="Last Name"
                               variant="outlined"
                               name="lastName"
-                              value={null}
+                              value={" "}
                               onChange={handleChange}
                               placeholder="Enter Lastname"
                               InputLabelProps={{
@@ -1171,7 +1171,7 @@ class LoanApplicationForm extends Component {
                               type="email"
                               variant="outlined"
                               name="email"
-                              value={null}
+                              value={" "}
                               onChange={handleChange}
                               placeholder="Enter Contact Email Address"
                               InputLabelProps={{
@@ -1186,7 +1186,7 @@ class LoanApplicationForm extends Component {
                               type="number"
                               variant="outlined"
                               name="mobile"
-                              value={null}
+                              value={" "}
                               onChange={handleChange}
                               placeholder="Enter Mobile Number"
                               InputLabelProps={{
@@ -1208,7 +1208,7 @@ class LoanApplicationForm extends Component {
                               id="outlined-required-firstName"
                               label="First Name"
                               variant="outlined"
-                              value={null}
+                              value={" "}
                               onChange={handleChange}
                               placeholder="Enter Firstname"
                               InputLabelProps={{
@@ -1223,7 +1223,7 @@ class LoanApplicationForm extends Component {
                               label="Last Name"
                               variant="outlined"
                               name="lastName"
-                              value={null}
+                              value={" "}
                               onChange={handleChange}
                               placeholder="Enter Lastname"
                               InputLabelProps={{
@@ -1238,7 +1238,7 @@ class LoanApplicationForm extends Component {
                               type="email"
                               variant="outlined"
                               name="email"
-                              value={null}
+                              value={" "}
                               onChange={handleChange}
                               placeholder="Enter Contact Email Address"
                               InputLabelProps={{
@@ -1253,7 +1253,7 @@ class LoanApplicationForm extends Component {
                               type="number"
                               variant="outlined"
                               name="mobile"
-                              value={null}
+                              value={" "}
                               onChange={handleChange}
                               placeholder="Enter Mobile Number"
                               InputLabelProps={{
@@ -1275,7 +1275,7 @@ class LoanApplicationForm extends Component {
                               id="outlined-required-firstName"
                               label="First Name"
                               variant="outlined"
-                              value={null}
+                              value={" "}
                               onChange={handleChange}
                               placeholder="Enter Firstname"
                               InputLabelProps={{
@@ -1290,7 +1290,7 @@ class LoanApplicationForm extends Component {
                               label="Last Name"
                               variant="outlined"
                               name="lastName"
-                              value={null}
+                              value={" "}
                               onChange={handleChange}
                               placeholder="Enter Lastname"
                               InputLabelProps={{
@@ -1305,7 +1305,7 @@ class LoanApplicationForm extends Component {
                               type="email"
                               variant="outlined"
                               name="email"
-                              value={null}
+                              value={" "}
                               onChange={handleChange}
                               placeholder="Enter Contact Email Address"
                               InputLabelProps={{
@@ -1320,7 +1320,7 @@ class LoanApplicationForm extends Component {
                               type="number"
                               variant="outlined"
                               name="mobile"
-                              value={null}
+                              value={" "}
                               onChange={handleChange}
                               placeholder="Enter Mobile Number"
                               InputLabelProps={{
@@ -1342,7 +1342,7 @@ class LoanApplicationForm extends Component {
                               id="outlined-required-firstName"
                               label="First Name"
                               variant="outlined"
-                              value={null}
+                              value={" "}
                               onChange={handleChange}
                               placeholder="Enter Firstname"
                               InputLabelProps={{
@@ -1357,7 +1357,7 @@ class LoanApplicationForm extends Component {
                               label="Last Name"
                               variant="outlined"
                               name="lastName"
-                              value={null}
+                              value={" "}
                               onChange={handleChange}
                               placeholder="Enter Lastname"
                               InputLabelProps={{
@@ -1372,7 +1372,7 @@ class LoanApplicationForm extends Component {
                               type="email"
                               variant="outlined"
                               name="email"
-                              value={null}
+                              value={" "}
                               onChange={handleChange}
                               placeholder="Enter Contact Email Address"
                               InputLabelProps={{
@@ -1387,7 +1387,7 @@ class LoanApplicationForm extends Component {
                               type="number"
                               variant="outlined"
                               name="mobile"
-                              value={null}
+                              value={" "}
                               onChange={handleChange}
                               placeholder="Enter Mobile Number"
                               InputLabelProps={{
@@ -1405,14 +1405,14 @@ class LoanApplicationForm extends Component {
                       <Paper className={classes.paper}>
                         <Grid item container xs={12}>
                           <Grid item xs={12}>
-                            <Typography variant="subtitle1" gutterBottom>
+                            <Typography variant="h6" gutterBottom>
                               Congratulations{" "}
                               <span >
                                 {firstName}!!!
                               </span>
                             </Typography>
                             
-                            <Typography variant="body1" gutterBottom>
+                            <Typography variant="h6" gutterBottom>
                               An email has been sent to you with your loan application ID.
                               If you wish to make enquiries about your loan,
                               please send an email to borrow@InstaKash.com.
