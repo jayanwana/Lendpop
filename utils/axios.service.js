@@ -1,4 +1,4 @@
-import axios from './axios.setup';
+import axios, { source } from './axios.setup';
 
 class LendPopApi {
   login(data) {
@@ -22,7 +22,7 @@ class LendPopApi {
   }
 
   history(data) {
-    return axios.post('/history', data)
+    return axios.post('/history', data, { cancelToken: source.token })
   }
 
   kycUpdate(data) {
@@ -31,6 +31,17 @@ class LendPopApi {
 
   loanApplication(data) {
     return axios.post('/apply', data)
+  }
+
+  docUpload(data) {
+    const options = {  headers: {
+        "Content-type": "multipart/form-data",
+      }}
+    return axios.post('/upload/documents?=', data, options)
+  }
+
+  cancel() {
+    return source
   }
 
 }

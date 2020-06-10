@@ -1,5 +1,6 @@
 import axios from "axios";
 
+const source = axios.CancelToken.source()
 
 const pay = axios.create({
   baseURL: "https://api.paystack.co/",
@@ -11,7 +12,11 @@ const pay = axios.create({
 
 class Paystack {
   banks() {
-    return pay.get('/bank')
+    return pay.get('/bank', { cancelToken: source.token })
+  }
+
+  cancel() {
+    return source
   }
 }
 
