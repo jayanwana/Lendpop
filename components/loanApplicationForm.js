@@ -216,7 +216,6 @@ class LoanApplicationForm extends Component {
 
   componentDidMount() {
     const formData = JSON.parse(localStorage('formstate'))
-    formData.activeStep = 5 // DELETE!!!!!!!!
     if (formData){this.setState({...formData})};
     Paystack.banks().then(response => {
       this.setState({banks: response.data.data})
