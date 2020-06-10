@@ -69,12 +69,13 @@ export default function Login(props) {
       sessionStorage.setItem('state', JSON.stringify(response.data))
       Router.push('/dashboard',);
     }).catch(error => {
-      if (error.response && error.response.status === 401 || error.response.status === 400){
+      if (error.response && (error.response.status === 401 || error.response.status === 400)){
         setErrorMessage(error.response.data.description);
         setError(true)
         setLoading(false)
       } else {
-        console.log(error.response)
+        setErrorMessage(error.message);
+        setError(true)
         setLoading(false)
       }
     })

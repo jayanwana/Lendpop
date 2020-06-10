@@ -312,7 +312,8 @@ class LoanApplicationForm extends Component {
         this.setState({loading:false})
         this.handleNext();
     }).catch(error => {
-      console.log(error);
+      console.log(error.response);
+      this.setState({loading:false})
     })
   }
 
