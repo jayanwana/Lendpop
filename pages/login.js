@@ -37,6 +37,9 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main,
   },
+  a: {
+    color: theme.palette.secondary.main,
+  },
   form: {
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(1),
@@ -44,6 +47,7 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+
 }));
 
 export default function Login(props) {
@@ -66,7 +70,7 @@ export default function Login(props) {
     }
     Api.login(JSON.stringify(postData)).then(response => {
       console.log(response.data)
-      sessionStorage.setItem('state', JSON.stringify(response.data))
+      sessionStorage.setItem('state', JSON.stringify(response.data.data))
       Router.push('/dashboard',);
     }).catch(error => {
       if (error.response && (error.response.status === 401 || error.response.status === 400)){
@@ -165,7 +169,7 @@ export default function Login(props) {
               </Grid>
             </Grid>
           </form>
-          <Typography>Don't have an account? <Link href="/"><a>Sign Up!</a></Link></Typography>
+          <Typography>Don't have an account? <Link href="/"><a className={classes.a}>Sign Up!</a></Link></Typography>
         </div>
         <Box mt={5}>
           <Copyright />

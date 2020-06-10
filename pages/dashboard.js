@@ -34,6 +34,7 @@ import PreviousLoans from '../components/previousLoans';
 import theme from '../src/theme';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
+import ReferButton from '../components/referButton';
 
 const localStorage = require('local-storage');
 const sessionstorage = require('sessionstorage');
@@ -169,6 +170,8 @@ class Dashboard extends Component {
       questions: true,
       application: false,
       showHistory: false,
+      initial_amount: '',
+      tenure: '',
       firstName: '',
       lastName: '',
       email: ''
@@ -193,13 +196,17 @@ class Dashboard extends Component {
       this.setState({
         firstName: state.first_name,
         lastName: state.last_name,
-        email: state.email
+        email: state.email,
+        initial_amount: state.initial_amount,
+        tenure: state.tenure
       })
     } else if (sessionStorage.getItem('email')) {
     this.setState({
       firstName : sessionStorage.getItem('firstName') ? sessionStorage.getItem('firstName') : '',
       lastName : sessionStorage.getItem('lastName') ? sessionStorage.getItem('lastName') : '',
       email : sessionStorage.getItem('email') ? sessionStorage.getItem('email') : '',
+      initial_amount : sessionStorage.getItem('principal') ? sessionStorage.getItem('principal') : '',
+      tenure: sessionStorage.getItem('period') ? sessionStorage.getItem('period') : ''
     })
     } else {
     Router.push('/login')
@@ -382,7 +389,11 @@ class Dashboard extends Component {
                     firstName={firstName}
                     lastName={lastName}
                     email={email}
-                    handler={this.continueApplication}/>
+                    handler={this.continueApplication}
+                    initialAmount={this.state.initial_amount}
+                    tenure={this.state.tenure}
+                  />
+
                 </Grid>}
               {this.state.showHistory &&
                 <Grid item xs={12}>

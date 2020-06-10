@@ -200,18 +200,18 @@ class LoanApplicationForm extends Component {
   };
 
   componentDidMount() {
-    const formData = JSON.parse(localStorage('formstate'))
-    if (formData){this.setState({...formData})};
     Paystack.banks().then(response => {
       this.setState({banks: response.data.data})
     }).catch(error => console.log(error))
+    const formData = JSON.parse(localStorage('formstate'))
+    if (formData){this.setState({...formData})};
   }
 
   componentDidUpdate() {
     const data = {...this.state}
     delete data.banks
     delete data.files
-    console.log(data);
+    delete data.loading
     localStorage('formstate', JSON.stringify(data))
   }
 
@@ -272,6 +272,50 @@ class LoanApplicationForm extends Component {
     }
 
 
+  submit = event => {
+    event.preventDefault()
+    this.setState({loading:true})
+    const kycForm = {
+      first_name: this.state.firstName,
+      last_name: this.state.lastName,
+      email: this.state.email,
+      national_id: this.state.NationalIdNo,
+      salary: this.state.salary,
+      employee_reference: this.state.employeeReference,
+      employee_number: this.state.employeeNumber,
+      gender: this.state.gender,
+      bank: this.state.bankName,
+      mobile: this.state.mobile,
+      dob: this.state.dob,
+      tenure: this.props.tenure,
+      initial_amount: this.props.initialAmount,
+      "address": this.state.address,
+      "account_number": this.state.accountNumber
+    }
+    Api.kycUpdate(JSON.stringify(kycForm)).then((response) => {
+      console.log(response);
+      // this.clear();
+      return response.data.data
+    }).then(data => {
+      console.log(data)
+      const apiData = {
+        "email": data.email,
+        "amount": data.initial_amount,
+        "loan_cos": "1",
+        "tenure": data.tenure,
+      }
+      return apiData })
+      .then(data => {
+      return Api.loanApplication(JSON.stringify(data))
+    }).then((response) => {
+        console.log(response);
+        this.setState({loading:false})
+        this.handleNext();
+    }).catch(error => {
+      console.log(error);
+      return this.setState({loading:false})
+    })
+  }
 
   render() {
     const edulist = ['None', 'Primary', 'Secondary', 'Diploma', 'Bachelors', 'Masters', 'Doctorate'];
