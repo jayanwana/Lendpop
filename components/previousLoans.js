@@ -18,44 +18,6 @@ const styles = theme => ({
     padding: '20 0',
     width: "100%"
   },
-  grid: {
-    margin: 0
-  },
-  smallContainer: {
-    width: "100%"
-  },
-  bigContainer: {
-    width: "100%"
-  },
-  stepContainer: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center"
-  },
-  stepGrid: {
-    width: "80%"
-  },
-  backButton: {
-    marginRight: theme.spacing(1)
-  },
-  outlinedButtom: {
-    textTransform: "uppercase",
-    margin: theme.spacing(1)
-  },
-  stepper: {
-    backgroundColor: "transparent",
-    "@media screen and (max-width: 600px)":{
-      display: "none"
-    }
-  },
-
-  title: {
-    fontSize: "1rem",
-    flexGrow: 0,
-    textAlign: 'left',
-    color: theme.palette.secondary.main
-  },
-
   paper: {
     padding: theme.spacing(2),
     display: 'flex',
@@ -64,58 +26,9 @@ const styles = theme => ({
     borderRadius: '10px',
     width: '100%'
   },
-  successPaper: {
-    backgroundColor: theme.palette.primary.main,
-    justifyContent: 'space-around'
+  grid: {
+    margin: 0
   },
-  successText: {
-    margin: '5px 0'
-  },
-  formPaper: {
-    margin: 0,
-  },
-  formLabel: {
-    padding: 8,
-    fontSize: '1rem',
-    color:theme.palette.secondary.main
-  },
-  formCaption:{
-    padding: 8,
-    fontSize: '0.8rem',
-  },
-  fixedHeight: {
-    height: 250,
-  },
-  topInfo: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 42
-  },
-  formControl: {
-    width: "100%",
-      '& .MuiTextField-root': {
-        width: "100%"
-      },
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2)
-  },
-  borderColumn: {
-    borderBottom: `1px solid ${theme.palette.grey["100"]}`,
-    paddingBottom: 24,
-    marginBottom: 24
-  },
-  flexBar: {
-    marginTop: 32,
-    display: "flex",
-    justifyContent: "center",
-    alignSelf: "flex-end",
-    width: '40%',
-    "@media screen and (max-width: 600px)":{
-      marginRight: '15px'
-    }
-  }
 });
 
 class PreviousLoans extends Component {
@@ -125,10 +38,17 @@ class PreviousLoans extends Component {
   }
 
   componentDidMount() {
+    this.cancelReq = Api.cancel()
     Api.history(JSON.stringify({email: this.state.email})).then(response => {
       console.log(response.data.data);
-      if (response.data.data){this.setState({loanHistory: response.data.data})}
+      if (response.data.data){
+        this.setState({loanHistory: response.data.data})
+      }
     }).catch(error => console.log(error))
+  }
+
+  componentWillUnmount() {
+    this.cancelReq.cancel('request canceled')
   }
 
   render() {
