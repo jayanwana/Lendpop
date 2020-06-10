@@ -215,17 +215,18 @@ class LoanApplicationForm extends Component {
   };
 
   componentDidMount() {
-    const formData = JSON.parse(localStorage('formstate'))
-    if (formData){this.setState({...formData})};
     Paystack.banks().then(response => {
       this.setState({banks: response.data.data})
     }).catch(error => console.log(error))
+    const formData = JSON.parse(localStorage('formstate'))
+    if (formData){this.setState({...formData})};
   }
 
   componentDidUpdate() {
     const data = {...this.state}
     delete data.banks
     delete data.files
+    delete data.loading
     localStorage('formstate', JSON.stringify(data))
   }
 
@@ -304,6 +305,7 @@ class LoanApplicationForm extends Component {
       bank: this.state.bankName,
       mobile: this.state.mobile,
       dob: this.state.dob,
+      tenure: this.props.tenure,
       initial_amount: this.props.initialAmount,
       "address": this.state.address,
       "account_number": this.state.accountNumber
@@ -318,18 +320,18 @@ class LoanApplicationForm extends Component {
         "email": data.email,
         "amount": data.initial_amount,
         "loan_cos": "1",
-        "loan_tenure": '8',
+        "tenure": data.tenure,
       }
       return apiData })
-      // .then(data => {
-      // Api.loanApplication(JSON.stringify(data))})
-      .then((response) => {
+      .then(data => {
+      return Api.loanApplication(JSON.stringify(data))
+    }).then((response) => {
         console.log(response);
         this.setState({loading:false})
         this.handleNext();
     }).catch(error => {
-      console.log(error.response);
-      this.setState({loading:false})
+      console.log(error);
+      return this.setState({loading:false})
     })
   }
 
