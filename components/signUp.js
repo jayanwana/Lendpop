@@ -130,7 +130,9 @@ class SignUp extends Component {
       principal: 5000,
       period: 6,
       monthlyPayment: '',
-      loading: false
+      loading: false,
+      error: false,
+      errorMessage: ''
     }
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handlePrincipalSlider = this.handlePrincipalSlider.bind(this);
@@ -194,20 +196,24 @@ class SignUp extends Component {
     }
     console.log(postData)
     for (let key in this.state) {
-      if (['period', 'monthlyPayment', 'loading'].includes(key)){continue}
+      if (['monthlyPayment', 'loading', 'error', 'errorMessage'].includes(key)){continue}
       sessionstorage.setItem(key, this.state[key])
     }
     Api.register(JSON.stringify(postData)).then(response => {
       Router.push('/email');
     }).catch(error => {
+      if (error.response && (error.response.status === 401 || error.response.status === 400)){
       console.log(error.response);
-      this.setState({loading: false})
+      this.setState({loading: false, error: true, errorMessage: error.response.data.description})
+    } else {
+      this.setState({loading: false, error: true, errorMessage: error.message})
+    }
     })
   }
 
   render() {
     const { classes } = this.props;
-    const { principal, period, monthlyPayment } = this.state;
+    const { principal, period, monthlyPayment, error, errorMessage } = this.state;
     return (
       <Grid container component="main" className={classes.root}>
         <CssBaseline />
@@ -221,6 +227,7 @@ class SignUp extends Component {
             <div className={classes.margin} />
             <form className={classes.form} validate={1} onSubmit={this.submit}>
               <TextField
+                error={error}
                 variant="outlined"
                 margin="normal"
                 required
@@ -237,6 +244,7 @@ class SignUp extends Component {
                 }}
               />
               <TextField
+                error={error}
                 variant="outlined"
                 margin="normal"
                 required
@@ -252,6 +260,8 @@ class SignUp extends Component {
                 }}
               />
               <TextField
+                error={error}
+                helperText={error ? errorMessage : ''}
                 variant="outlined"
                 margin="normal"
                 required
