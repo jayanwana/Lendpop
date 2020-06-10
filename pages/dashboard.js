@@ -28,12 +28,12 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import LoanApplicationForm from '../components/loanApplicationForm';
 import { mainListItems, secondaryListItems } from '../components/listItems';
 import LinkOutlinedIcon from '@material-ui/icons/LinkOutlined';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Copyright from '../components/copyright';
 import PreviousLoans from '../components/previousLoans';
 import theme from '../src/theme';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
-import ReferButton from '../components/referButton'
 
 const localStorage = require('local-storage');
 const sessionstorage = require('sessionstorage');
@@ -73,7 +73,6 @@ const useStyles = theme => ({
     marginRight: 36,
   },
   optionButtons: {
-    flexWrap: 'nowrap',
     "@media screen and (max-width: 600px)":{
       flexDirection: 'column',
       justifyContent: 'space-around',
@@ -146,6 +145,9 @@ const useStyles = theme => ({
     }
 
   },
+  buttonGroup: {
+    marginTop: '50px'
+  },
   divider: {
     width: "40px",
     margin: 0,
@@ -167,7 +169,6 @@ class Dashboard extends Component {
       questions: true,
       application: false,
       showHistory: false,
-      initial_amount: '',
       firstName: '',
       lastName: '',
       email: ''
@@ -192,15 +193,13 @@ class Dashboard extends Component {
       this.setState({
         firstName: state.first_name,
         lastName: state.last_name,
-        email: state.email,
-        initial_amount: state.initial_amount
+        email: state.email
       })
     } else if (sessionStorage.getItem('email')) {
     this.setState({
       firstName : sessionStorage.getItem('firstName') ? sessionStorage.getItem('firstName') : '',
       lastName : sessionStorage.getItem('lastName') ? sessionStorage.getItem('lastName') : '',
       email : sessionStorage.getItem('email') ? sessionStorage.getItem('email') : '',
-      initial_amount : sessionStorage.getItem('principal') ? sessionStorage.getItem('principal') : '',
     })
     } else {
     Router.push('/login')
@@ -230,7 +229,6 @@ class Dashboard extends Component {
   handleDrawer() {
     this.setState({open: !this.state.open})
   }
-
   reset(){
     this.setState({
       showHistory: false,
@@ -238,7 +236,6 @@ class Dashboard extends Component {
       questions: true
     })
   }
-
   submit(event) {
     event.preventDefault()
     console.log(event);
@@ -298,16 +295,23 @@ class Dashboard extends Component {
             <Grid container spacing={3}>
               {/* Chart */}
               <Grid item xs={12}>
-                <Paper className={fixedHeightPaper} style={{justifyContent: 'center'}}>
+                <Paper className={fixedHeightPaper}>
                   <Grid container>
                     <Grid className={classes.hello} item xs={12} sm={8}>
                       <Typography variant="h3" color="inherit" noWrap className={classes.title}>
                         Hello, {firstName? firstName : 'User'}!
                       </Typography>
-                      <Typography variant='body1' styles={{marginTop:"5px"}}>
+                      <Typography variant='body1'>
                         Welcome to InstaKash, please continue your application.
                       </Typography>
-                      <ReferButton link='https://member.instakash.com/api/landing/&pc=5053&sid=CID137'/>
+                      <ButtonGroup className={classes.buttonGroup} aria-label="outlined primary button group">
+                        <Button >Refer your friends and get N1,000</Button>
+                        <Button >https://member.instakash.com/api/landing/&pc=5053&sid=CID137</Button>
+                        <Button variant="outlined"
+                          color="primary"
+                          className={classes.root}
+                          endIcon={<LinkOutlinedIcon/>} />
+                      </ButtonGroup>                      
                     </Grid>
                   </Grid>
                   {/* <Chart /> */}
@@ -330,7 +334,7 @@ class Dashboard extends Component {
                     fullWidth
                     variant="outlined"
                     className={classes.gridButton}>
-                    <span style={{whiteSpace: 'nowrap'}}>Approval Documents</span></Button>
+                  Approval Documents</Button>
                   </Grid>
                   <Divider className={classes.divider} orientation="horizontal"/>
 
@@ -339,7 +343,7 @@ class Dashboard extends Component {
                     variant="outlined"
                     className={classes.gridButton}
                     onClick={this.showHistory}>
-                    <span style={{whiteSpace: 'nowrap'}}>Other applications</span></Button>
+                  Other applications</Button>
                   </Grid>
                 </Grid>
               </Grid>
@@ -378,10 +382,7 @@ class Dashboard extends Component {
                     firstName={firstName}
                     lastName={lastName}
                     email={email}
-                    handler={this.continueApplication}
-                    initialAmount={this.state.initial_amount}
-                  />
-
+                    handler={this.continueApplication}/>
                 </Grid>}
               {this.state.showHistory &&
                 <Grid item xs={12}>
