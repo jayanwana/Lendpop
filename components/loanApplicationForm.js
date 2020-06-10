@@ -114,12 +114,16 @@ const styles = theme => ({
   },
   formLabel: {
     padding: 8,
-    fontSize: '1rem',
+    fontSize: '1.2rem',
     color:theme.palette.secondary.main
+  },
+  formSubLabel: {
+    padding: 8,
+    fontSize: '1rem',
   },
   formCaption:{
     padding: 8,
-    fontSize: '0.8rem',
+    fontSize: '1rem',
   },
   fixedHeight: {
     height: 250,
@@ -212,6 +216,7 @@ class LoanApplicationForm extends Component {
 
   componentDidMount() {
     const formData = JSON.parse(localStorage('formstate'))
+    formData.activeStep = 5 // DELETE!!!!!!!!
     if (formData){this.setState({...formData})};
     Paystack.banks().then(response => {
       this.setState({banks: response.data.data})
@@ -848,7 +853,7 @@ class LoanApplicationForm extends Component {
                             />
                           </Grid>
                         </Grid>
-                        <Typography className={classes.formCaption} variant='caption'>
+                        <Typography className={classes.formSubLabel} variant='caption'>
                           DEBIT & RECONCILIATION AUTHORIZATION
                         </Typography>
                         <Grid container spacing={2} style={{margin: '20px 0', width: '100%'}}>
@@ -912,7 +917,7 @@ class LoanApplicationForm extends Component {
                             />
                           </Grid>
                         </Grid>
-                        <Typography className={classes.formCaption} variant='caption'>
+                        <Typography className={classes.formSubLabel} variant='caption'>
                           LIST OF DOCUMENTS TO UPLOAD
                         </Typography>
                         <Grid container spacing={2} style={{margin: '20px 0', width: '100%'}}>
@@ -960,13 +965,12 @@ class LoanApplicationForm extends Component {
                       <Paper className={classes.paper}>
                         <div style={{ marginBottom: 24 }}>
                           <Typography
-                            variant="subtitle1"
-                            style={{ fontWeight: "bold" }}
-                            gutterBottom
+                            variant="caption"
+                            className={classes.formLabel}
                           >
-                            Terms & Conditions
+                            TERMS & CONDITIONS
                           </Typography>
-                          <Typography variant="body1" gutterBottom>
+                          <Typography variant="body1" className={classes.formCaption} gutterBottom>
                             Please read through and accept the terms &
                             conditions
                           </Typography>
@@ -1050,75 +1054,266 @@ class LoanApplicationForm extends Component {
                   )}
                   {activeStep === 5  && (
                     <Paper className={classes.paper} >
-                      <Typography variant="h6" gutterBottom>
-                        Congratulations! you're one step closer to completing your loan application,
+                      <Typography variant="body1" className={classes.formCaption} gutterBottom>
+                        You're one step closer to completing your loan application, <br/>
                         Instakash would like to get your personal social media details and 5 of your close contacts information.
                       </Typography>
                       <Typography className={classes.formLabel} variant="caption">SOCIAL MEDIA HANDLE</Typography>
                       <form className={classes.formControl} noValidate autoComplete="off">
                         <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
                           <Grid item xs={12} sm={6} >
-                            <div>
-                              <TextField
-                                className={classes.margin}
-                                id="input-with-icon-textfield"
-                                label="Facebook"
-                                InputProps={{
-                                  startAdornment: (
-                                    <InputAdornment position="start">
-                                      <FacebookIcon />
-                                    </InputAdornment>
-                                  ),
-                                }}
-                              />
-                            </div>
-                            <div>
-                              <TextField
-                                className={classes.margin}
-                                id="social-twitter"
-                                label="Twitter"
-                                InputProps={{
-                                  startAdornment: (
-                                    <InputAdornment position="start">
-                                      <TwitterIcon />
-                                    </InputAdornment>
-                                  ),
-                                }}
-                              />
-                            </div>
-                            <div>
-                              <TextField
-                                className={classes.margin}
-                                id="social-instagram"
-                                label="Instagram"
-                                InputProps={{
-                                  startAdornment: (
-                                    <InputAdornment position="start">
-                                      <InstagramIcon/>
-                                    </InputAdornment>
-                                  ),
-                                }}
-                              />
-                            </div>
-                            <div>
-                              <TextField
-                                className={classes.margin}
-                                id="social-snapchat"
-                                label="Snap Chat"
-                                InputProps={{
-                                  startAdornment: (
-                                    <InputAdornment position="start">
-                                      <NotificationsActiveIcon />
-                                    </InputAdornment>
-                                  ),
-                                }}
-                              />
-                            </div>
+                            <TextField
+                              className={classes.margin}
+                              id="input-with-icon-textfield"
+                              label="Facebook"
+                              variant="outlined"
+                              InputProps={{
+                                startAdornment: (
+                                  <InputAdornment position="start">
+                                    <FacebookIcon />
+                                  </InputAdornment>
+                                ),
+                              }}
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={6} >
+                            <TextField
+                              className={classes.margin}
+                              id="social-twitter"
+                              label="Twitter"
+                              variant="outlined"
+                              InputProps={{
+                                startAdornment: (
+                                  <InputAdornment position="start">
+                                    <TwitterIcon />
+                                  </InputAdornment>
+                                ),
+                              }}
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={6} >
+                            <TextField
+                              className={classes.margin}
+                              id="social-instagram"
+                              label="Instagram"
+                              variant="outlined"
+                              InputProps={{
+                                startAdornment: (
+                                  <InputAdornment position="start">
+                                    <InstagramIcon/>
+                                  </InputAdornment>
+                                ),
+                              }}
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={6} >
+                            <TextField
+                              className={classes.margin}
+                              id="social-snapchat"
+                              label="Snap Chat"
+                              variant="outlined"
+                              InputProps={{
+                                startAdornment: (
+                                  <InputAdornment position="start">
+                                    <NotificationsActiveIcon />
+                                  </InputAdornment>
+                                ),
+                              }}
+                            />
                           </Grid>
                         </Grid>
                       </form>
                       <Typography className={classes.formLabel} variant="caption">REFEREE CONTACT INFO</Typography>
-                      <Typography variant="h6" gutterBottom>  Refree 1
+                      <Typography className={classes.formSubLabel} variant="caption" gutterBottom>  Referee 1
+                      </Typography>
+                      <form className={classes.formControl} noValidate autoComplete="off">
+                        <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
+                              <Grid item xs={12} sm={6}>
+                                <TextField
+                                  fullWidth
+                                  required
+                                  name="referee1firstName"
+                                  id="outlined-required-referee1firstName"
+                                  label="First Name"
+                                  variant="outlined"
+                                  onChange={handleChange}
+                                  placeholder="Enter Referee Firstname"
+                                  InputLabelProps={{
+                                    shrink: true,
+                                  }}
+                                />
+                              </Grid>
+
+                              <Grid item xs={12} sm={6}>
+                                <TextField
+                                  id="outlined-referee1lastName"
+                                  label="Last Name"
+                                  variant="outlined"
+                                  name="referee1lastName"
+                                  onChange={handleChange}
+                                  placeholder="Enter Referee Lastname"
+                                  InputLabelProps={{
+                                    shrink: true,
+                                  }}
+                                />
+                              </Grid>
+                              <Grid item xs={12} sm={6}>
+                                <TextField
+                                  id="outlined-referee1email"
+                                  label="Email Address"
+                                  type="email"
+                                  variant="outlined"
+                                  name="referee1email"
+                                  onChange={handleChange}
+                                  placeholder="Enter Referee Email Address"
+                                  InputLabelProps={{
+                                    shrink: true,
+                                  }}
+                                />
+                              </Grid>
+                              <Grid item xs={12} sm={6}>
+                                <TextField
+                                  id="outlined-referee1mobile"
+                                  label="Mobile Number"
+                                  type="number"
+                                  variant="outlined"
+                                  name="referee1mobile"
+                                  onChange={handleChange}
+                                  placeholder="Enter Referee Mobile Number"
+                                  InputLabelProps={{
+                                    shrink: true,
+                                  }}
+                                />
+                              </Grid>
+                            </Grid>
+                          </form>
+                          <Typography className={classes.formSubLabel} variant="caption" gutterBottom>  Referee 2
+                          </Typography>
+                          <form className={classes.formControl} noValidate autoComplete="off">
+                            <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
+                              <Grid item xs={12} sm={6}>
+                                <TextField
+                                  fullWidth
+                                  required
+                                  name="referee2firstName"
+                                  id="outlined-required-referee2firstName"
+                                  label="First Name"
+                                  variant="outlined"
+                                  onChange={handleChange}
+                                  placeholder="Enter Referee Firstname"
+                                  InputLabelProps={{
+                                    shrink: true,
+                                  }}
+                                />
+                              </Grid>
+
+                              <Grid item xs={12} sm={6}>
+                                <TextField
+                                  id="outlined-referee2lastName"
+                                  label="Last Name"
+                                  variant="outlined"
+                                  name="referee2lastName"
+                                  onChange={handleChange}
+                                  placeholder="Enter Referee Lastname"
+                                  InputLabelProps={{
+                                    shrink: true,
+                                  }}
+                                />
+                              </Grid>
+                              <Grid item xs={12} sm={6}>
+                                <TextField
+                                  id="outlined-referee2email"
+                                  label="Email Address"
+                                  type="email"
+                                  variant="outlined"
+                                  name="referee2email"
+                                  onChange={handleChange}
+                                  placeholder="Enter Referee Email Address"
+                                  InputLabelProps={{
+                                    shrink: true,
+                                  }}
+                                />
+                              </Grid>
+                              <Grid item xs={12} sm={6}>
+                                <TextField
+                                  id="outlined-referee2mobile"
+                                  label="Mobile Number"
+                                  type="number"
+                                  variant="outlined"
+                                  name="referee2mobile"
+                                  onChange={handleChange}
+                                  placeholder="Enter Referee Mobile Number"
+                                  InputLabelProps={{
+                                    shrink: true,
+                                  }}
+                                />
+                              </Grid>
+                            </Grid>
+                          </form>
+                          <Typography className={classes.formSubLabel} variant="caption" gutterBottom>  Referee 3
+                          </Typography>
+                          <form className={classes.formControl} noValidate autoComplete="off">
+                            <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
+                              <Grid item xs={12} sm={6}>
+                                <TextField
+                                  fullWidth
+                                  required
+                                  name="referee3firstName"
+                                  id="outlined-required-referee3firstName"
+                                  label="First Name"
+                                  variant="outlined"
+                                  onChange={handleChange}
+                                  placeholder="Enter Referee Firstname"
+                                  InputLabelProps={{
+                                    shrink: true,
+                                  }}
+                                />
+                              </Grid>
+
+                              <Grid item xs={12} sm={6}>
+                                <TextField
+                                  id="outlined-referee3lastName"
+                                  label="Last Name"
+                                  variant="outlined"
+                                  name="referee3lastName"
+                                  onChange={handleChange}
+                                  placeholder="Enter Referee Lastname"
+                                  InputLabelProps={{
+                                    shrink: true,
+                                  }}
+                                />
+                              </Grid>
+                              <Grid item xs={12} sm={6}>
+                                <TextField
+                                  id="outlined-referee3email"
+                                  label="Email Address"
+                                  type="email"
+                                  variant="outlined"
+                                  name="referee3email"
+                                  onChange={handleChange}
+                                  placeholder="Enter Referee Email Address"
+                                  InputLabelProps={{
+                                    shrink: true,
+                                  }}
+                                />
+                              </Grid>
+                              <Grid item xs={12} sm={6}>
+                                <TextField
+                                  id="outlined-referee3mobile"
+                                  label="Mobile Number"
+                                  type="number"
+                                  variant="outlined"
+                                  name="referee3mobile"
+                                  onChange={handleChange}
+                                  placeholder="Enter Referee Mobile Number"
+                                  InputLabelProps={{
+                                    shrink: true,
+                                  }}
+                                />
+                          </Grid>
+                        </Grid>
+                      </form>
+                      <Typography className={classes.formSubLabel} variant="caption" gutterBottom>  Referee 4
                       </Typography>
                       <form className={classes.formControl} noValidate autoComplete="off">
                         <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
@@ -1126,13 +1321,12 @@ class LoanApplicationForm extends Component {
                             <TextField
                               fullWidth
                               required
-                              name="firstName"
-                              id="outlined-required-firstName"
+                              name="referee4firstName"
+                              id="outlined-required-referee4firstName"
                               label="First Name"
                               variant="outlined"
-                              value={" "}
                               onChange={handleChange}
-                              placeholder="Enter Firstname"
+                              placeholder="Enter Referee Firstname"
                               InputLabelProps={{
                                 shrink: true,
                               }}
@@ -1141,13 +1335,12 @@ class LoanApplicationForm extends Component {
 
                           <Grid item xs={12} sm={6}>
                             <TextField
-                              id="outlined-lastName"
+                              id="outlined-referee4lastName"
                               label="Last Name"
                               variant="outlined"
-                              name="lastName"
-                              value={" "}
+                              name="referee4lastName"
                               onChange={handleChange}
-                              placeholder="Enter Lastname"
+                              placeholder="Enter Referee Lastname"
                               InputLabelProps={{
                                 shrink: true,
                               }}
@@ -1155,14 +1348,13 @@ class LoanApplicationForm extends Component {
                           </Grid>
                           <Grid item xs={12} sm={6}>
                             <TextField
-                              id="outlined-email"
+                              id="outlined-referee4email"
                               label="Email Address"
                               type="email"
                               variant="outlined"
-                              name="email"
-                              value={" "}
+                              name="referee4email"
                               onChange={handleChange}
-                              placeholder="Enter Contact Email Address"
+                              placeholder="Enter Referee Email Address"
                               InputLabelProps={{
                                 shrink: true,
                               }}
@@ -1170,14 +1362,13 @@ class LoanApplicationForm extends Component {
                           </Grid>
                           <Grid item xs={12} sm={6}>
                             <TextField
-                              id="outlined-mobile"
+                              id="outlined-referee4mobile"
                               label="Mobile Number"
                               type="number"
                               variant="outlined"
-                              name="mobile"
-                              value={" "}
+                              name="referee4mobile"
                               onChange={handleChange}
-                              placeholder="Enter Mobile Number"
+                              placeholder="Enter Referee Mobile Number"
                               InputLabelProps={{
                                 shrink: true,
                               }}
@@ -1185,7 +1376,7 @@ class LoanApplicationForm extends Component {
                           </Grid>
                         </Grid>
                       </form>
-                      <Typography variant="h6" gutterBottom>  Refree 2
+                      <Typography className={classes.formSubLabel} variant="caption" gutterBottom>  Referee 5
                       </Typography>
                       <form className={classes.formControl} noValidate autoComplete="off">
                         <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
@@ -1193,13 +1384,12 @@ class LoanApplicationForm extends Component {
                             <TextField
                               fullWidth
                               required
-                              name="firstName"
-                              id="outlined-required-firstName"
+                              name="referee5firstName"
+                              id="outlined-required-referee5firstName"
                               label="First Name"
                               variant="outlined"
-                              value={" "}
                               onChange={handleChange}
-                              placeholder="Enter Firstname"
+                              placeholder="Enter Referee Firstname"
                               InputLabelProps={{
                                 shrink: true,
                               }}
@@ -1208,13 +1398,12 @@ class LoanApplicationForm extends Component {
 
                           <Grid item xs={12} sm={6}>
                             <TextField
-                              id="outlined-lastName"
+                              id="outlined-referee5lastName"
                               label="Last Name"
                               variant="outlined"
-                              name="lastName"
-                              value={" "}
+                              name="referee5lastName"
                               onChange={handleChange}
-                              placeholder="Enter Lastname"
+                              placeholder="Enter Referee Lastname"
                               InputLabelProps={{
                                 shrink: true,
                               }}
@@ -1222,14 +1411,13 @@ class LoanApplicationForm extends Component {
                           </Grid>
                           <Grid item xs={12} sm={6}>
                             <TextField
-                              id="outlined-email"
+                              id="outlined-referee5email"
                               label="Email Address"
                               type="email"
                               variant="outlined"
-                              name="email"
-                              value={" "}
+                              name="referee5email"
                               onChange={handleChange}
-                              placeholder="Enter Contact Email Address"
+                              placeholder="Enter Referee Email Address"
                               InputLabelProps={{
                                 shrink: true,
                               }}
@@ -1237,215 +1425,13 @@ class LoanApplicationForm extends Component {
                           </Grid>
                           <Grid item xs={12} sm={6}>
                             <TextField
-                              id="outlined-mobile"
+                              id="outlined-referee5mobile"
                               label="Mobile Number"
                               type="number"
                               variant="outlined"
-                              name="mobile"
-                              value={" "}
+                              name="referee5mobile"
                               onChange={handleChange}
-                              placeholder="Enter Mobile Number"
-                              InputLabelProps={{
-                                shrink: true,
-                              }}
-                            />
-                          </Grid>
-                        </Grid>
-                      </form>
-                      <Typography variant="h6" gutterBottom>  Refree 3
-                      </Typography>
-                      <form className={classes.formControl} noValidate autoComplete="off">
-                        <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
-                          <Grid item xs={12} sm={6}>
-                            <TextField
-                              fullWidth
-                              required
-                              name="firstName"
-                              id="outlined-required-firstName"
-                              label="First Name"
-                              variant="outlined"
-                              value={" "}
-                              onChange={handleChange}
-                              placeholder="Enter Firstname"
-                              InputLabelProps={{
-                                shrink: true,
-                              }}
-                            />
-                          </Grid>
-
-                          <Grid item xs={12} sm={6}>
-                            <TextField
-                              id="outlined-lastName"
-                              label="Last Name"
-                              variant="outlined"
-                              name="lastName"
-                              value={" "}
-                              onChange={handleChange}
-                              placeholder="Enter Lastname"
-                              InputLabelProps={{
-                                shrink: true,
-                              }}
-                            />
-                          </Grid>
-                          <Grid item xs={12} sm={6}>
-                            <TextField
-                              id="outlined-email"
-                              label="Email Address"
-                              type="email"
-                              variant="outlined"
-                              name="email"
-                              value={" "}
-                              onChange={handleChange}
-                              placeholder="Enter Contact Email Address"
-                              InputLabelProps={{
-                                shrink: true,
-                              }}
-                            />
-                          </Grid>
-                          <Grid item xs={12} sm={6}>
-                            <TextField
-                              id="outlined-mobile"
-                              label="Mobile Number"
-                              type="number"
-                              variant="outlined"
-                              name="mobile"
-                              value={" "}
-                              onChange={handleChange}
-                              placeholder="Enter Mobile Number"
-                              InputLabelProps={{
-                                shrink: true,
-                              }}
-                            />
-                          </Grid>
-                        </Grid>
-                      </form>
-                      <Typography variant="h6" gutterBottom>  Refree 4
-                      </Typography>
-                      <form className={classes.formControl} noValidate autoComplete="off">
-                        <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
-                          <Grid item xs={12} sm={6}>
-                            <TextField
-                              fullWidth
-                              required
-                              name="firstName"
-                              id="outlined-required-firstName"
-                              label="First Name"
-                              variant="outlined"
-                              value={" "}
-                              onChange={handleChange}
-                              placeholder="Enter Firstname"
-                              InputLabelProps={{
-                                shrink: true,
-                              }}
-                            />
-                          </Grid>
-
-                          <Grid item xs={12} sm={6}>
-                            <TextField
-                              id="outlined-lastName"
-                              label="Last Name"
-                              variant="outlined"
-                              name="lastName"
-                              value={" "}
-                              onChange={handleChange}
-                              placeholder="Enter Lastname"
-                              InputLabelProps={{
-                                shrink: true,
-                              }}
-                            />
-                          </Grid>
-                          <Grid item xs={12} sm={6}>
-                            <TextField
-                              id="outlined-email"
-                              label="Email Address"
-                              type="email"
-                              variant="outlined"
-                              name="email"
-                              value={" "}
-                              onChange={handleChange}
-                              placeholder="Enter Contact Email Address"
-                              InputLabelProps={{
-                                shrink: true,
-                              }}
-                            />
-                          </Grid>
-                          <Grid item xs={12} sm={6}>
-                            <TextField
-                              id="outlined-mobile"
-                              label="Mobile Number"
-                              type="number"
-                              variant="outlined"
-                              name="mobile"
-                              value={" "}
-                              onChange={handleChange}
-                              placeholder="Enter Mobile Number"
-                              InputLabelProps={{
-                                shrink: true,
-                              }}
-                            />
-                          </Grid>
-                        </Grid>
-                      </form>
-                      <Typography variant="h6" gutterBottom>  Refree 5
-                      </Typography>
-                      <form className={classes.formControl} noValidate autoComplete="off">
-                        <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
-                          <Grid item xs={12} sm={6}>
-                            <TextField
-                              fullWidth
-                              required
-                              name="firstName"
-                              id="outlined-required-firstName"
-                              label="First Name"
-                              variant="outlined"
-                              value={" "}
-                              onChange={handleChange}
-                              placeholder="Enter Firstname"
-                              InputLabelProps={{
-                                shrink: true,
-                              }}
-                            />
-                          </Grid>
-
-                          <Grid item xs={12} sm={6}>
-                            <TextField
-                              id="outlined-lastName"
-                              label="Last Name"
-                              variant="outlined"
-                              name="lastName"
-                              value={" "}
-                              onChange={handleChange}
-                              placeholder="Enter Lastname"
-                              InputLabelProps={{
-                                shrink: true,
-                              }}
-                            />
-                          </Grid>
-                          <Grid item xs={12} sm={6}>
-                            <TextField
-                              id="outlined-email"
-                              label="Email Address"
-                              type="email"
-                              variant="outlined"
-                              name="email"
-                              value={" "}
-                              onChange={handleChange}
-                              placeholder="Enter Contact Email Address"
-                              InputLabelProps={{
-                                shrink: true,
-                              }}
-                            />
-                          </Grid>
-                          <Grid item xs={12} sm={6}>
-                            <TextField
-                              id="outlined-mobile"
-                              label="Mobile Number"
-                              type="number"
-                              variant="outlined"
-                              name="mobile"
-                              value={" "}
-                              onChange={handleChange}
-                              placeholder="Enter Mobile Number"
+                              placeholder="Enter Referee Mobile Number"
                               InputLabelProps={{
                                 shrink: true,
                               }}
