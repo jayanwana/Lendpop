@@ -33,6 +33,9 @@ const useStyles = theme => ({
     backgroundSize: 'cover',
     backgroundPosition: 'center',
   },
+  a: {
+    color: theme.palette.secondary.main,
+  },
   paperroot: {
     "@media screen and (min-width: 600px)": {
       height: 'auto',
@@ -223,7 +226,7 @@ class SignUp extends Component {
               Sign up
             </Typography>
             <Typography>You are a step closer to joining thousands of people who trust us to back their financial needs</Typography>
-            <Typography>Already have an account? <Link href="/login"><a>Login</a></Link></Typography>
+            <Typography>Already have an account? <Link href="/login"><a className={classes.a}>Login</a></Link></Typography>
             <div className={classes.margin} />
             <form className={classes.form} validate={1} onSubmit={this.submit}>
               <TextField
