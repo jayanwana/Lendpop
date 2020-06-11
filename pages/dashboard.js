@@ -47,7 +47,7 @@ const useStyles = theme => ({
     display: 'flex',
     backgroundColor: "rgba(131, 210, 217, 0.05)",
     width: '100vw',
-    overflow: 'hidden'
+    overflowX: 'hidden'
   },
   toolbar: {
     paddingRight: 24, // keep right padding when drawer closed
@@ -121,7 +121,7 @@ const useStyles = theme => ({
   content: {
     flexGrow: 1,
     height: '100vh',
-    overflow: 'hidden',
+    overflowX: 'hidden',
     minWidth: '280px'
   },
   container: {
