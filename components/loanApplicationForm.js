@@ -176,7 +176,6 @@ const CustomStepIcon = withStyles({
 })(StepIcon)
 
 
-
 const getSteps = () => {
   return ["INSTRUCTIONS", "PERSONAL INFO", "DEMOGRAPHICS", "ELIGIBILITY", "AGREEMENT", "OTHER INFO", "COMPLETE"];
 };
@@ -232,7 +231,8 @@ class LoanApplicationForm extends Component {
     delete data.banks
     delete data.files
     delete data.loading
-    localStorage('formstate', JSON.stringify(data))
+    if(data.activeStep < 4) {
+    localStorage('formstate', JSON.stringify(data))}
   }
 
   componentWillUnmount() {
@@ -292,7 +292,7 @@ class LoanApplicationForm extends Component {
     this.setState({files: files,});
   }
 
-  clear = () => {
+  clear() {
     localStorage.clear()
   }
 
@@ -330,7 +330,7 @@ class LoanApplicationForm extends Component {
       .then((data) => {
       return Api.loanApplication(JSON.stringify(data))
     }).then((response) => {
-      if (this.state.files) {
+      if (this.state.files.length > 0) {
         const formData = new FormData();
         const keys = ["national_id", 'statement', 'contract', 'payslip']
         for (let i=0; i < this.state.files.length; i++) {
@@ -1461,7 +1461,7 @@ class LoanApplicationForm extends Component {
                     </div>
                   )}
                   <div className={classes.flexBar}>
-                    {activeStep !== 8 && (
+                    {activeStep < 5 && (
                       <Button
                         fullWidth
                         variant="outlined"
