@@ -216,8 +216,11 @@ class LoanApplicationForm extends Component {
   };
 
   componentDidMount() {
-    this.cancelReq = Paystack.cancel()
-    Paystack.banks().then(response => {
+    if (this.source) {
+          this.source.cancel('Cancel previous request');
+      }
+    this.source = Paystack.source()
+    Paystack.banks({ cancelToken: this.source.token }).then(response => {
       this.setState({banks: response.data.data})
     }).catch(error => console.log(error))
     const formData = JSON.parse(localStorage('formstate'))
@@ -233,7 +236,7 @@ class LoanApplicationForm extends Component {
   }
 
   componentWillUnmount() {
-    this.cancelReq.cancel('request canceled')
+    return this.source.cancel('paystack request canceled')
   }
 
   handleNext = () => {

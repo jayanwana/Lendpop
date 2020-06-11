@@ -1,6 +1,10 @@
 import axios, { source } from './axios.setup';
 
 class LendPopApi {
+  constructor() {
+    this.source = source;
+  }
+
   login(data) {
     return axios.post("/login", data)
   }
@@ -21,8 +25,8 @@ class LendPopApi {
     return axios.post("/password", data)
   }
 
-  history(data) {
-    return axios.post('/history', data, { cancelToken: source.token })
+  history(data, token) {
+    return axios.post('/history', data, token)
   }
 
   kycUpdate(data) {
@@ -38,10 +42,6 @@ class LendPopApi {
         "Content-type": "multipart/form-data",
       }}
     return axios.post('/upload/documents?=', data, options)
-  }
-
-  cancel() {
-    return source
   }
 
 }
