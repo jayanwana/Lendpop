@@ -26,7 +26,7 @@ const sessionstorage = require('sessionstorage');
 const useStyles = theme => ({
   root: {
     height: '100vh',
-    backgroundImage: 'url(' + `${require('../public/images/InstaKash-background.jpg')}` + ')',
+    backgroundImage: 'url(' + `${require('../public/images/instacash-bg.jpg')}` + ')',
     backgroundRepeat: 'no-repeat',
     backgroundColor:
       theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],

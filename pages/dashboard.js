@@ -288,7 +288,7 @@ class Dashboard extends Component {
         >
           <div className={classes.toolbarIcon}>
             <IconButton onClick={this.handleDrawer}>
-              {open && <img src={require('../public/images/instakash-logo.png')} style={{width: '180px', height: '50px'}}/>}
+              {open && <img src={require('../public/images/instakash-oroginal-logo.png')} style={{width: '180px', height: '50px'}}/>}
               <ChevronLeftIcon />
             </IconButton>
           </div>
