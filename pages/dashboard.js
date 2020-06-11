@@ -30,7 +30,9 @@ import { mainListItems, secondaryListItems } from '../components/listItems';
 import LinkOutlinedIcon from '@material-ui/icons/LinkOutlined';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Copyright from '../components/copyright';
+import Questions from '../components/questions';
 import PreviousLoans from '../components/previousLoans';
+import ApprovalDocuments from '../components/approvalDocuments';
 import theme from '../src/theme';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
@@ -167,9 +169,10 @@ class Dashboard extends Component {
     this.state = {
       loaded: false,
       open: false,
-      questions: true,
+      questions: false,
       application: false,
-      showHistory: false,
+      showHistory: true,
+      showApprovalDocs: false,
       initial_amount: '',
       tenure: '',
       firstName: '',
@@ -221,7 +224,8 @@ class Dashboard extends Component {
     this.setState({
       questions: false,
       showHistory: false,
-      application: true
+      application: true,
+      showApprovalDocs: false,
     })
   }
 
@@ -230,6 +234,16 @@ class Dashboard extends Component {
       questions:false,
       application: false,
       showHistory: true,
+      showApprovalDocs: false,
+    })
+  }
+
+  showApprovalDocuments(){
+    this.setState({
+      questions:false,
+      application: false,
+      showHistory: false,
+      showApprovalDocs: true,
     })
   }
 
@@ -240,7 +254,8 @@ class Dashboard extends Component {
     this.setState({
       showHistory: false,
       application: false,
-      questions: true
+      showApprovalDocs: false,
+      questions: true,
     })
   }
   submit(event) {
@@ -331,7 +346,7 @@ class Dashboard extends Component {
                     variant="outlined"
                     color="primary"
                     className={classes.gridButton}
-                    onClick={this.continueApplication}>
+                    onClick={this.continueApplication.bind(this)}>
                     <span style={{whiteSpace: 'nowrap'}}>Continue my loan application</span>
                   </Button>
                   </Grid>
@@ -340,8 +355,10 @@ class Dashboard extends Component {
                   <Grid className={classes.buttonContainer} item xs={12} md='auto' lg='auto'><Button
                     fullWidth
                     variant="outlined"
-                    className={classes.gridButton}>
-                  Approval Documents</Button>
+                    className={classes.gridButton}
+                    onClick={this.showApprovalDocuments.bind(this)}
+                                                                                             >
+                    <span style={{whiteSpace: 'nowrap'}}>Approval Documents</span></Button>
                   </Grid>
                   <Divider className={classes.divider} orientation="horizontal"/>
 
@@ -349,47 +366,21 @@ class Dashboard extends Component {
                     fullWidth
                     variant="outlined"
                     className={classes.gridButton}
-                    onClick={this.showHistory}>
-                  Other applications</Button>
+                    onClick={this.showHistory.bind(this)}>
+                    <span style={{whiteSpace: 'nowrap'}}>Other applications</span></Button>
                   </Grid>
                 </Grid>
               </Grid>
               {this.state.questions &&
-                <Grid item xs={12}>
-                  <Paper className={classes.paper}>
-                    <form className={classes.form} onSubmit={this.submit} validate="true">
-                      <Grid item xs={12}>
-                        <TextField
-                          fullWidth
-                          id="outlined-multiline-static"
-                          label="Have Any Questions?"
-                          placeholder="Leave a message"
-                          required
-                          multiline
-                          rows={8}
-                          variant="outlined"
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Button
-
-                          variant="contained"
-                          color="primary"
-                          className={classes.submit}
-                          style={{marginTop: '10px'}}
-                        >Send</Button>
-                      </Grid>
-                    </form>
-
-                  </Paper>
-                </Grid>}
+                <Questions email={email}/>
+              }
               {this.state.application &&
                 <Grid item xs={12}>
                   <LoanApplicationForm
                     firstName={firstName}
                     lastName={lastName}
                     email={email}
-                    handler={this.continueApplication}
+                    handler={this.showHistory}
                     initialAmount={this.state.initial_amount}
                     tenure={this.state.tenure}
                   />
@@ -398,6 +389,11 @@ class Dashboard extends Component {
               {this.state.showHistory &&
                 <Grid item xs={12}>
                   <PreviousLoans email={email}/>
+                </Grid>
+              }
+              {this.state.showApprovalDocs &&
+                <Grid item xs={12}>
+                  <ApprovalDocuments email={email}/>
                 </Grid>
               }
             </Grid>
