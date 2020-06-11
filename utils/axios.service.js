@@ -44,6 +44,10 @@ class LendPopApi {
     return axios.post('/upload/documents?=', data, options)
   }
 
+  questions(data) {
+    return axios.post('/questions/email', data)
+  }
+
 }
 
 export default new LendPopApi();
