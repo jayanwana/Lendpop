@@ -7,7 +7,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { PageTransition } from 'next-page-transitions';
 import Loader from '../components/Loader';
 import theme from '../src/theme';
-const ico = require('../public/images/favicon.png');
+const ico = require('../public/images/favicon-2.png');
 
 const TIMEOUT = 400
 
