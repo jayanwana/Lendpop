@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import withStyles from "@material-ui/styles/withStyles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Typography from "@material-ui/core/Typography";
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Divider from '@material-ui/core/Divider';
@@ -34,21 +35,30 @@ const styles = theme => ({
 class PreviousLoans extends Component {
   state = {
     loanHistory: [],
-    email: this.props.email
+    email: this.props.email,
+    loaded: false
   }
 
   componentDidMount() {
-    this.cancelReq = Api.cancel()
-    Api.history(JSON.stringify({email: this.state.email})).then(response => {
+    if (this.source) {
+          this.source.cancel('Cancel previous request');
+      }
+    this.source = Api.source()
+    Api.history(JSON.stringify({email: this.state.email}), { cancelToken: this.source.token }).then(response => {
       console.log(response.data.data);
       if (response.data.data){
-        this.setState({loanHistory: response.data.data})
+        this.setState({loanHistory: response.data.data, loaded: true})
+      } else {
+        this.setState({loaded: true})
       }
-    }).catch(error => console.log(error))
+    }).catch(error => {
+      console.log(error)
+      this.setState({loaded: true})
+    })
   }
 
   componentWillUnmount() {
-    this.cancelReq.cancel('request canceled')
+    return this.source.cancel('request canceled')
   }
 
   render() {
@@ -58,7 +68,7 @@ class PreviousLoans extends Component {
         <div className={classes.root}>
           <Grid container justify="center">
             <Paper className={classes.paper}>
-              {this.state.loanHistory.length > 0 ? (<ol>
+              {!this.state.loaded ? <CircularProgress style={{alignSelf: 'center'}}/> : (this.state.loanHistory.length > 0 ? (<ol>
                 {this.state.loanHistory.map((loan) => (
                   <li key={loan.id}>
                     <Divider/>
@@ -79,7 +89,7 @@ class PreviousLoans extends Component {
                     <Divider/>
                   </li>
                 ))}
-              </ol>) : (<Typography variant='caption'>You haven't Applied for any loan yet.</Typography>)}
+              </ol>) : (<Typography variant='caption'>You haven't Applied for any loan yet.</Typography>))}
             </Paper>
           </Grid>
         </div>
