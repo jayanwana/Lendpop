@@ -24,6 +24,7 @@ import DashboardIcon from '@material-ui/icons/Dashboard';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import LoanApplicationForm from '../components/loanApplicationForm';
 import { mainListItems, secondaryListItems } from '../components/listItems';
@@ -45,7 +46,9 @@ const drawerWidth = 240;
 const useStyles = theme => ({
   root: {
     display: 'flex',
-    backgroundColor: "rgba(131, 210, 217, 0.05)"
+    backgroundColor: "rgba(131, 210, 217, 0.05)",
+    width: '100vw',
+    overflowX: 'hidden'
   },
   toolbar: {
     paddingRight: 24, // keep right padding when drawer closed
@@ -118,7 +121,8 @@ const useStyles = theme => ({
   content: {
     flexGrow: 1,
     height: '100vh',
-    overflow: 'auto',
+    overflowX: 'hidden',
+    minWidth: '280px'
   },
   container: {
     paddingTop: theme.spacing(4),
@@ -289,7 +293,7 @@ class Dashboard extends Component {
           <div className={classes.toolbarIcon}>
             <IconButton onClick={this.handleDrawer}>
               {open && <img src={require('../public/images/instakash-original-logo.png')} style={{width: '180px', height: '50px'}}/>}
-              <ChevronLeftIcon />
+              {open ? <ChevronLeftIcon /> : <ChevronRightIcon/>}
             </IconButton>
           </div>
           <Divider/>
