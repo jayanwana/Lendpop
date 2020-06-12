@@ -19,6 +19,7 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import StepIcon from '@material-ui/core/StepIcon';
 import TextField from '@material-ui/core/TextField';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/core/styles';
 import {DropzoneArea} from 'material-ui-dropzone'
 import FacebookIcon from '@material-ui/icons/Facebook';
@@ -32,6 +33,7 @@ import Back from "./common/Back";
 import numeral from "numeral";
 import Questions from '../components/questions';
 import Paystack from '../utils/axios.paystack';
+import Api from '../utils/axios.service';
 import states from './statedata.json';
 import indigo from '@material-ui/core/colors/indigo';
 
@@ -54,7 +56,7 @@ const styles = theme => ({
     padding: '20 0',
     width: "100%"
   },
-  
+
   grid: {
     margin: 0
   },
@@ -113,12 +115,16 @@ const styles = theme => ({
   },
   formLabel: {
     padding: 8,
-    fontSize: '1rem',
+    fontSize: '1.2rem',
     color:theme.palette.secondary.main
+  },
+  formSubLabel: {
+    padding: 8,
+    fontSize: '1rem',
   },
   formCaption:{
     padding: 8,
-    fontSize: '0.8rem',
+    fontSize: '1rem',
   },
   fixedHeight: {
     height: 250,
@@ -143,6 +149,14 @@ const styles = theme => ({
     paddingBottom: 24,
     marginBottom: 24
   },
+  buttonProgress: {
+    color: theme.palette.secondary.main,
+    // position: 'absolute',
+    // top: '50%',
+    // left: '50%',
+    // marginTop: -12,
+    // marginLeft: -12,
+  },
   flexBar: {
     marginTop: 32,
     display: "flex",
@@ -162,13 +176,13 @@ const CustomStepIcon = withStyles({
 })(StepIcon)
 
 
-
 const getSteps = () => {
   return ["INSTRUCTIONS", "PERSONAL INFO", "DEMOGRAPHICS", "ELIGIBILITY", "AGREEMENT", "OTHER INFO", "COMPLETE"];
 };
 
 class LoanApplicationForm extends Component {
   state = {
+    loading: false,
     activeStep: 0,
     termsChecked: false,
     labelWidth: 0,
@@ -201,8 +215,11 @@ class LoanApplicationForm extends Component {
   };
 
   componentDidMount() {
-    this.cancelReq = Paystack.cancel()
-    Paystack.banks().then(response => {
+    if (this.source) {
+          this.source.cancel('Cancel previous request');
+      }
+    this.source = Paystack.source()
+    Paystack.banks({ cancelToken: this.source.token }).then(response => {
       this.setState({banks: response.data.data})
     }).catch(error => console.log(error))
     const formData = JSON.parse(localStorage('formstate'))
@@ -214,11 +231,12 @@ class LoanApplicationForm extends Component {
     delete data.banks
     delete data.files
     delete data.loading
-    localStorage('formstate', JSON.stringify(data))
+    if(data.activeStep < 4) {
+    localStorage('formstate', JSON.stringify(data))}
   }
 
   componentWillUnmount() {
-    this.cancelReq.cancel('request canceled')
+    return this.source.cancel('paystack request canceled')
   }
 
   handleNext = () => {
@@ -274,6 +292,9 @@ class LoanApplicationForm extends Component {
     this.setState({files: files,});
   }
 
+  clear() {
+    localStorage.clear()
+  }
 
   submit = event => {
     event.preventDefault()
@@ -309,7 +330,7 @@ class LoanApplicationForm extends Component {
       .then((data) => {
       return Api.loanApplication(JSON.stringify(data))
     }).then((response) => {
-      if (this.state.files) {
+      if (this.state.files.length > 0) {
         const formData = new FormData();
         const keys = ["national_id", 'statement', 'contract', 'payslip']
         for (let i=0; i < this.state.files.length; i++) {
@@ -342,8 +363,8 @@ class LoanApplicationForm extends Component {
     const steps = getSteps();
     const { activeStep, firstName, lastName, gracePeriod, hascreditScore, creditScore,
       NationalIdNo, email, dob, mobile, gender, education, ethnicity, questions,
-      address, city, state, mobileCheck, addressCheck, repaymentPlan, bankName, 
-      accountNumber, banks, employeeReference, employeeNumber, salary,
+      address, city, state, mobileCheck, addressCheck, repaymentPlan, bankName,
+      accountNumber, banks, employeeReference, employeeNumber, salary, loading,
     } = this.state;
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
     const successPaper = clsx(classes.paper, classes.successPaper);
@@ -535,7 +556,7 @@ class LoanApplicationForm extends Component {
                               }}
                             />
                           </Grid>
-                          
+
                           <Grid item xs={12} style={{padding: 0}}>
                             <Grid item xs={12} sm={4} style={{float: "right"}}>
                               <FormGroup row>
@@ -838,7 +859,7 @@ class LoanApplicationForm extends Component {
                             />
                           </Grid>
                         </Grid>
-                        <Typography className={classes.formCaption} variant='caption'>
+                        <Typography className={classes.formSubLabel} variant='caption'>
                           DEBIT & RECONCILIATION AUTHORIZATION
                         </Typography>
                         <Grid container spacing={2} style={{margin: '20px 0', width: '100%'}}>
@@ -902,7 +923,7 @@ class LoanApplicationForm extends Component {
                             />
                           </Grid>
                         </Grid>
-                        <Typography className={classes.formCaption} variant='caption'>
+                        <Typography className={classes.formSubLabel} variant='caption'>
                           LIST OF DOCUMENTS TO UPLOAD
                         </Typography>
                         <Grid container spacing={2} style={{margin: '20px 0', width: '100%'}}>
@@ -934,13 +955,12 @@ class LoanApplicationForm extends Component {
                       <Paper className={classes.paper}>
                         <div style={{ marginBottom: 24 }}>
                           <Typography
-                            variant="subtitle1"
-                            style={{ fontWeight: "bold" }}
-                            gutterBottom
+                            variant="caption"
+                            className={classes.formLabel}
                           >
-                            Terms & Conditions
+                            TERMS & CONDITIONS
                           </Typography>
-                          <Typography variant="body1" gutterBottom>
+                          <Typography variant="body1" className={classes.formCaption} gutterBottom>
                             Please read through and accept the terms &
                             conditions
                           </Typography>
@@ -1024,136 +1044,70 @@ class LoanApplicationForm extends Component {
                   )}
                   {activeStep === 5  && (
                     <Paper className={classes.paper} >
-                      <Typography variant="h6" gutterBottom>
-                              Congratulations! you're one step closer to completing your loan application, 
-                              Instakash would like to get your personal social media details and 5 of your close contacts information. 
-                            </Typography>
+                      <Typography variant="body1" className={classes.formCaption} gutterBottom>
+                        You're one step closer to completing your loan application, <br/>
+                        Instakash would like to get your personal social media details and 5 of your close contacts information.
+                      </Typography>
                       <Typography className={classes.formLabel} variant="caption">SOCIAL MEDIA HANDLE</Typography>
                       <form className={classes.formControl} noValidate autoComplete="off">
                         <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
-                        <Grid item xs={12} sm={6} >  
-                        <div>                       
-                          <TextField
-                            className={classes.margin}
-                            id="input-with-icon-textfield"
-                            label="Facebook"
-                            InputProps={{
-                              startAdornment: (
-                                <InputAdornment position="start">
-                                  <FacebookIcon />
-                                </InputAdornment>
-                              ),
-                            }}
-                          />
-                        </div> 
-                        <div>
-                        <TextField
-                            className={classes.margin}
-                            id="social-twitter"
-                            label="Twitter"
-                            InputProps={{
-                              startAdornment: (
-                                <InputAdornment position="start">
-                                  <TwitterIcon />
-                                </InputAdornment>
-                              ),
-                            }}
-                          />
-                        </div> 
-                        <div>
-                        <TextField
-                            className={classes.margin}
-                            id="social-instagram"
-                            label="Instagram"
-                            InputProps={{
-                              startAdornment: (
-                                <InputAdornment position="start">
-                                  <InstagramIcon/>
-                                </InputAdornment>
-                              ),
-                            }}
-                          />
-                        </div> 
-                        <div>
-                        <TextField
-                            className={classes.margin}
-                            id="social-snapchat"
-                            label="Snap Chat"
-                            InputProps={{
-                              startAdornment: (
-                                <InputAdornment position="start">
-                                  <NotificationsActiveIcon />
-                                </InputAdornment>
-                              ),
-                            }}
-                          />
-                        </div> 
-                        </Grid>
-                        </Grid>
-                        </form>
-                          <Typography className={classes.formLabel} variant="caption">REFEREE CONTACT INFO</Typography>
-                          <Typography variant="h6" gutterBottom>  Refree 1
-                          </Typography>
-                          <form className={classes.formControl} noValidate autoComplete="off">
-                          <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
-                          <Grid item xs={12} sm={6}>
-                          <TextField
-                              fullWidth
-                              required
-                              name="firstName"
-                              id="outlined-required-firstName"
-                              label="First Name"
+                          <Grid item xs={12} sm={6} >
+                            <TextField
+                              className={classes.margin}
+                              id="input-with-icon-textfield"
+                              label="Facebook"
                               variant="outlined"
-                              value={" "}
-                              onChange={handleChange}
-                              placeholder="Enter Firstname"
-                              InputLabelProps={{
-                                shrink: true,
+                              InputProps={{
+                                startAdornment: (
+                                  <InputAdornment position="start">
+                                    <FacebookIcon />
+                                  </InputAdornment>
+                                ),
                               }}
                             />
                           </Grid>
-                         
-                          <Grid item xs={12} sm={6}>
+                          <Grid item xs={12} sm={6} >
                             <TextField
-                              id="outlined-lastName"
-                              label="Last Name"
+                              className={classes.margin}
+                              id="social-twitter"
+                              label="Twitter"
                               variant="outlined"
-                              name="lastName"
-                              value={" "}
-                              onChange={handleChange}
-                              placeholder="Enter Lastname"
-                              InputLabelProps={{
-                                shrink: true,
+                              InputProps={{
+                                startAdornment: (
+                                  <InputAdornment position="start">
+                                    <TwitterIcon />
+                                  </InputAdornment>
+                                ),
                               }}
                             />
                           </Grid>
-                          <Grid item xs={12} sm={6}>
+                          <Grid item xs={12} sm={6} >
                             <TextField
-                              id="outlined-email"
-                              label="Email Address"
-                              type="email"
+                              className={classes.margin}
+                              id="social-instagram"
+                              label="Instagram"
                               variant="outlined"
-                              name="email"
-                              value={" "}
-                              onChange={handleChange}
-                              placeholder="Enter Contact Email Address"
-                              InputLabelProps={{
-                                shrink: true,
+                              InputProps={{
+                                startAdornment: (
+                                  <InputAdornment position="start">
+                                    <InstagramIcon/>
+                                  </InputAdornment>
+                                ),
                               }}
                             />
                           </Grid>
-                          <Grid item xs={12} sm={6}>
+                          <Grid item xs={12} sm={6} >
                             <TextField
-                              id="outlined-mobile"
-                              label="Mobile Number"
-                              type="number"
+                              className={classes.margin}
+                              id="social-snapchat"
+                              label="Snap Chat"
                               variant="outlined"
-                              name="mobile"
-                              value={" "}
-                              onChange={handleChange}
-                              placeholder="Enter Mobile Number"
-                              InputLabelProps={{
-                                shrink: true,
+                              InputProps={{
+                                startAdornment: (
+                                  <InputAdornment position="start">
+                                    <NotificationsActiveIcon />
+                                  </InputAdornment>
+                                ),
                               }}
                             />
                           </Grid>
@@ -1349,36 +1303,34 @@ class LoanApplicationForm extends Component {
                           </Grid>
                         </Grid>
                       </form>
-                      <Typography variant="h6" gutterBottom>  Refree 4
-                          </Typography>
-                          <form className={classes.formControl} noValidate autoComplete="off">
-                          <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
+                      <Typography className={classes.formSubLabel} variant="caption" gutterBottom>  Referee 4
+                      </Typography>
+                      <form className={classes.formControl} noValidate autoComplete="off">
+                        <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
                           <Grid item xs={12} sm={6}>
-                          <TextField
+                            <TextField
                               fullWidth
                               required
-                              name="firstName"
-                              id="outlined-required-firstName"
+                              name="referee4firstName"
+                              id="outlined-required-referee4firstName"
                               label="First Name"
                               variant="outlined"
-                              value={" "}
                               onChange={handleChange}
-                              placeholder="Enter Firstname"
+                              placeholder="Enter Referee Firstname"
                               InputLabelProps={{
                                 shrink: true,
                               }}
                             />
                           </Grid>
-                         
+
                           <Grid item xs={12} sm={6}>
                             <TextField
-                              id="outlined-lastName"
+                              id="outlined-referee4lastName"
                               label="Last Name"
                               variant="outlined"
-                              name="lastName"
-                              value={" "}
+                              name="referee4lastName"
                               onChange={handleChange}
-                              placeholder="Enter Lastname"
+                              placeholder="Enter Referee Lastname"
                               InputLabelProps={{
                                 shrink: true,
                               }}
@@ -1386,14 +1338,13 @@ class LoanApplicationForm extends Component {
                           </Grid>
                           <Grid item xs={12} sm={6}>
                             <TextField
-                              id="outlined-email"
+                              id="outlined-referee4email"
                               label="Email Address"
                               type="email"
                               variant="outlined"
-                              name="email"
-                              value={" "}
+                              name="referee4email"
                               onChange={handleChange}
-                              placeholder="Enter Contact Email Address"
+                              placeholder="Enter Referee Email Address"
                               InputLabelProps={{
                                 shrink: true,
                               }}
@@ -1401,14 +1352,13 @@ class LoanApplicationForm extends Component {
                           </Grid>
                           <Grid item xs={12} sm={6}>
                             <TextField
-                              id="outlined-mobile"
+                              id="outlined-referee4mobile"
                               label="Mobile Number"
                               type="number"
                               variant="outlined"
-                              name="mobile"
-                              value={" "}
+                              name="referee4mobile"
                               onChange={handleChange}
-                              placeholder="Enter Mobile Number"
+                              placeholder="Enter Referee Mobile Number"
                               InputLabelProps={{
                                 shrink: true,
                               }}
@@ -1416,36 +1366,34 @@ class LoanApplicationForm extends Component {
                           </Grid>
                         </Grid>
                       </form>
-                      <Typography variant="h6" gutterBottom>  Refree 5
-                          </Typography>
-                          <form className={classes.formControl} noValidate autoComplete="off">
-                          <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
+                      <Typography className={classes.formSubLabel} variant="caption" gutterBottom>  Referee 5
+                      </Typography>
+                      <form className={classes.formControl} noValidate autoComplete="off">
+                        <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
                           <Grid item xs={12} sm={6}>
-                          <TextField
+                            <TextField
                               fullWidth
                               required
-                              name="firstName"
-                              id="outlined-required-firstName"
+                              name="referee5firstName"
+                              id="outlined-required-referee5firstName"
                               label="First Name"
                               variant="outlined"
-                              value={" "}
                               onChange={handleChange}
-                              placeholder="Enter Firstname"
+                              placeholder="Enter Referee Firstname"
                               InputLabelProps={{
                                 shrink: true,
                               }}
                             />
                           </Grid>
-                         
+
                           <Grid item xs={12} sm={6}>
                             <TextField
-                              id="outlined-lastName"
+                              id="outlined-referee5lastName"
                               label="Last Name"
                               variant="outlined"
-                              name="lastName"
-                              value={" "}
+                              name="referee5lastName"
                               onChange={handleChange}
-                              placeholder="Enter Lastname"
+                              placeholder="Enter Referee Lastname"
                               InputLabelProps={{
                                 shrink: true,
                               }}
@@ -1453,14 +1401,13 @@ class LoanApplicationForm extends Component {
                           </Grid>
                           <Grid item xs={12} sm={6}>
                             <TextField
-                              id="outlined-email"
+                              id="outlined-referee5email"
                               label="Email Address"
                               type="email"
                               variant="outlined"
-                              name="email"
-                              value={" "}
+                              name="referee5email"
                               onChange={handleChange}
-                              placeholder="Enter Contact Email Address"
+                              placeholder="Enter Referee Email Address"
                               InputLabelProps={{
                                 shrink: true,
                               }}
@@ -1468,14 +1415,13 @@ class LoanApplicationForm extends Component {
                           </Grid>
                           <Grid item xs={12} sm={6}>
                             <TextField
-                              id="outlined-mobile"
+                              id="outlined-referee5mobile"
                               label="Mobile Number"
                               type="number"
                               variant="outlined"
-                              name="mobile"
-                              value={" "}
+                              name="referee5mobile"
                               onChange={handleChange}
-                              placeholder="Enter Mobile Number"
+                              placeholder="Enter Referee Mobile Number"
                               InputLabelProps={{
                                 shrink: true,
                               }}
@@ -1486,7 +1432,7 @@ class LoanApplicationForm extends Component {
                     </Paper>
                      //
                   )}
-                  {(activeStep === 6 || activeStep === 7) && (
+                  {activeStep === 6  && (
                     <div className={classes.smallContainer}>
                       <Paper className={classes.paper}>
                         <Grid item container xs={12}>
@@ -1497,7 +1443,7 @@ class LoanApplicationForm extends Component {
                                 {firstName}!!!
                               </span>
                             </Typography>
-                            
+
                             <Typography variant="h6" gutterBottom>
                               An email has been sent to you with your loan application ID.
                               If you wish to make enquiries about your loan,
@@ -1515,7 +1461,7 @@ class LoanApplicationForm extends Component {
                     </div>
                   )}
                   <div className={classes.flexBar}>
-                    {activeStep !== 8 && (
+                    {activeStep < 5 && (
                       <Button
                         fullWidth
                         variant="outlined"
@@ -1527,7 +1473,20 @@ class LoanApplicationForm extends Component {
                         Back
                       </Button>
                     )}
-                    <Button
+                    {this.state.activeStep === 4 ?
+                      (<React.Fragment>
+                        <Button
+                          fullWidth
+                          variant="contained"
+                          color="primary"
+                          onClick={this.submit}
+                          disabled={loading}
+                        >
+                          {loading ? <CircularProgress size={24} className={classes.buttonProgress}/> : 'ACCEPT'}
+                        </Button>
+                      </React.Fragment>
+                      )
+                    : (<Button
                       fullWidth
                       variant="contained"
                       color="primary"
@@ -1536,10 +1495,10 @@ class LoanApplicationForm extends Component {
                       }
                       size="large"
                       disabled={
-                        this.state.activeStep === 0 && !this.state.termsChecked
-                      }>
-                      {this.stepActions()}
-                    </Button>
+                          this.state.activeStep === 0 && !this.state.termsChecked
+                        }>
+                        {this.stepActions()}
+                      </Button>)}
                   </div>
                 </div>
               </Grid>

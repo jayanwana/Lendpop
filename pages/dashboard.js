@@ -29,7 +29,6 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import LoanApplicationForm from '../components/loanApplicationForm';
 import { mainListItems, secondaryListItems } from '../components/listItems';
 import LinkOutlinedIcon from '@material-ui/icons/LinkOutlined';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Copyright from '../components/copyright';
 import Questions from '../components/questions';
 import PreviousLoans from '../components/previousLoans';
@@ -79,6 +78,7 @@ const useStyles = theme => ({
     marginRight: 36,
   },
   optionButtons: {
+    flexWrap: 'nowrap',
     "@media screen and (max-width: 600px)":{
       flexDirection: 'column',
       justifyContent: 'space-around',
@@ -151,9 +151,6 @@ const useStyles = theme => ({
       marginTop: '10px'
     }
 
-  },
-  buttonGroup: {
-    marginTop: '50px'
   },
   divider: {
     width: "40px",
@@ -254,6 +251,7 @@ class Dashboard extends Component {
   handleDrawer() {
     this.setState({open: !this.state.open})
   }
+
   reset(){
     this.setState({
       showHistory: false,
@@ -262,6 +260,7 @@ class Dashboard extends Component {
       questions: true,
     })
   }
+
   submit(event) {
     event.preventDefault()
     console.log(event);
@@ -321,23 +320,16 @@ class Dashboard extends Component {
             <Grid container spacing={3}>
               {/* Chart */}
               <Grid item xs={12}>
-                <Paper className={fixedHeightPaper}>
+                <Paper className={fixedHeightPaper} style={{justifyContent: 'center'}}>
                   <Grid container>
                     <Grid className={classes.hello} item xs={12} sm={8}>
                       <Typography variant="h3" color="inherit" noWrap className={classes.title}>
                         Hello, {firstName? firstName : 'User'}!
                       </Typography>
-                      <Typography variant='body1'>
+                      <Typography variant='body1' styles={{marginTop:"5px"}}>
                         Welcome to InstaKash, please continue your application.
                       </Typography>
-                      <ButtonGroup className={classes.buttonGroup} aria-label="outlined primary button group">
-                        <Button >Refer your friends and get N1,000</Button>
-                        <Button >https://member.instakash.com/api/landing/&pc=5053&sid=CID137</Button>
-                        <Button variant="outlined"
-                          color="primary"
-                          className={classes.root}
-                          endIcon={<LinkOutlinedIcon/>} />
-                      </ButtonGroup>                      
+                      <ReferButton link='https://member.instakash.com/api/landing/&pc=5053&sid=CID137'/>
                     </Grid>
                   </Grid>
                   {/* <Chart /> */}
