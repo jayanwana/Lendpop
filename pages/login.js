@@ -70,7 +70,7 @@ export default function Login(props) {
     }
     Api.login(JSON.stringify(postData)).then(response => {
       console.log(response.data)
-      sessionStorage.setItem('state', JSON.stringify(response.data.data))
+      sessionStorage.setItem('email', email)
       Router.push('/dashboard',);
     }).catch(error => {
       if (error.response && (error.response.status === 401 || error.response.status === 400)){

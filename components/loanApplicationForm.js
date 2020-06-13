@@ -39,7 +39,6 @@ import indigo from '@material-ui/core/colors/indigo';
 
 
 const localStorage = require('local-storage')
-const qs = require("query-string");
 const backgroundShape = require("../public/images/shape.svg");
 
 numeral.defaultFormat("0,000");
@@ -339,6 +338,7 @@ class LoanApplicationForm extends Component {
           )
         }
         formData.append('loan_id', response.data.data.id)
+        console.log('uploading files...');
         Api.docUpload(formData).then((response)=> {
           return response
         }).catch(error=>{console.log(error.response)})

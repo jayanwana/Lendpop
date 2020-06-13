@@ -198,11 +198,11 @@ class SignUp extends Component {
       tenure: `${this.state.period}`
     }
     console.log(postData)
-    for (let key in this.state) {
-      if (['monthlyPayment', 'loading', 'error', 'errorMessage'].includes(key)){continue}
-      sessionstorage.setItem(key, this.state[key])
-    }
     Api.register(JSON.stringify(postData)).then(response => {
+      for (let key in this.state) {
+        if (['monthlyPayment', 'loading', 'error', 'errorMessage'].includes(key)){continue}
+        sessionstorage.setItem(key, this.state[key])
+      }
       Router.push('/email');
     }).catch(error => {
       if (error.response && (error.response.status === 401 || error.response.status === 400)){

@@ -29,8 +29,10 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import LoanApplicationForm from '../components/loanApplicationForm';
 import { mainListItems, secondaryListItems } from '../components/listItems';
 import LinkOutlinedIcon from '@material-ui/icons/LinkOutlined';
+import Api from '../utils/axios.service';
 import Copyright from '../components/copyright';
 import Questions from '../components/questions';
+import NewLoanApplicationForm from '../components/newLoanApp';
 import PreviousLoans from '../components/previousLoans';
 import ApprovalDocuments from '../components/approvalDocuments';
 import theme from '../src/theme';
@@ -162,7 +164,6 @@ const useStyles = theme => ({
   },
 });
 
-
 class Dashboard extends Component {
   static pageTransitionDelayEnter = true
   constructor(props) {
@@ -172,13 +173,15 @@ class Dashboard extends Component {
       open: false,
       questions: false,
       application: false,
+      newLoanApp: false,
       showHistory: true,
       showApprovalDocs: false,
       initial_amount: '',
       tenure: '',
       firstName: '',
       lastName: '',
-      email: ''
+      email: '',
+      loans: [],
     }
     this.handleDrawer = this.handleDrawer.bind(this);
     this.submit = this.submit.bind(this);
@@ -189,36 +192,33 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-    this.timeoutId = setTimeout(() => {
-      this.props.pageTransitionReadyToEnter()
-      this.setState({ loaded: true })
-    }, 2000)
-    let state = sessionstorage.getItem('state')
-    if(state){
-      state = JSON.parse(state)
-      console.log(state);
-      this.setState({
-        firstName: state.first_name,
-        lastName: state.last_name,
-        email: state.email,
-        initial_amount: state.initial_amount,
-        tenure: state.tenure
-      })
-    } else if (sessionStorage.getItem('email')) {
-    this.setState({
-      firstName : sessionStorage.getItem('firstName') ? sessionStorage.getItem('firstName') : '',
-      lastName : sessionStorage.getItem('lastName') ? sessionStorage.getItem('lastName') : '',
-      email : sessionStorage.getItem('email') ? sessionStorage.getItem('email') : '',
-      initial_amount : sessionStorage.getItem('principal') ? sessionStorage.getItem('principal') : '',
-      tenure: sessionStorage.getItem('period') ? sessionStorage.getItem('period') : ''
-    })
+    if (this.source) {
+          this.source.cancel('Cancel previous request');
+      }
+    this.source = Api.source()
+    const email = sessionstorage.getItem('email')
+    if (email) {
+      Api.userData(JSON.stringify({email: email}),
+      { cancelToken: this.source.token }).then(response => {
+        this.props.pageTransitionReadyToEnter()
+        console.log(response)
+        this.setState({
+          firstName: response.data.user_data.first_name,
+          lastName: response.data.user_data.last_name,
+          email: response.data.user_data.email,
+          initial_amount: response.data.user_data.initial_amount,
+          tenure: response.data.user_data.tenure,
+          loans: response.data.loan_data,
+          loaded: true,
+        })
+      }).catch(error => console.log(error))
     } else {
     Router.push('/login')
     }
   }
 
   componentWillUnmount() {
-    if (this.timeoutId) clearTimeout(this.timeoutId)
+    return this.source.cancel('request canceled')
   }
 
   continueApplication(){
@@ -227,6 +227,17 @@ class Dashboard extends Component {
       showHistory: false,
       application: true,
       showApprovalDocs: false,
+      newLoanApp: false,
+    })
+  }
+
+  newApplication(){
+    this.setState({
+      questions: false,
+      showHistory: false,
+      application: false,
+      showApprovalDocs: false,
+      newLoanApp: true,
     })
   }
 
@@ -236,6 +247,7 @@ class Dashboard extends Component {
       application: false,
       showHistory: true,
       showApprovalDocs: false,
+      newLoanApp: false,
     })
   }
 
@@ -245,6 +257,7 @@ class Dashboard extends Component {
       application: false,
       showHistory: false,
       showApprovalDocs: true,
+      newLoanApp: false,
     })
   }
 
@@ -275,7 +288,7 @@ class Dashboard extends Component {
     if (!this.state.loaded) return null;
     const { classes } = this.props;
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-    const { open, firstName, email, lastName } = this.state;
+    const { open, firstName, email, lastName, loans } = this.state;
     return (
       <div className={classes.root}>
         <Head>
@@ -337,14 +350,22 @@ class Dashboard extends Component {
               </Grid>
               <Grid item xs={12}>
                 <Grid container className={classes.optionButtons} spacing={0}>
-                  <Grid item className={classes.buttonContainer} xs={12} md='auto' lg='auto'><Button
-                    fullWidth
-                    variant="outlined"
-                    color="primary"
-                    className={classes.gridButton}
-                    onClick={this.continueApplication.bind(this)}>
-                    <span style={{whiteSpace: 'nowrap'}}>Continue my loan application</span>
-                  </Button>
+                  <Grid item className={classes.buttonContainer} xs={12} md='auto' lg='auto'>
+                    {loans.length ? <Button
+                      fullWidth
+                      variant="outlined"
+                      color="primary"
+                      className={classes.gridButton}
+                      onClick={this.newApplication.bind(this)}>
+                      <span style={{whiteSpace: 'nowrap'}}>New loan application</span>
+                    </Button> : <Button
+                      fullWidth
+                      variant="outlined"
+                      color="primary"
+                      className={classes.gridButton}
+                      onClick={this.continueApplication.bind(this)}>
+                      <span style={{whiteSpace: 'nowrap'}}>Continue my loan application</span>
+                    </Button>}
                   </Grid>
                   <Divider className={classes.divider} orientation="horizontal"/>
 
@@ -384,12 +405,17 @@ class Dashboard extends Component {
                 </Grid>}
               {this.state.showHistory &&
                 <Grid item xs={12}>
-                  <PreviousLoans email={email}/>
+                  <PreviousLoans loans={loans}/>
                 </Grid>
               }
               {this.state.showApprovalDocs &&
                 <Grid item xs={12}>
-                  <ApprovalDocuments email={email}/>
+                  <ApprovalDocuments email={email} loans={loans}/>
+                </Grid>
+              }
+              {this.state.newLoanApp &&
+                <Grid item xs={12}>
+                  <NewLoanApplicationForm email={email}/>
                 </Grid>
               }
             </Grid>

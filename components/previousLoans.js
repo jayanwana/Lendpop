@@ -34,32 +34,10 @@ const styles = theme => ({
 
 class PreviousLoans extends Component {
   state = {
-    loanHistory: [],
-    email: this.props.email,
-    loaded: false
+    loanHistory: this.props.loans,
   }
 
-  componentDidMount() {
-    if (this.source) {
-          this.source.cancel('Cancel previous request');
-      }
-    this.source = Api.source()
-    Api.history(JSON.stringify({email: this.state.email}), { cancelToken: this.source.token }).then(response => {
-      console.log(response.data.data);
-      if (response.data.data){
-        this.setState({loanHistory: response.data.data, loaded: true})
-      } else {
-        this.setState({loaded: true})
-      }
-    }).catch(error => {
-      console.log(error)
-      this.setState({loaded: true})
-    })
-  }
-
-  componentWillUnmount() {
-    return this.source.cancel('request canceled')
-  }
+  componentDidMount() {}
 
   render() {
     const { classes } = this.props;
@@ -68,14 +46,14 @@ class PreviousLoans extends Component {
         <div className={classes.root}>
           <Grid container justify="center">
             <Paper className={classes.paper}>
-              {!this.state.loaded ? <CircularProgress style={{alignSelf: 'center'}}/> : (this.state.loanHistory.length > 0 ? (<ol>
+              {this.state.loanHistory.length ? (<ol>
                 {this.state.loanHistory.map((loan) => (
                   <li key={loan.id}>
                     <Divider/>
                     <Grid container>
                       <Grid item xs={12} sm={6}>
                         <Typography variant='body1'>Loan Amount: {` SAR ${loan.amount}`}</Typography>
-                        <Typography variant='body1'>Loan Duration: {` ${loan.loan_duration}`}</Typography>
+                        <Typography variant='body1'>Loan Duration: {` ${loan.tenure} months`}</Typography>
                         <Typography variant='body1'>Status: <span style={{color: loan.status==='AUTHORIZED' ? 'green' :'red'}}>
                           {`  ${loan.status}`}
                         </span>
@@ -89,7 +67,7 @@ class PreviousLoans extends Component {
                     <Divider/>
                   </li>
                 ))}
-              </ol>) : (<Typography variant='caption'>You haven't Applied for any loan yet.</Typography>))}
+              </ol>) : (<Typography variant='caption'>You haven't Applied for any loan yet.</Typography>)}
             </Paper>
           </Grid>
         </div>
