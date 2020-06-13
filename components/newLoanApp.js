@@ -160,7 +160,6 @@ class NewLoanApplicationForm extends Component {
             justify="center"
             container
             className={classes.grid}
-            spacing={2}
           >
             <Paper className={classes.paper} >
               <Typography className={classes.formLabel} variant="caption">NEW LOAN APPLICATION</Typography>
