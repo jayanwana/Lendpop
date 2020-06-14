@@ -58,7 +58,6 @@ class ApprovalDocuments extends Component {
 
   componentDidMount(){
     const lwd = this.props.loans.filter(this.filterLoans)
-    console.log(lwd);
     this.setState({loans: lwd})
   }
 
