@@ -34,7 +34,7 @@ const useStyles = theme => ({
     backgroundPosition: 'center',
   },
   a: {
-    color: theme.palette.secondary.main,
+    color: theme.palette.primary.main,
   },
   paperroot: {
     "@media screen and (min-width: 600px)": {
@@ -69,11 +69,11 @@ const useStyles = theme => ({
     marginTop: '1rem'
  },
   value:{
-    color: theme.palette.secondary.main,
+    color: theme.palette.primary.main,
   },
   bottom: {
     padding: "0 2em",
-    border: `1px solid ${theme.palette.secondary.main}`,
+    border: `1px solid ${theme.palette.primary.main}`,
     borderRadius: "35px",
     marginTop: '1rem'
   }
@@ -222,7 +222,7 @@ class SignUp extends Component {
         <CssBaseline />
         <Grid className={classes.paperroot} item xs={12} sm={6} md={4} lg={4} component={Paper} elevation={6} square>
           <div className={classes.paper}>
-            <Typography component="h4" variant="h5" style={{color: theme.palette.secondary.main}}>
+            <Typography component="h4" variant="h5" style={{color: theme.palette.primary.main}}>
               Sign up
             </Typography>
             <Typography>You are a step closer to joining thousands of people who trust us to back their financial needs</Typography>

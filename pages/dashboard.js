@@ -96,12 +96,24 @@ const useStyles = theme => ({
   title: {
     flexGrow: 0,
     textAlign: 'left',
-    color: theme.palette.secondary.main
+    color: theme.palette.primary.main
+  },
+  helloContainer: {
+    justifyContent:'space-between',
+    flexWrap:'nowrap',
+    height:'100%'
   },
   hello: {
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center'
+    justifyContent: 'space-around'
+  },
+  helloImage: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    "@media screen and (max-width: 850px)": {
+      display: "none"
+    }
   },
   drawerPaper: {
     position: 'relative',
@@ -147,8 +159,8 @@ const useStyles = theme => ({
   gridButton: {
     borderRadius: "10px",
     "&:hover": {
-      border: `1px solid ${theme.palette.secondary.main}`,
-      color: theme.palette.secondary.main
+      border: `1px solid ${theme.palette.primary.main}`,
+      color: theme.palette.primary.main
     },
   },
   buttonContainer: {
@@ -284,6 +296,7 @@ class Dashboard extends Component {
 
   logout() {
     sessionStorage.clear();
+    this.setState({loaded:false})
     return Router.push('/login')
   }
 
@@ -348,15 +361,20 @@ class Dashboard extends Component {
               {/* Chart */}
               <Grid item xs={12}>
                 <Paper className={fixedHeightPaper} style={{justifyContent: 'center'}}>
-                  <Grid container>
-                    <Grid className={classes.hello} item xs={12} sm={8}>
-                      <Typography variant="h3" color="inherit" noWrap className={classes.title}>
-                        Hello, {firstName? firstName : 'User'}!
-                      </Typography>
-                      <Typography variant='body1' styles={{marginTop:"5px"}}>
-                        Welcome to InstaKash, please continue your application.
-                      </Typography>
+                  <Grid container className={classes.helloContainer}>
+                    <Grid className={classes.hello} item xs={12} sm={10} md={8}>
+                      <Grid>
+                        <Typography variant="h3" color="inherit" noWrap className={classes.title}>
+                          Hello, {firstName? firstName : 'User'}!
+                        </Typography>
+                        <Typography variant='body1' styles={{marginTop:"5px"}}>
+                          Welcome to InstaKash, please continue your application.
+                        </Typography>
+                      </Grid>
                       <ReferButton link='https://member.instakash.com/api/landing/&pc=5053&sid=CID137'/>
+                    </Grid>
+                    <Grid className={classes.helloImage} item xs={null} sm={4}>
+                      <img src={require('../public/images/dashboard icon.png')} style={{height:'200px'}}/>
                     </Grid>
                   </Grid>
                   {/* <Chart /> */}

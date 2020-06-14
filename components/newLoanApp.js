@@ -50,7 +50,7 @@ const styles = theme => ({
     fontSize: "1rem",
     flexGrow: 0,
     textAlign: 'left',
-    color: theme.palette.secondary.main
+    color: theme.palette.primary.main
   },
 
   paper: {

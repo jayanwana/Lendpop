@@ -91,7 +91,7 @@ const styles = theme => ({
     fontSize: "1rem",
     flexGrow: 0,
     textAlign: 'left',
-    color: theme.palette.secondary.main
+    color: theme.palette.primary.main
   },
 
   paper: {
@@ -115,7 +115,7 @@ const styles = theme => ({
   formLabel: {
     padding: 8,
     fontSize: '1.2rem',
-    color:theme.palette.secondary.main
+    color:theme.palette.primary.main
   },
   formSubLabel: {
     padding: 8,
@@ -149,7 +149,7 @@ const styles = theme => ({
     marginBottom: 24
   },
   buttonProgress: {
-    color: theme.palette.secondary.main,
+    color: theme.palette.primary.main,
     // position: 'absolute',
     // top: '50%',
     // left: '50%',

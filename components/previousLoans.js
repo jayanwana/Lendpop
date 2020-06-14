@@ -32,7 +32,7 @@ const styles = theme => ({
   formLabel: {
     padding: 8,
     fontSize: '1.2rem',
-    color:theme.palette.secondary.main,
+    color:theme.palette.primary.main,
     textTransform: "uppercase"
   },
   grid: {
@@ -63,8 +63,7 @@ class PreviousLoans extends Component {
                   from={{ overflow: 'hidden', height: 0, opacity: 0 }}
                   enter={{ height: 'auto', opacity: 1, padding: '8px' }}
                   leave={{ height: 0, opacity: 0, }}
-                  // trail={1000}
-                  config={config.slow}
+                  trail={300}
                 >
                   {item => props => (
                     <animated.div style={props}>
@@ -73,7 +72,7 @@ class PreviousLoans extends Component {
                         <Grid item xs={12} sm={6}>
                           <Typography variant='body1'>Loan Amount: {` SAR ${item.amount}`}</Typography>
                           <Typography variant='body1'>Loan Duration: {` ${item.tenure} months`}</Typography>
-                          <Typography variant='body1'>Status: <span style={{color: item.status==='AUTHORIZED' ? 'green' :'red'}}>
+                          <Typography variant='body1'>Status: <span style={{color: item.status==='AUTHORIZED' ? theme.palette.primary.main :'red'}}>
                             {`  ${item.status}`}
                           </span>
                           </Typography>

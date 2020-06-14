@@ -30,7 +30,7 @@ const styles = theme => ({
   formLabel: {
     padding: 8,
     fontSize: '1.2rem',
-    color:theme.palette.secondary.main,
+    color:theme.palette.primary.main,
     textTransform: "uppercase"
   },
   grid: {
