@@ -32,9 +32,9 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import Back from "./common/Back";
 import numeral from "numeral";
 import Questions from '../components/questions';
-import Paystack from '../utils/axios.paystack';
+// import Paystack from '../utils/axios.paystack';
 import Api from '../utils/axios.service';
-import states from './statedata.json';
+import regions from './data/saudi_regions_lite.json';
 import indigo from '@material-ui/core/colors/indigo';
 
 
@@ -179,6 +179,8 @@ const getSteps = () => {
   return ["INSTRUCTIONS", "PERSONAL INFO", "DEMOGRAPHICS", "ELIGIBILITY", "AGREEMENT", "OTHER INFO", "COMPLETE"];
 };
 
+const banks = ['The National Commercial Bank', 'The Saudi British Bank', 'Saudi Investment Bank','alinma bank','Banque Saudi Fransi','Riyad Bank', 'Samba Financial Group (Samba)', 'alawwal bank', 'Al Rajhi Bank', 'Arab National Bank', 'Bank AlBilad', 'Bank AlJazira', 'Gulf International Bank Saudi Aribia (GIB-SA)']
+
 class LoanApplicationForm extends Component {
   state = {
     loading: false,
@@ -192,8 +194,7 @@ class LoanApplicationForm extends Component {
     email: this.props.email,
     mobile: '',
     address: '',
-    city: '',
-    state: '',
+    region: '',
     gender: '',
     education: '',
     ethnicity:'',
@@ -209,18 +210,18 @@ class LoanApplicationForm extends Component {
     repaymentPlan: '',
     bankName: '',
     accountNumber: '',
-    banks: [],
+    banks: banks,
     files: []
   };
 
   componentDidMount() {
-    if (this.source) {
-          this.source.cancel('Cancel previous request');
-      }
-    this.source = Paystack.source()
-    Paystack.banks({ cancelToken: this.source.token }).then(response => {
-      this.setState({banks: response.data.data})
-    }).catch(error => console.log(error))
+    // if (this.source) {
+    //       this.source.cancel('Cancel previous request');
+    //   }
+    // this.source = Paystack.source()
+    // Paystack.banks({ cancelToken: this.source.token }).then(response => {
+    //   this.setState({banks: response.data.data})
+    // }).catch(error => console.log(error))
     const formData = JSON.parse(localStorage('formstate'))
     if (formData){this.setState({...formData})};
   }
@@ -235,7 +236,7 @@ class LoanApplicationForm extends Component {
   }
 
   componentWillUnmount() {
-    return this.source.cancel('paystack request canceled')
+    // return this.source.cancel('paystack request canceled')
   }
 
   handleNext = () => {
@@ -281,9 +282,9 @@ class LoanApplicationForm extends Component {
     this.props.handler()
   };
 
-  getCity = name => {
-    return states.filter(state => {
-      return state.state.name == name
+  getCity = id => {
+    return cities.filter(city => {
+      return city.region_id === id
     })
   }
 
@@ -363,7 +364,7 @@ class LoanApplicationForm extends Component {
     const steps = getSteps();
     const { activeStep, firstName, lastName, gracePeriod, hascreditScore, creditScore,
       NationalIdNo, email, dob, mobile, gender, education, ethnicity, questions,
-      address, city, state, mobileCheck, addressCheck, repaymentPlan, bankName,
+      address, region, mobileCheck, addressCheck, repaymentPlan, bankName,
       accountNumber, banks, employeeReference, employeeNumber, salary, loading,
     } = this.state;
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
@@ -641,31 +642,33 @@ class LoanApplicationForm extends Component {
                               }}
                             />
                           </Grid>
-                          <Grid item xs={12} sm={2}>
+                          <Grid item xs={12} sm={4}>
                             <TextField
                               required
-                              id="outlined-select-state"
+                              id="outlined-select-region"
                               select
-                              label="Current State"
-                              name="state"
-                              value={state}
+                              label="Current Region"
+                              name="region"
+                              value={region}
                               onChange={handleChange}
                               variant="outlined"
-                              placeholder="Select State"
+                              placeholder="Select Region"
                               InputLabelProps={{
                                 shrink: true,
                               }}
                             >
-                              {states.map((option) => (
-                                <MenuItem key={option.state.id} value={option.state.name}>
-                                  {option.state.name}
+                              {regions.map((region) => (
+                                <MenuItem key={region.region_id} value={region.region_id}>
+                                  <div style={{display:'flex',justifyContent:'space-between',width:'100%'}}>
+                                    <div>{region.name_en}</div><div>{region.name_ar}</div>
+                                  </div>
                                 </MenuItem>
                               ))}
                             </TextField>
                           </Grid>
-                          <Grid item xs={12} sm={2}>
+                          {/* <Grid item xs={12} sm={2}>
                             <TextField
-                              disabled={!state ? true : false}
+                              disabled={!region ? true : false}
                               id="outlined-select-city"
                               select
                               label="Current City"
@@ -673,21 +676,25 @@ class LoanApplicationForm extends Component {
                               value={city}
                               onChange={handleChange}
                               InputLabelProps={{
-                                shrink: true,
+                            shrink: true,
                               }}
                               variant="outlined"
                             >
-                              {state? (this.getCity(state)[0].state.locals.map((option) => (
-                                <MenuItem key={option.id} value={option.name}>
-                                  {option.name}
-                                </MenuItem>
-                              ))) : (this.getCity('Lagos State')[0].state.locals.map((option) => (
-                                <MenuItem key={option.id} value={option.name}>
-                                  {option.name}
-                                </MenuItem>
+                              {region ? (this.getCity(region).map((city) => (
+                            <MenuItem key={city.city_id} value={city.city_id}>
+                            <div style={{display:'flex',justifyContent:'space-between',width:'100%'}}>
+                            <div>{city.name_en}</div><div>{city.name_ar}</div>
+                            </div>
+                            </MenuItem>
+                              ))) : (this.getCity(1).map((city) => (
+                            <MenuItem key={city.city_id} value={city.name_en}>
+                            <div style={{display:'flex',justifyContent:'space-between',width:'100%'}}>
+                            <div>{city.name_en}</div><div>{city.name_ar}</div>
+                            </div>
+                            </MenuItem>
                               )))}
                             </TextField>
-                          </Grid>
+                          </Grid> */}
                           <Grid item xs={12} style={{padding: 0}}>
                             <Grid item xs={12} sm={4} style={{float: "left"}}>
                               <FormGroup row>
@@ -898,9 +905,9 @@ class LoanApplicationForm extends Component {
                               }}
                               variant="outlined"
                             >
-                              {banks.map((bank) => (
-                                <MenuItem key={bank.id} value={bank.name}>
-                                  {bank.name}
+                              {banks.map((bank, index) => (
+                                <MenuItem key={index} value={bank}>
+                                  {bank}
                                 </MenuItem>
                               ))}
                             </TextField>
