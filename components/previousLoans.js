@@ -27,6 +27,12 @@ const styles = theme => ({
     borderRadius: '10px',
     width: '100%'
   },
+  formLabel: {
+    padding: 8,
+    fontSize: '1.2rem',
+    color:theme.palette.secondary.main,
+    textTransform: "uppercase"
+  },
   grid: {
     margin: 0
   },

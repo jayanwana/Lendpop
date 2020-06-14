@@ -27,6 +27,12 @@ const styles = theme => ({
     borderRadius: '10px',
     width: '100%'
   },
+  formLabel: {
+    padding: 8,
+    fontSize: '1.2rem',
+    color:theme.palette.secondary.main,
+    textTransform: "uppercase"
+  },
   grid: {
     margin: 0
   },
@@ -69,7 +75,7 @@ class ApprovalDocuments extends Component {
             {this.state.loans.length ?
               (<Grid container spacing={2} className={classes.loans}
                >
-                <Typography variant='h4'>Approval Documents</Typography>
+                <Typography  className={classes.formLabel} variant="caption">Approval Documents</Typography>
                 {this.state.loans.map(loan => (
                   <Grid item xs={12} key={loan.id}>
                     <Paper className={classes.loanPaper}>
