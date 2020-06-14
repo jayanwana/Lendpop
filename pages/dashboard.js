@@ -23,6 +23,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItem from '@material-ui/core/ListItem';
 import DashboardIcon from '@material-ui/icons/Dashboard';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
@@ -313,6 +314,16 @@ class Dashboard extends Component {
           </div>
           <Divider/>
           <List>
+            {loans.length &&
+              <React.Fragment>
+                <ListItem button onClick={this.continueApplication}>
+                  <ListItemIcon>
+                    <AccountBoxIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Update Profile" />
+                </ListItem>
+                <Divider />
+              </React.Fragment>}
             <ListItem button onClick={this.reset}>
               <ListItemIcon>
                 <DashboardIcon />
