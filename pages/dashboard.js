@@ -290,7 +290,7 @@ class Dashboard extends Component {
     if (!this.state.loaded) return null;
     const { classes } = this.props;
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-    const { open, firstName, email, lastName, loans,
+    const { open, firstName, email, lastName, loans, questions,
       showHistory, showApprovalDocs, newLoanApp, application } = this.state;
     return (
       <div className={classes.root}>
@@ -391,9 +391,19 @@ class Dashboard extends Component {
                   </Grid>
                 </Grid>
               </Grid>
-              {this.state.questions &&
-                <Questions email={email}/>
-              }
+              <Transition
+                items={questions}
+                initial={null}
+                from={{ opacity: 0, transform: 'translate3d(0,-40px,0)' }}
+                enter={{ opacity: 1, transform: 'translate3d(0,0px,0)' }}
+                leave={{ opacity: 0, display: 'none' }}
+                trail={300}>
+                {items => questions && (props =>
+                  <AnimatedGrid style={props} item xs={12}>
+                    <Questions email={email}/>
+                  </AnimatedGrid>)
+                }
+              </Transition>
               <Transition
                 items={application}
                 initial={null}
