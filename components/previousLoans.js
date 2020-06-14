@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import {Transition} from 'react-spring/renderprops.cjs';
+import {animated, config} from 'react-spring';
 import withStyles from "@material-ui/styles/withStyles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Typography from "@material-ui/core/Typography";
@@ -47,33 +49,45 @@ class PreviousLoans extends Component {
 
   render() {
     const { classes } = this.props;
+    const loans = this.state.loanHistory
     return (
       <React.Fragment>
         <div className={classes.root}>
           <Grid container justify="center">
             <Paper className={classes.paper}>
-              {this.state.loanHistory.length ? (<ol>
-                {this.state.loanHistory.map((loan) => (
-                  <li key={loan.id}>
-                    <Divider/>
-                    <Grid container>
-                      <Grid item xs={12} sm={6}>
-                        <Typography variant='body1'>Loan Amount: {` SAR ${loan.amount}`}</Typography>
-                        <Typography variant='body1'>Loan Duration: {` ${loan.tenure} months`}</Typography>
-                        <Typography variant='body1'>Status: <span style={{color: loan.status==='AUTHORIZED' ? 'green' :'red'}}>
-                          {`  ${loan.status}`}
-                        </span>
-                        </Typography>
+              <Typography  className={classes.formLabel} variant="caption">Loan history</Typography>
+              {loans.length ? (
+                <Transition
+                  items={loans} keys={item => item.id}
+                  initial={null}
+                  from={{ overflow: 'hidden', height: 0, opacity: 0 }}
+                  enter={{ height: 'auto', opacity: 1, padding: '8px' }}
+                  leave={{ height: 0, opacity: 0, }}
+                  // trail={1000}
+                  config={config.slow}
+                >
+                  {item => props => (
+                    <animated.div style={props}>
+                      <Divider/>
+                      <Grid container>
+                        <Grid item xs={12} sm={6}>
+                          <Typography variant='body1'>Loan Amount: {` SAR ${item.amount}`}</Typography>
+                          <Typography variant='body1'>Loan Duration: {` ${item.tenure} months`}</Typography>
+                          <Typography variant='body1'>Status: <span style={{color: item.status==='AUTHORIZED' ? 'green' :'red'}}>
+                            {`  ${item.status}`}
+                          </span>
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                          <Typography variant='body1'>Description: {` ${item.description}`}</Typography>
+                          <Typography variant='body1'>Created At: {`  ${item.created_at}`}</Typography>
+                        </Grid>
                       </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <Typography variant='body1'>Description: {` ${loan.description}`}</Typography>
-                        <Typography variant='body1'>Created At: {`  ${loan.created_at}`}</Typography>
-                      </Grid>
-                    </Grid>
-                    <Divider/>
-                  </li>
-                ))}
-              </ol>) : (<Typography variant='caption'>You haven't Applied for any loan yet.</Typography>)}
+                      <Divider/>
+                    </animated.div>
+                  )}
+                </Transition>
+              ) : (<Typography variant='caption'>You haven't Applied for any loan yet.</Typography>)}
             </Paper>
           </Grid>
         </div>

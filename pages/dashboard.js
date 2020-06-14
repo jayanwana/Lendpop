@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import Head from 'next/head';
+import {Transition} from 'react-spring/renderprops.cjs';
+import {animated, config} from 'react-spring';
 import clsx from 'clsx';
 import withStyles from "@material-ui/styles/withStyles";
 import Divider from '@material-ui/core/Divider';
@@ -44,6 +46,7 @@ const localStorage = require('local-storage');
 const sessionstorage = require('sessionstorage');
 const drawerWidth = 240;
 
+const AnimatedGrid = animated(Grid)
 const useStyles = theme => ({
   root: {
     display: 'flex',
@@ -201,7 +204,6 @@ class Dashboard extends Component {
       Api.userData(JSON.stringify({email: email}),
       { cancelToken: this.source.token }).then(response => {
         this.props.pageTransitionReadyToEnter()
-        console.log(response)
         this.setState({
           firstName: response.data.user_data.first_name,
           lastName: response.data.user_data.last_name,
@@ -288,7 +290,8 @@ class Dashboard extends Component {
     if (!this.state.loaded) return null;
     const { classes } = this.props;
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-    const { open, firstName, email, lastName, loans } = this.state;
+    const { open, firstName, email, lastName, loans,
+      showHistory, showApprovalDocs, newLoanApp, application } = this.state;
     return (
       <div className={classes.root}>
         <Head>
@@ -391,33 +394,70 @@ class Dashboard extends Component {
               {this.state.questions &&
                 <Questions email={email}/>
               }
-              {this.state.application &&
-                <Grid item xs={12}>
-                  <LoanApplicationForm
-                    firstName={firstName}
-                    lastName={lastName}
-                    email={email}
-                    handler={this.showHistory}
-                    initialAmount={this.state.initial_amount}
-                    tenure={this.state.tenure}
-                  />
+              <Transition
+                items={application}
+                initial={null}
+                from={{ opacity: 0, transform: 'translate3d(0,-40px,0)' }}
+                enter={{ opacity: 1, transform: 'translate3d(0,0px,0)' }}
+                leave={{ opacity: 0, display: 'none' }}
+                trail={300}>
+                {items => application && (props =>
+                  <AnimatedGrid style={props} item xs={12}>
+                    <LoanApplicationForm
+                      firstName={firstName}
+                      lastName={lastName}
+                      email={email}
+                      handler={this.showHistory}
+                      initialAmount={this.state.initial_amount}
+                      tenure={this.state.tenure}
+                    />
+                  </AnimatedGrid>)
+                }
+              </Transition>
+              <Transition
+                items={showHistory}
+                initial={null}
+                from={{ opacity: 0, transform: 'translate3d(0,-40px,0)' }}
+                enter={{ opacity: 1, transform: 'translate3d(0,0px,0)' }}
+                leave={{ opacity: 0, display: 'none' }}
+                trail={300}>
+                {items => showHistory && (props =>
 
-                </Grid>}
-              {this.state.showHistory &&
-                <Grid item xs={12}>
-                  <PreviousLoans loans={loans}/>
-                </Grid>
-              }
-              {this.state.showApprovalDocs &&
-                <Grid item xs={12}>
-                  <ApprovalDocuments email={email} loans={loans}/>
-                </Grid>
-              }
-              {this.state.newLoanApp &&
-                <Grid item xs={12}>
-                  <NewLoanApplicationForm email={email}/>
-                </Grid>
-              }
+                  <AnimatedGrid style={props} item xs={12}>
+                    <PreviousLoans loans={loans}/>
+                  </AnimatedGrid>)
+                }
+              </Transition>
+              <Transition
+                items={showApprovalDocs}
+                initial={null}
+                from={{ opacity: 0, transform: 'translate3d(0,-40px,0)' }}
+                enter={{ opacity: 1, transform: 'translate3d(0,0px,0)' }}
+                leave={{ opacity: 0, display: 'none' }}
+                trail={300}>
+
+                {items => showApprovalDocs && (props =>
+
+                  <AnimatedGrid style={props} item xs={12}>
+                    <ApprovalDocuments email={email} loans={loans}/>
+                  </AnimatedGrid>)
+                }
+              </Transition>
+              <Transition
+                items={newLoanApp}
+                initial={null}
+                from={{ opacity: 0, transform: 'translate3d(0,-40px,0)' }}
+                enter={{ opacity: 1, transform: 'translate3d(0,0px,0)' }}
+                leave={{ opacity: 0, display: 'none'}}
+                trail={300}>
+                {items => newLoanApp && (props =>
+
+                  <AnimatedGrid style={props} item xs={12}>
+                    <NewLoanApplicationForm email={email}/>
+                  </AnimatedGrid>)
+                }
+              </Transition>
+
             </Grid>
             <Box pt={4}>
               <Copyright />
