@@ -188,19 +188,19 @@ class LoanApplicationForm extends Component {
     termsChecked: false,
     labelWidth: 0,
     firstName: this.props.firstName,
-    lastName: this.props.lastName,
-    NationalIdNo: '',
-    dob: '',
+    lastName: this.props.data.last_name,
+    NationalIdNo: this.props.data.national_id ? this.props.data.national_id : '',
+    dob: this.props.data.dob ? this.props.data.dob : '',
     email: this.props.email,
-    mobile: '',
-    address: '',
+    mobile: this.props.data.mobile ? this.props.data.mobile : '',
+    address: this.props.data.address ? this.props.data.address : '',
     region: '',
-    gender: '',
+    gender: this.props.data.gender ? this.props.data.gender : '',
     education: '',
     ethnicity:'',
-    employeeReference: '',
-    employeeNumber: '',
-    salary: '',
+    employeeReference: this.props.data.employee_reference ? this.props.data.employee_reference : '',
+    employeeNumber: this.props.data.employee_number ? this.props.data.employee_number : '',
+    salary: this.props.data.salary ? this.props.data.salary : '',
     questions:'',
     mobileCheck: false,
     addressCheck: false,
@@ -208,8 +208,8 @@ class LoanApplicationForm extends Component {
     hascreditScore: false,
     creditScore: '',
     repaymentPlan: '',
-    bankName: '',
-    accountNumber: '',
+    bankName: this.props.data.bank ? this.props.data.bank : '',
+    accountNumber: this.props.data.account_number ? this.props.data.account_number : '',
     banks: banks,
     files: []
   };
@@ -279,7 +279,7 @@ class LoanApplicationForm extends Component {
   }
 
   goToDashboard = event => {
-    this.props.handler()
+    Router.reload()
   };
 
   getCity = id => {
@@ -311,13 +311,12 @@ class LoanApplicationForm extends Component {
       bank: this.state.bankName,
       mobile: this.state.mobile,
       dob: this.state.dob,
-      tenure: this.props.tenure,
-      initial_amount: this.props.initialAmount,
+      tenure: this.props.data.tenure,
+      initial_amount: this.props.data.initial_amount,
       "address": this.state.address,
       "account_number": this.state.accountNumber
     }
     Api.kycUpdate(JSON.stringify(kycForm)).then((response) => {
-      console.log(response);
       return response.data.data
     }).then((data) => {
       const apiData = {
@@ -352,7 +351,7 @@ class LoanApplicationForm extends Component {
         this.clear();
         this.handleNext();
     }).catch(error => {
-      console.log(error);
+      console.log(error.response);
       return this.setState({loading:false})
     })
   }
@@ -579,23 +578,23 @@ class LoanApplicationForm extends Component {
                               </FormGroup>
                             </Grid>
                           </Grid>
-                          <Grid item xs={12} sm={4}>
+                          <Grid item xs={12} sm={8}>
                             <TextField
                               fullWidth
                               required
                               name="employeeReference"
                               id="outlined-employee-reference"
-                              label="Employee Reference"
+                              label="Employer Address"
                               variant="outlined"
                               value={employeeReference}
                               onChange={handleChange}
-                              placeholder="Enter Employee Reference"
+                              placeholder="Enter your Employers Address"
                               InputLabelProps={{
                                   shrink: true,
                               }}
                             />
                           </Grid>
-                          <Grid item xs={12} sm={4}>
+                          <Grid item xs={12} sm={2}>
                             <TextField
                               fullWidth
                               required
@@ -611,7 +610,7 @@ class LoanApplicationForm extends Component {
                               }}
                             />
                           </Grid>
-                          <Grid item xs={12} sm={4}>
+                          <Grid item xs={12} sm={2}>
                             <TextField
                               fullWidth
                               required
@@ -796,7 +795,7 @@ class LoanApplicationForm extends Component {
                       <Typography className={classes.formLabel} variant="caption">ELIGIBILITY</Typography>
                       <Paper className={successPaper}>
                         <Typography className={classes.successText} variant='body2'>Congratulations!!</Typography>
-                        <Typography className={classes.successText} variant='body2'>You have prequalified for the loan of $3000 your repayment plan would be $55 to $155 over a period of 16 months.</Typography>
+                        <Typography className={classes.successText} variant='body2'>You have prequalified for the loan of {` SAR${this.props.data.initial_amount} `} your repayment plan would be SAR55 to SAR155 over a period of 16 months.</Typography>
                         <Typography className={classes.successText} variant='body2'>Would you like to proceed?</Typography>
                       </Paper>
                       <form className={classes.formControl} noValidate autoComplete="off">
@@ -1459,7 +1458,7 @@ class LoanApplicationForm extends Component {
                             <Typography variant="body1" gutterBottom>
                               Your dashboard is ready for you to review your loan history
                             </Typography>
-                            <Button fullWidth variant="outlined" onClick={this.props.handler}>
+                            <Button fullWidth variant="outlined" onClick={this.goToDashboard}>
                               Back to Dashboard
                             </Button>
                           </Grid>
