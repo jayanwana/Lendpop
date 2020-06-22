@@ -192,11 +192,9 @@ class Dashboard extends Component {
       newLoanApp: false,
       showHistory: true,
       showApprovalDocs: false,
-      initial_amount: '',
-      tenure: '',
       firstName: '',
-      lastName: '',
       email: '',
+      data: {},
       loans: [],
     }
     this.handleDrawer = this.handleDrawer.bind(this);
@@ -216,16 +214,14 @@ class Dashboard extends Component {
     if (email) {
       Api.userData(JSON.stringify({email: email}),
       { cancelToken: this.source.token }).then(response => {
-        this.props.pageTransitionReadyToEnter()
         this.setState({
           firstName: response.data.user_data.first_name,
-          lastName: response.data.user_data.last_name,
           email: response.data.user_data.email,
-          initial_amount: response.data.user_data.initial_amount,
-          tenure: response.data.user_data.tenure,
+          data: response.data.user_data,
           loans: response.data.loan_data,
           loaded: true,
         })
+        this.props.pageTransitionReadyToEnter()
       }).catch(error => console.log(error))
     } else {
     Router.push('/login')
@@ -304,7 +300,7 @@ class Dashboard extends Component {
     if (!this.state.loaded) return null;
     const { classes } = this.props;
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-    const { open, firstName, email, lastName, loans, questions,
+    const { open, firstName, email, data, loans, questions,
       showHistory, showApprovalDocs, newLoanApp, application } = this.state;
     return (
       <div className={classes.root}>
@@ -444,11 +440,9 @@ class Dashboard extends Component {
                   <AnimatedGrid style={props} item xs={12}>
                     <LoanApplicationForm
                       firstName={firstName}
-                      lastName={lastName}
                       email={email}
+                      data={data}
                       handler={this.showHistory}
-                      initialAmount={this.state.initial_amount}
-                      tenure={this.state.tenure}
                     />
                   </AnimatedGrid>)
                 }
