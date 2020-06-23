@@ -2,6 +2,7 @@
   "name": "Lendpop",
   "version": "3.0.0",
   "private": true,
+  "cacheDirectories": [".next/cache"],
   "dependencies": {
     "@date-io/date-fns": "^1.3.13",
     "@material-ui/core": "latest",
