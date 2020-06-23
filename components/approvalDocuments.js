@@ -27,6 +27,12 @@ const styles = theme => ({
     borderRadius: '10px',
     width: '100%'
   },
+  formLabel: {
+    padding: 8,
+    fontSize: '1.2rem',
+    color:theme.palette.primary.main,
+    textTransform: "uppercase"
+  },
   grid: {
     margin: 0
   },
@@ -37,6 +43,10 @@ const styles = theme => ({
   },
   loanPaper: {
     padding:'8px'
+  },
+  buttonGrid: {
+    display:'flex',
+    justifyContent: 'space-between'
   }
 });
 
@@ -48,7 +58,6 @@ class ApprovalDocuments extends Component {
 
   componentDidMount(){
     const lwd = this.props.loans.filter(this.filterLoans)
-    console.log(lwd);
     this.setState({loans: lwd})
   }
 
@@ -65,15 +74,29 @@ class ApprovalDocuments extends Component {
             {this.state.loans.length ?
               (<Grid container spacing={2} className={classes.loans}
                >
-                <Typography variant='h4'>Approval Documents</Typography>
+                <Typography  className={classes.formLabel} variant="caption">Approval Documents</Typography>
                 {this.state.loans.map(loan => (
-                  <Grid item xs={12} sm={6} key={loan.id}>
+                  <Grid item xs={12} key={loan.id}>
                     <Paper className={classes.loanPaper}>
-                      <Typography variant='body1'>Loan Amount: {` SAR ${loan.amount}`}</Typography>
-                      <Typography variant='body1'>Loan Duration: {` ${loan.tenure} months`}</Typography>
-                      <Grid item>
-                        <Typography variant='body1'>Download Photo</Typography>
-                        <Button component='a' variant="outlined" href={`http://35.239.244.63:60000/${loan.payslip}`}> Photo</Button>
+                      <Grid container spacing={2} className={classes.loans}>
+                        <Typography variant='body1'>Loan Amount: {` SAR ${loan.amount}`}</Typography>
+                        <Typography variant='body1'>Loan Duration: {` ${loan.tenure} months`}</Typography>
+                        {loan.photo &&<Grid item xs={12} className={classes.buttonGrid}>
+                          <Typography variant='body1'>Download Photo</Typography>
+                          <Button component='a' variant="outlined" target="_blank" href={`http://35.239.244.63:60000/${loan.photo}`}> Photo</Button>
+                        </Grid>}
+                        {loan.payslip &&<Grid item xs={12} className={classes.buttonGrid}>
+                          <Typography variant='body1'>Download Payslip</Typography>
+                          <Button component='a' variant="outlined" target="_blank" href={`http://35.239.244.63:60000/${loan.payslip}`}> Payslip</Button>
+                        </Grid>}
+                        {loan.bank_statement &&<Grid item xs={12} className={classes.buttonGrid}>
+                          <Typography variant='body1'>Download Bank Statement</Typography>
+                          <Button component='a' variant="outlined" target="_blank" href={`http://35.239.244.63:60000/${loan.bank_statement}`}> Bank Statement</Button>
+                        </Grid>}
+                        {loan.letter_of_employment &&<Grid item xs={12} className={classes.buttonGrid}>
+                          <Typography variant='body1'>Download Letter of Employment</Typography>
+                          <Button component='a' variant="outlined" target="_blank" href={`http://35.239.244.63:60000/${loan.letter_of_employment}`}> Letter of Employment</Button>
+                        </Grid>}
                       </Grid>
                     </Paper>
                   </Grid>

@@ -50,7 +50,7 @@ const styles = theme => ({
     fontSize: "1rem",
     flexGrow: 0,
     textAlign: 'left',
-    color: theme.palette.secondary.main
+    color: theme.palette.primary.main
   },
 
   paper: {
@@ -160,7 +160,6 @@ class NewLoanApplicationForm extends Component {
             justify="center"
             container
             className={classes.grid}
-            spacing={2}
           >
             <Paper className={classes.paper} >
               <Typography className={classes.formLabel} variant="caption">NEW LOAN APPLICATION</Typography>

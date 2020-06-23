@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import Head from 'next/head';
+import {Transition} from 'react-spring/renderprops.cjs';
+import {animated, config} from 'react-spring';
 import clsx from 'clsx';
 import withStyles from "@material-ui/styles/withStyles";
 import Divider from '@material-ui/core/Divider';
@@ -21,6 +23,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItem from '@material-ui/core/ListItem';
 import DashboardIcon from '@material-ui/icons/Dashboard';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
@@ -29,8 +32,10 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import LoanApplicationForm from '../components/loanApplicationForm';
 import { mainListItems, secondaryListItems } from '../components/listItems';
 import LinkOutlinedIcon from '@material-ui/icons/LinkOutlined';
+import Api from '../utils/axios.service';
 import Copyright from '../components/copyright';
 import Questions from '../components/questions';
+import NewLoanApplicationForm from '../components/newLoanApp';
 import PreviousLoans from '../components/previousLoans';
 import ApprovalDocuments from '../components/approvalDocuments';
 import theme from '../src/theme';
@@ -42,6 +47,7 @@ const localStorage = require('local-storage');
 const sessionstorage = require('sessionstorage');
 const drawerWidth = 240;
 
+const AnimatedGrid = animated(Grid)
 const useStyles = theme => ({
   root: {
     display: 'flex',
@@ -90,12 +96,24 @@ const useStyles = theme => ({
   title: {
     flexGrow: 0,
     textAlign: 'left',
-    color: theme.palette.secondary.main
+    color: theme.palette.primary.main
+  },
+  helloContainer: {
+    justifyContent:'space-between',
+    flexWrap:'nowrap',
+    height:'100%'
   },
   hello: {
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center'
+    justifyContent: 'space-around'
+  },
+  helloImage: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    "@media screen and (max-width: 850px)": {
+      display: "none"
+    }
   },
   drawerPaper: {
     position: 'relative',
@@ -141,8 +159,8 @@ const useStyles = theme => ({
   gridButton: {
     borderRadius: "10px",
     "&:hover": {
-      border: `1px solid ${theme.palette.secondary.main}`,
-      color: theme.palette.secondary.main
+      border: `1px solid ${theme.palette.primary.main}`,
+      color: theme.palette.primary.main
     },
   },
   buttonContainer: {
@@ -162,7 +180,6 @@ const useStyles = theme => ({
   },
 });
 
-
 class Dashboard extends Component {
   static pageTransitionDelayEnter = true
   constructor(props) {
@@ -172,13 +189,13 @@ class Dashboard extends Component {
       open: false,
       questions: false,
       application: false,
+      newLoanApp: false,
       showHistory: true,
       showApprovalDocs: false,
-      initial_amount: '',
-      tenure: '',
       firstName: '',
-      lastName: '',
-      email: ''
+      email: '',
+      data: {},
+      loans: [],
     }
     this.handleDrawer = this.handleDrawer.bind(this);
     this.submit = this.submit.bind(this);
@@ -189,36 +206,30 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-    this.timeoutId = setTimeout(() => {
-      this.props.pageTransitionReadyToEnter()
-      this.setState({ loaded: true })
-    }, 2000)
-    let state = sessionstorage.getItem('state')
-    if(state){
-      state = JSON.parse(state)
-      console.log(state);
-      this.setState({
-        firstName: state.first_name,
-        lastName: state.last_name,
-        email: state.email,
-        initial_amount: state.initial_amount,
-        tenure: state.tenure
-      })
-    } else if (sessionStorage.getItem('email')) {
-    this.setState({
-      firstName : sessionStorage.getItem('firstName') ? sessionStorage.getItem('firstName') : '',
-      lastName : sessionStorage.getItem('lastName') ? sessionStorage.getItem('lastName') : '',
-      email : sessionStorage.getItem('email') ? sessionStorage.getItem('email') : '',
-      initial_amount : sessionStorage.getItem('principal') ? sessionStorage.getItem('principal') : '',
-      tenure: sessionStorage.getItem('period') ? sessionStorage.getItem('period') : ''
-    })
+    if (this.source) {
+          this.source.cancel('Cancel previous request');
+      }
+    this.source = Api.source()
+    const email = sessionstorage.getItem('email')
+    if (email) {
+      Api.userData(JSON.stringify({email: email}),
+      { cancelToken: this.source.token }).then(response => {
+        this.setState({
+          firstName: response.data.user_data.first_name,
+          email: response.data.user_data.email,
+          data: response.data.user_data,
+          loans: response.data.loan_data,
+          loaded: true,
+        })
+        this.props.pageTransitionReadyToEnter()
+      }).catch(error => console.log(error))
     } else {
     Router.push('/login')
     }
   }
 
   componentWillUnmount() {
-    if (this.timeoutId) clearTimeout(this.timeoutId)
+    return this.source.cancel('request canceled')
   }
 
   continueApplication(){
@@ -227,6 +238,17 @@ class Dashboard extends Component {
       showHistory: false,
       application: true,
       showApprovalDocs: false,
+      newLoanApp: false,
+    })
+  }
+
+  newApplication(){
+    this.setState({
+      questions: false,
+      showHistory: false,
+      application: false,
+      showApprovalDocs: false,
+      newLoanApp: true,
     })
   }
 
@@ -236,6 +258,7 @@ class Dashboard extends Component {
       application: false,
       showHistory: true,
       showApprovalDocs: false,
+      newLoanApp: false,
     })
   }
 
@@ -245,6 +268,7 @@ class Dashboard extends Component {
       application: false,
       showHistory: false,
       showApprovalDocs: true,
+      newLoanApp: false,
     })
   }
 
@@ -268,6 +292,7 @@ class Dashboard extends Component {
 
   logout() {
     sessionStorage.clear();
+    this.setState({loaded:false})
     return Router.push('/login')
   }
 
@@ -275,7 +300,8 @@ class Dashboard extends Component {
     if (!this.state.loaded) return null;
     const { classes } = this.props;
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-    const { open, firstName, email, lastName } = this.state;
+    const { open, firstName, email, data, loans, questions,
+      showHistory, showApprovalDocs, newLoanApp, application } = this.state;
     return (
       <div className={classes.root}>
         <Head>
@@ -297,6 +323,16 @@ class Dashboard extends Component {
           </div>
           <Divider/>
           <List>
+            {loans.length &&
+              <React.Fragment>
+                <ListItem button onClick={this.continueApplication}>
+                  <ListItemIcon>
+                    <AccountBoxIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Update Profile" />
+                </ListItem>
+                <Divider />
+              </React.Fragment>}
             <ListItem button onClick={this.reset}>
               <ListItemIcon>
                 <DashboardIcon />
@@ -321,15 +357,20 @@ class Dashboard extends Component {
               {/* Chart */}
               <Grid item xs={12}>
                 <Paper className={fixedHeightPaper} style={{justifyContent: 'center'}}>
-                  <Grid container>
-                    <Grid className={classes.hello} item xs={12} sm={8}>
-                      <Typography variant="h3" color="inherit" noWrap className={classes.title}>
-                        Hello, {firstName? firstName : 'User'}!
-                      </Typography>
-                      <Typography variant='body1' styles={{marginTop:"5px"}}>
-                        Welcome to InstaKash, please continue your application.
-                      </Typography>
+                  <Grid container className={classes.helloContainer}>
+                    <Grid className={classes.hello} item xs={12} sm={10} md={8}>
+                      <Grid>
+                        <Typography variant="h3" color="inherit" noWrap className={classes.title}>
+                          Hello, {firstName? firstName : 'User'}!
+                        </Typography>
+                        <Typography variant='body1' styles={{marginTop:"5px"}}>
+                          Welcome to InstaKash, please continue your application.
+                        </Typography>
+                      </Grid>
                       <ReferButton link='https://member.instakash.com/api/landing/&pc=5053&sid=CID137'/>
+                    </Grid>
+                    <Grid className={classes.helloImage} item xs={null} sm={4}>
+                      <img src={require('../public/images/dashboard icon.png')} style={{height:'200px'}}/>
                     </Grid>
                   </Grid>
                   {/* <Chart /> */}
@@ -337,14 +378,22 @@ class Dashboard extends Component {
               </Grid>
               <Grid item xs={12}>
                 <Grid container className={classes.optionButtons} spacing={0}>
-                  <Grid item className={classes.buttonContainer} xs={12} md='auto' lg='auto'><Button
-                    fullWidth
-                    variant="outlined"
-                    color="primary"
-                    className={classes.gridButton}
-                    onClick={this.continueApplication.bind(this)}>
-                    <span style={{whiteSpace: 'nowrap'}}>Continue my loan application</span>
-                  </Button>
+                  <Grid item className={classes.buttonContainer} xs={12} md='auto' lg='auto'>
+                    {loans.length ? <Button
+                      fullWidth
+                      variant="outlined"
+                      color="primary"
+                      className={classes.gridButton}
+                      onClick={this.newApplication.bind(this)}>
+                      <span style={{whiteSpace: 'nowrap'}}>New loan application</span>
+                    </Button> : <Button
+                      fullWidth
+                      variant="outlined"
+                      color="primary"
+                      className={classes.gridButton}
+                      onClick={this.continueApplication.bind(this)}>
+                      <span style={{whiteSpace: 'nowrap'}}>Continue my loan application</span>
+                    </Button>}
                   </Grid>
                   <Divider className={classes.divider} orientation="horizontal"/>
 
@@ -367,31 +416,81 @@ class Dashboard extends Component {
                   </Grid>
                 </Grid>
               </Grid>
-              {this.state.questions &&
-                <Questions email={email}/>
-              }
-              {this.state.application &&
-                <Grid item xs={12}>
-                  <LoanApplicationForm
-                    firstName={firstName}
-                    lastName={lastName}
-                    email={email}
-                    handler={this.showHistory}
-                    initialAmount={this.state.initial_amount}
-                    tenure={this.state.tenure}
-                  />
+              <Transition
+                items={questions}
+                initial={null}
+                from={{ opacity: 0, transform: 'translate3d(0,-40px,0)' }}
+                enter={{ opacity: 1, transform: 'translate3d(0,0px,0)' }}
+                leave={{ opacity: 0, display: 'none' }}
+                trail={300}>
+                {items => questions && (props =>
+                  <AnimatedGrid style={props} item xs={12}>
+                    <Questions email={email}/>
+                  </AnimatedGrid>)
+                }
+              </Transition>
+              <Transition
+                items={application}
+                initial={null}
+                from={{ opacity: 0, transform: 'translate3d(0,-40px,0)' }}
+                enter={{ opacity: 1, transform: 'translate3d(0,0px,0)' }}
+                leave={{ opacity: 0, display: 'none' }}
+                trail={300}>
+                {items => application && (props =>
+                  <AnimatedGrid style={props} item xs={12}>
+                    <LoanApplicationForm
+                      firstName={firstName}
+                      email={email}
+                      data={data}
+                      handler={this.showHistory}
+                    />
+                  </AnimatedGrid>)
+                }
+              </Transition>
+              <Transition
+                items={showHistory}
+                initial={null}
+                from={{ opacity: 0, transform: 'translate3d(0,-40px,0)' }}
+                enter={{ opacity: 1, transform: 'translate3d(0,0px,0)' }}
+                leave={{ opacity: 0, display: 'none' }}
+                trail={300}>
+                {items => showHistory && (props =>
 
-                </Grid>}
-              {this.state.showHistory &&
-                <Grid item xs={12}>
-                  <PreviousLoans email={email}/>
-                </Grid>
-              }
-              {this.state.showApprovalDocs &&
-                <Grid item xs={12}>
-                  <ApprovalDocuments email={email}/>
-                </Grid>
-              }
+                  <AnimatedGrid style={props} item xs={12}>
+                    <PreviousLoans loans={loans}/>
+                  </AnimatedGrid>)
+                }
+              </Transition>
+              <Transition
+                items={showApprovalDocs}
+                initial={null}
+                from={{ opacity: 0, transform: 'translate3d(0,-40px,0)' }}
+                enter={{ opacity: 1, transform: 'translate3d(0,0px,0)' }}
+                leave={{ opacity: 0, display: 'none' }}
+                trail={300}>
+
+                {items => showApprovalDocs && (props =>
+
+                  <AnimatedGrid style={props} item xs={12}>
+                    <ApprovalDocuments email={email} loans={loans}/>
+                  </AnimatedGrid>)
+                }
+              </Transition>
+              <Transition
+                items={newLoanApp}
+                initial={null}
+                from={{ opacity: 0, transform: 'translate3d(0,-40px,0)' }}
+                enter={{ opacity: 1, transform: 'translate3d(0,0px,0)' }}
+                leave={{ opacity: 0, display: 'none'}}
+                trail={300}>
+                {items => newLoanApp && (props =>
+
+                  <AnimatedGrid style={props} item xs={12}>
+                    <NewLoanApplicationForm email={email}/>
+                  </AnimatedGrid>)
+                }
+              </Transition>
+
             </Grid>
             <Box pt={4}>
               <Copyright />
