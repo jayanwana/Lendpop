@@ -427,8 +427,8 @@ class LoanApplicationForm extends Component {
                       initial={null}
                       from={{ opacity: 0, transform: 'translate3d(40px,0,0)' }}
                       enter={{ opacity: 1, transform: 'translate3d(0,0px,0)' }}
-                      leave={{ opacity: 0, transform: 'translate3d(-40px,0,0)' }}
-                      trail={0}>
+                      leave={{ opacity: 0, transform: 'translate3d(-40px,0,0)', display: 'none' }}
+                    >
                       {items => (activeStep === 1) && (props =>
                         <AnimatedGrid style={props} item xs={12}>
                           <Form1
@@ -444,8 +444,8 @@ class LoanApplicationForm extends Component {
                       initial={null}
                       from={{ opacity: 0, transform: 'translate3d(40px,0,0)' }}
                       enter={{ opacity: 1, transform: 'translate3d(0,0px,0)' }}
-                      leave={{ opacity: 0, transform: 'translate3d(-40px,0,0)' }}
-                      trail={0}>
+                      leave={{ opacity: 0, transform: 'translate3d(-40px,0,0)', display: 'none' }}
+                    >
                       {items => (activeStep === 2) && (props =>
                         <AnimatedGrid style={props} item xs={12}>
                           <Form2
@@ -462,8 +462,8 @@ class LoanApplicationForm extends Component {
                       initial={null}
                       from={{ opacity: 0, transform: 'translate3d(40px,0,0)' }}
                       enter={{ opacity: 1, transform: 'translate3d(0,0px,0)' }}
-                      leave={{ opacity: 0, transform: 'translate3d(-40px,0,0)' }}
-                      trail={0}>
+                      leave={{ opacity: 0, transform: 'translate3d(-40px,0,0)', display: 'none' }}
+                    >
                       {items => (activeStep === 3) && (props =>
                         <AnimatedGrid style={props} item xs={12}>
                           <Form3
@@ -483,8 +483,8 @@ class LoanApplicationForm extends Component {
                       initial={null}
                       from={{ opacity: 0, transform: 'translate3d(40px,0,0)' }}
                       enter={{ opacity: 1, transform: 'translate3d(0,0px,0)' }}
-                      leave={{ opacity: 0, transform: 'translate3d(-40px,0,0)' }}
-                      trail={0}>
+                      leave={{ opacity: 0, transform: 'translate3d(-40px,0,0)', display: 'none' }}
+                    >
                       {items => (activeStep === 4) && (props =>
                         <AnimatedGrid style={props} item xs={12}>
                           <Form4
@@ -499,8 +499,8 @@ class LoanApplicationForm extends Component {
                       initial={null}
                       from={{ opacity: 0, transform: 'translate3d(40px,0,0)' }}
                       enter={{ opacity: 1, transform: 'translate3d(0,0px,0)' }}
-                      leave={{ opacity: 0, transform: 'translate3d(-40px,0,0)' }}
-                      trail={0}>
+                      leave={{ opacity: 0, transform: 'translate3d(-40px,0,0)', display: 'none' }}
+                    >
                       {items => (activeStep === 5) && (props =>
                         <AnimatedGrid style={props} item xs={12}>
                           <Form5
@@ -515,8 +515,8 @@ class LoanApplicationForm extends Component {
                       initial={null}
                       from={{ opacity: 0, transform: 'translate3d(40px,0,0)' }}
                       enter={{ opacity: 1, transform: 'translate3d(0,0px,0)' }}
-                      leave={{ opacity: 0, transform: 'translate3d(-40px,0,0)' }}
-                      trail={0}>
+                      leave={{ opacity: 0, transform: 'translate3d(-40px,0,0)', display: 'none' }}
+                    >
                       {items => (activeStep === 6) && (props =>
                         <AnimatedGrid style={props} item xs={12}>
                           <Form6
