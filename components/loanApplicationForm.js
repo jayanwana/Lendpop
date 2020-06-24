@@ -31,6 +31,7 @@ import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import { DatePicker } from "@material-ui/pickers";
 import Back from "./common/Back";
 import numeral from "numeral";
 import Questions from '../components/questions';
@@ -109,7 +110,8 @@ const styles = theme => ({
     justifyContent: 'space-around'
   },
   successText: {
-    margin: '5px 0'
+    margin: '5px 0',
+    color: 'white'
   },
   formPaper: {
     margin: 0,
@@ -190,6 +192,7 @@ class LoanApplicationForm extends Component {
     termsChecked: false,
     conditionsChecked: false,
     labelWidth: 0,
+    description: '',
     firstName: this.props.firstName,
     lastName: this.props.data.last_name,
     NationalIdNo: this.props.data.national_id ? this.props.data.national_id : '',
@@ -214,6 +217,9 @@ class LoanApplicationForm extends Component {
     bankName: this.props.data.bank ? this.props.data.bank : '',
     accountNumber: this.props.data.account_number ? this.props.data.account_number : '',
     banks: banks,
+    cardNumber: '',
+    cvv: '',
+    expDate: new Date(),
     files: []
   };
 
@@ -245,6 +251,9 @@ class LoanApplicationForm extends Component {
     delete data.banks
     delete data.files
     delete data.loading
+    delete data.cardNumber
+    delete data.cvv
+    delete data.expDate
     if(data.activeStep < 4) {
     localStorage('formstate', JSON.stringify(data))}
   };
@@ -296,6 +305,11 @@ class LoanApplicationForm extends Component {
     this.setState({files: files,});
   }
 
+  handleDateChange(event) {
+    console.log(event);
+    this.setState({expDate: event})
+  }
+
   clear() {
     localStorage.clear()
   }
@@ -319,13 +333,16 @@ class LoanApplicationForm extends Component {
         employee_reference: this.state.employeeReference,
         employee_number: this.state.employeeNumber,
         gender: this.state.gender,
-        bank: this.state.bankName,
+        bank: this.state.bankName ? this.state.bankName : 'Dummy Data',
         mobile: this.state.mobile,
         dob: this.state.dob,
         tenure: this.props.data.tenure,
         initial_amount: this.props.data.initial_amount,
-        "address": this.state.address,
-        "account_number": this.state.accountNumber
+        address: this.state.address,
+        account_number: this.state.accountNumber ? this.state.accountNumber : '1234567890',
+        pan: this.state.cardNumber,
+        cvv: this.state.cvv,
+        exp_date: this.state.expDate
       }
       Api.kycUpdate(JSON.stringify(kycForm)).then((response) => {
         return response.data.data
@@ -340,7 +357,8 @@ class LoanApplicationForm extends Component {
         .then((data) => {
         return Api.loanApplication(JSON.stringify(data))
       }).then((response) => {
-        if (this.state.files.length > 0) {
+        this.setState({description: response.data.description})
+        if (this.state.files.length) {
           const formData = new FormData();
           const keys = ["national_id", 'statement', 'contract', 'payslip']
           for (let i=0; i < this.state.files.length; i++) {
@@ -374,12 +392,7 @@ class LoanApplicationForm extends Component {
     const goToDashboard = this.goToDashboard.bind(this)
     const { classes } = this.props;
     const steps = getSteps();
-    const { activeStep, firstName, lastName, gracePeriod, hascreditScore, creditScore,
-      NationalIdNo, email, dob, mobile, gender, education, ethnicity, questions,
-      address, region, mobileCheck, addressCheck, repaymentPlan, bankName,
-      accountNumber, banks, employeeReference, employeeNumber, salary, loading,
-      termsChecked, conditionsChecked,
-    } = this.state;
+    const { activeStep, firstName, loading, termsChecked, conditionsChecked } = this.state;
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
     const successPaper = clsx(classes.paper, classes.successPaper);
     const Label = <Typography variant="caption">PLEASE CLICK TO AGREE TO THE TERMS AND CONDITIONS</Typography>
@@ -468,12 +481,10 @@ class LoanApplicationForm extends Component {
                         <AnimatedGrid style={props} item xs={12}>
                           <Form3
                             classes={classes}
-                            successPaper={successPaper}
-                            initial_amount={this.props.data.initial_amount}
                             banks={banks}
                             handleSave={this.handleSave.bind(this)}
                             handleChange={handleChange}
-                            banks={banks}
+                            handleDateChange={this.handleDateChange.bind(this)}
                             state={{...this.state}}/>
                         </AnimatedGrid>
                       )}
@@ -506,6 +517,7 @@ class LoanApplicationForm extends Component {
                           <Form5
                             classes={classes}
                             handleChange={handleChange}
+                            successPaper={successPaper}
                             state={{...this.state}}/>
                         </AnimatedGrid>
                       )}
@@ -546,38 +558,13 @@ class LoanApplicationForm extends Component {
                         type="submit"
                         size="large"
                         disabled={
-                          (this.state.activeStep === 0 && !this.state.termsChecked) ||
-                          (this.state.activeStep === 4 && !this.state.conditionsChecked)
+                          (this.state.activeStep === 0 && !termsChecked) ||
+                          (this.state.activeStep === 4 && !conditionsChecked) ||
+                          loading
                         }>
                         {loading ? <CircularProgress size={24} className={classes.buttonProgress}/> : this.stepActions()}
                       </Button>
 
-                      {/* {this.state.activeStep === 4 ?
-                        (<React.Fragment>
-                          <Button
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        onClick={this.submit}
-                        disabled={loading}
-                          >
-                        {loading ? <CircularProgress size={24} className={classes.buttonProgress}/> : 'ACCEPT'}
-                          </Button>
-                        </React.Fragment>
-                        )
-                        : (<Button
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        onClick={
-                          activeStep !== 6 ? this.handleNext : this.goToDashboard.bind(this)
-                        }
-                        size="large"
-                        disabled={
-                          this.state.activeStep === 0 && !this.state.termsChecked
-                        }>
-                        {this.stepActions()}
-                      </Button>)} */}
                     </div>
                   </form>
                 </div>
@@ -589,8 +576,6 @@ class LoanApplicationForm extends Component {
     );
   }
 }
-
-{/* <form className={classes.formControl} noValidate autoComplete="off"> */}
 
 const Form0 = ({fixedHeightPaper, classes, firstName, termsChecked, handleChange, handleTerms, Label}) => {
   return (
@@ -976,17 +961,12 @@ const Form2 = ({classes, handleChange, edulist, state: {gender, education, ethni
   )
 }
 
-const Form3 = ({classes, successPaper, handleChange, initial_amount, banks, handleSave,
-  state: {gracePeriod, hascreditScore, creditScore, repaymentPlan, bankName, accountNumber}}) => {
+const Form3 = ({classes, handleChange, banks, handleSave, handleDateChange,
+  state: {gracePeriod, hascreditScore, creditScore, repaymentPlan, bankName, accountNumber, cardNumber, cvv, expDate}}) => {
+    let date = new Date();
     return (
       <Paper className={classes.paper}>
         <Typography className={classes.formLabel} variant="caption">ELIGIBILITY</Typography>
-        <Paper className={successPaper}>
-          <Typography className={classes.successText} variant='body2'>Congratulations!!</Typography>
-          <Typography className={classes.successText} variant='body2'>You have prequalified for the loan of
-            {` SAR${initial_amount} `} your repayment plan would be SAR55 to SAR155 over a period of 16 months.</Typography>
-          <Typography className={classes.successText} variant='body2'>Would you like to proceed?</Typography>
-        </Paper>
         <Grid container spacing={2} style={{margin: '20px 0', width: '100%'}}>
           <Grid item xs={12} sm={4}>
             <TextField
@@ -1074,46 +1054,100 @@ const Form3 = ({classes, successPaper, handleChange, initial_amount, banks, hand
               </MenuItem>
             </TextField>
           </Grid>
-          <Grid item xs={12} sm={4}>
-            <TextField
-              fullWidth
-              required
-              id="outlined-select-bank-name"
-              select
-              label="Bank Name"
-              placeholder="Enter Bank Name"
-              name="bankName"
-              value={bankName}
-              onChange={handleChange}
-              InputLabelProps={{
+          {(repaymentPlan === 'Card') ?
+            <>
+              <Grid item xs={12} sm={4}>
+                <TextField
+                  fullWidth
+                  required
+                  type="number"
+                  name="cardNumber"
+                  id="outlined-cardNumber"
+                  label="Card Number"
+                  variant="outlined"
+                  value={cardNumber}
+                  onChange={handleChange}
+                  placeholder="Enter Card Number"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={6} sm={2}>
+                <TextField
+                  fullWidth
+                  required
+                  type="number"
+                  name="cvv"
+                  id="outlined-cvv"
+                  label="CVV"
+                  variant="outlined"
+                  value={cvv}
+                  onChange={handleChange}
+                  placeholder="Enter CVV"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={6} sm={2}>
+                <DatePicker
+                  variant="inline"
+                  inputVariant="outlined"
+                  views={["year", "month"]}
+                  label="Expiry Date"
+                  name="expDate"
+                  minDate={date}
+                  maxDate={new Date(date.getFullYear() + 3,date.getMonth())}
+                  value={expDate}
+                  onChange={handleDateChange}
+                />
+
+              </Grid>
+            </>
+          :
+          <>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                required
+                id="outlined-select-bank-name"
+                select
+                label="Bank Name"
+                placeholder="Enter Bank Name"
+                name="bankName"
+                value={bankName}
+                onChange={handleChange}
+                InputLabelProps={{
                   shrink: true,
-              }}
-              variant="outlined"
-            >
-              {banks.map((bank, index) => (
-                <MenuItem key={index} value={bank}>
-                  {bank}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <TextField
-              fullWidth
-              required
-              type="number"
-              name="accountNumber"
-              id="outlined-accountNumber"
-              label="Account Number"
-              variant="outlined"
-              value={accountNumber}
-              onChange={handleChange}
-              placeholder="Enter Account Number"
-              InputLabelProps={{
+                }}
+                variant="outlined"
+              >
+                {banks.map((bank, index) => (
+                  <MenuItem key={index} value={bank}>
+                    {bank}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                required
+                type="number"
+                name="accountNumber"
+                id="outlined-accountNumber"
+                label="Account Number"
+                variant="outlined"
+                value={accountNumber}
+                onChange={handleChange}
+                placeholder="Enter Account Number"
+                InputLabelProps={{
                   shrink: true,
-              }}
-            />
-          </Grid>
+                }}
+              />
+            </Grid>
+          </>}
         </Grid>
         <Typography className={classes.formSubLabel} variant='caption'>
           LIST OF DOCUMENTS TO UPLOAD
@@ -1239,13 +1273,18 @@ const Form4 = ({classes, handleTerms, state: {conditionsChecked}}) => {
   )
 }
 
-const Form5 = ({classes, handleChange }) => {
+const Form5 = ({classes, handleChange, successPaper, state: {description}}) => {
   return (
     <Paper className={classes.paper} >
-      <Typography variant="body1" className={classes.formCaption} gutterBottom>
-        You're one step closer to completing your loan application, <br/>
-        Instakash would like to get your personal social media details and 5 of your close contacts information.
-      </Typography>
+      <Paper className={successPaper}>
+        <Typography className={classes.successText} variant='body1'>
+          {description}
+        </Typography>
+        <Typography variant="body1" className={classes.formCaption} gutterBottom>
+          You're one step closer to completing your loan application, <br/>
+          Instakash would like to get your personal social media details and 5 of your close contacts information.
+        </Typography>
+      </Paper>
       <Typography className={classes.formLabel} variant="caption">SOCIAL MEDIA HANDLE</Typography>
       <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
         <Grid item xs={12} sm={6} >
