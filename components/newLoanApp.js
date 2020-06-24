@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import clsx from 'clsx';
 import withStyles from "@material-ui/styles/withStyles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Typography from "@material-ui/core/Typography";
@@ -66,7 +67,8 @@ const styles = theme => ({
     justifyContent: 'space-around'
   },
   successText: {
-    margin: '5px 0'
+    margin: '5px 0',
+    color: 'white'
   },
   formPaper: {
     margin: 0,
@@ -125,7 +127,8 @@ class NewLoanApplicationForm extends Component {
     amount: '',
     loan_cos: '1',
     tenure: '',
-    loading: false
+    loading: false,
+    description: ''
   }
 
   handleChange = event => {
@@ -138,19 +141,20 @@ class NewLoanApplicationForm extends Component {
     const data = { ...this.state }
     delete data.setLoading
     Api.loanApplication(JSON.stringify(data)).then(response => {
-      this.setState({loading:false})
-      console.log(response);
-      return Router.reload()
+      this.setState({loading:false, description: response.data.description})
+      console.log(response.data);
+      // return Router.reload()
     }).catch(error => {
       console.log(error.response );
     })
   }
 
   render() {
-    const {email, amount, tenure, loading} = this.state
+    const {email, amount, tenure, loading, description} = this.state
     const handleChange = this.handleChange.bind(this)
     const submit = this.submit.bind(this)
     const { classes } = this.props;
+    const successPaper = clsx(classes.paper, classes.successPaper);
 
     return(
       <React.Fragment>
@@ -161,11 +165,27 @@ class NewLoanApplicationForm extends Component {
             container
             className={classes.grid}
           >
-            <Paper className={classes.paper} >
+            <Paper className={classes.paper} elevation={2}>
               <Typography className={classes.formLabel} variant="caption">NEW LOAN APPLICATION</Typography>
-              <form className={classes.formControl}
+              {description ? <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
+                <Paper className={successPaper}>
+                  <Typography className={classes.successText} variant='body1'>
+                    {description}
+                  </Typography>
+                </Paper>
+                <Grid item xs={6} style={{margin: '16px 0', padding: 0}}>
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => Router.reload()}
+                  >
+                    Dashboard
+                  </Button>
+                </Grid></Grid>
+              : <form className={classes.formControl}
                 validate="true" onSubmit={submit}
-              autoComplete="off">
+                autoComplete="off">
                 <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
                   <Grid item xs={6}>
                     <TextField
@@ -223,7 +243,7 @@ class NewLoanApplicationForm extends Component {
                     </Button>
                   </Grid>
                 </Grid>
-              </form>
+              </form>}
             </Paper>
           </Grid>
         </div>
