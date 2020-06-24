@@ -35,10 +35,10 @@ const useStyles = makeStyles((theme) => ({
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.primary.main,
   },
   a: {
-    color: theme.palette.secondary.main,
+    color: theme.palette.primary.main,
   },
   form: {
     width: '100%', // Fix IE 11 issue.
@@ -70,7 +70,7 @@ export default function Login(props) {
     }
     Api.login(JSON.stringify(postData)).then(response => {
       console.log(response.data)
-      sessionStorage.setItem('state', JSON.stringify(response.data.data))
+      sessionStorage.setItem('email', email)
       Router.push('/dashboard',);
     }).catch(error => {
       if (error.response && (error.response.status === 401 || error.response.status === 400)){
@@ -104,7 +104,7 @@ export default function Login(props) {
           <Avatar className={classes.avatar}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5">
+          <Typography component="h1" variant="h5" style={{color: theme.palette.primary.main}}>
             Login
           </Typography>
           <form className={classes.form} onSubmit={submit} validate={1}>

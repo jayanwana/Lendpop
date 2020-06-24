@@ -25,6 +25,10 @@ class LendPopApi {
     return axios.post("/password", data)
   }
 
+  userData(data, token) {
+    return axios.post('/applicant/information', data, token)
+  }
+
   history(data, token) {
     return axios.post('/history', data, token)
   }
