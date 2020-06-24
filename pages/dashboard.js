@@ -25,6 +25,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import NotificationsIcon from '@material-ui/icons/Notifications';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
 import LoanApplicationForm from '../components/loanApplicationForm';
 import { mainListItems, secondaryListItems } from '../components/listItems';
 import Api from '../utils/axios.service';
@@ -298,201 +300,203 @@ class Dashboard extends Component {
     const { open, firstName, email, data, loans, questions,
       showHistory, showApprovalDocs, newLoanApp, application } = this.state;
     return (
-      <div className={classes.root}>
-        <Head>
-          <title>InstaKash: Dashboard</title>
-        </Head>
-        {/* <CssBaseline /> */}
-        <Drawer
-          variant="permanent"
-          classes={{
-            paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
-          }}
-          open={open}
-        >
-          <div className={classes.toolbarIcon}>
-            <IconButton onClick={this.handleDrawer}>
-              {open && <img src={require('../public/images/instakash-original-logo.png')} style={{width: '180px', height: '50px'}}/>}
-              {open ? <ChevronLeftIcon /> : <ChevronRightIcon/>}
-            </IconButton>
-          </div>
-          <Divider/>
-          <List>
-            {loans.length &&
-              <React.Fragment>
-                <ListItem button onClick={this.continueApplication}>
-                  <ListItemIcon>
-                    <AccountBoxIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Update Profile" />
-                </ListItem>
-                <Divider />
-              </React.Fragment>}
-            <ListItem button onClick={this.reset}>
-              <ListItemIcon>
-                <DashboardIcon />
-              </ListItemIcon>
-              <ListItemText primary="Dashboard" />
-            </ListItem>
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <div className={classes.root}>
+          <Head>
+            <title>InstaKash: Dashboard</title>
+          </Head>
+          {/* <CssBaseline /> */}
+          <Drawer
+            variant="permanent"
+            classes={{
+              paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
+            }}
+            open={open}
+          >
+            <div className={classes.toolbarIcon}>
+              <IconButton onClick={this.handleDrawer}>
+                {open && <img src={require('../public/images/instakash-original-logo.png')} style={{width: '180px', height: '50px'}}/>}
+                {open ? <ChevronLeftIcon /> : <ChevronRightIcon/>}
+              </IconButton>
+            </div>
+            <Divider/>
+            <List>
+              {loans.length &&
+                <React.Fragment>
+                  <ListItem button onClick={this.continueApplication}>
+                    <ListItemIcon>
+                      <AccountBoxIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Update Profile" />
+                  </ListItem>
+                  <Divider />
+                </React.Fragment>}
+              <ListItem button onClick={this.reset}>
+                <ListItemIcon>
+                  <DashboardIcon />
+                </ListItemIcon>
+                <ListItemText primary="Dashboard" />
+              </ListItem>
+              <Divider />
+              <ListItem button onClick={this.logout}>
+                <ListItemIcon>
+                  <ExitToAppIcon />
+                </ListItemIcon>
+                <ListItemText primary="Logout" />
+              </ListItem>
+            </List>
             <Divider />
-            <ListItem button onClick={this.logout}>
-              <ListItemIcon>
-                <ExitToAppIcon />
-              </ListItemIcon>
-              <ListItemText primary="Logout" />
-            </ListItem>
-          </List>
-          <Divider />
-          {/* <List>{secondaryListItems}</List> */}
-        </Drawer>
-        <main className={classes.content}>
-          {/* <div className={classes.appBarSpacer} /> */}
-          <Container maxWidth="lg" className={classes.container}>
-            <Grid container spacing={3}>
-              {/* Chart */}
-              <Grid item xs={12}>
-                <Paper className={fixedHeightPaper} style={{justifyContent: 'center'}}>
-                  <Grid container className={classes.helloContainer}>
-                    <Grid className={classes.hello} item xs={12} sm={10} md={8}>
-                      <Grid>
-                        <Typography variant="h3" color="inherit" noWrap className={classes.title}>
-                          Hello, {firstName? firstName : 'User'}!
-                        </Typography>
-                        <Typography variant='body1' styles={{marginTop:"5px"}}>
-                          Welcome to InstaKash, please continue your application.
-                        </Typography>
+            {/* <List>{secondaryListItems}</List> */}
+          </Drawer>
+          <main className={classes.content}>
+            {/* <div className={classes.appBarSpacer} /> */}
+            <Container maxWidth="lg" className={classes.container}>
+              <Grid container spacing={3}>
+                {/* Chart */}
+                <Grid item xs={12}>
+                  <Paper className={fixedHeightPaper} style={{justifyContent: 'center'}}>
+                    <Grid container className={classes.helloContainer}>
+                      <Grid className={classes.hello} item xs={12} sm={10} md={8}>
+                        <Grid>
+                          <Typography variant="h3" color="inherit" noWrap className={classes.title}>
+                            Hello, {firstName? firstName : 'User'}!
+                          </Typography>
+                          <Typography variant='body1' styles={{marginTop:"5px"}}>
+                            Welcome to InstaKash, please continue your application.
+                          </Typography>
+                        </Grid>
+                        <ReferButton link='https://member.instakash.com/api/landing/&pc=5053&sid=CID137'/>
                       </Grid>
-                      <ReferButton link='https://member.instakash.com/api/landing/&pc=5053&sid=CID137'/>
+                      <Grid className={classes.helloImage} item xs={null} sm={4}>
+                        <img src={require('../public/images/dashboard icon.png')} style={{height:'200px'}}/>
+                      </Grid>
                     </Grid>
-                    <Grid className={classes.helloImage} item xs={null} sm={4}>
-                      <img src={require('../public/images/dashboard icon.png')} style={{height:'200px'}}/>
+                    {/* <Chart /> */}
+                  </Paper>
+                </Grid>
+                <Grid item xs={12}>
+                  <Grid container className={classes.optionButtons} spacing={0}>
+                    <Grid item className={classes.buttonContainer} xs={12} md='auto' lg='auto'>
+                      {loans.length ? <Button
+                        fullWidth
+                        variant="outlined"
+                        color="primary"
+                        className={classes.gridButton}
+                        onClick={this.newApplication.bind(this)}>
+                        <span style={{whiteSpace: 'nowrap'}}>New loan application</span>
+                      </Button> : <Button
+                        fullWidth
+                        variant="outlined"
+                        color="primary"
+                        className={classes.gridButton}
+                        onClick={this.continueApplication.bind(this)}>
+                        <span style={{whiteSpace: 'nowrap'}}>Continue my loan application</span>
+                      </Button>}
                     </Grid>
-                  </Grid>
-                  {/* <Chart /> */}
-                </Paper>
-              </Grid>
-              <Grid item xs={12}>
-                <Grid container className={classes.optionButtons} spacing={0}>
-                  <Grid item className={classes.buttonContainer} xs={12} md='auto' lg='auto'>
-                    {loans.length ? <Button
+                    <Divider className={classes.divider} orientation="horizontal"/>
+
+                    <Grid className={classes.buttonContainer} item xs={12} md='auto' lg='auto'><Button
                       fullWidth
                       variant="outlined"
-                      color="primary"
                       className={classes.gridButton}
-                      onClick={this.newApplication.bind(this)}>
-                      <span style={{whiteSpace: 'nowrap'}}>New loan application</span>
-                    </Button> : <Button
+                      onClick={this.showApprovalDocuments.bind(this)}
+                                                                                               >
+                      <span style={{whiteSpace: 'nowrap'}}>Approval Documents</span></Button>
+                    </Grid>
+                    <Divider className={classes.divider} orientation="horizontal"/>
+
+                    <Grid item className={classes.buttonContainer} xs={12} md='auto' lg='auto'><Button
                       fullWidth
                       variant="outlined"
-                      color="primary"
                       className={classes.gridButton}
-                      onClick={this.continueApplication.bind(this)}>
-                      <span style={{whiteSpace: 'nowrap'}}>Continue my loan application</span>
-                    </Button>}
-                  </Grid>
-                  <Divider className={classes.divider} orientation="horizontal"/>
-
-                  <Grid className={classes.buttonContainer} item xs={12} md='auto' lg='auto'><Button
-                    fullWidth
-                    variant="outlined"
-                    className={classes.gridButton}
-                    onClick={this.showApprovalDocuments.bind(this)}
-                                                                                             >
-                    <span style={{whiteSpace: 'nowrap'}}>Approval Documents</span></Button>
-                  </Grid>
-                  <Divider className={classes.divider} orientation="horizontal"/>
-
-                  <Grid item className={classes.buttonContainer} xs={12} md='auto' lg='auto'><Button
-                    fullWidth
-                    variant="outlined"
-                    className={classes.gridButton}
-                    onClick={this.showHistory.bind(this)}>
-                    <span style={{whiteSpace: 'nowrap'}}>Other applications</span></Button>
+                      onClick={this.showHistory.bind(this)}>
+                      <span style={{whiteSpace: 'nowrap'}}>Other applications</span></Button>
+                    </Grid>
                   </Grid>
                 </Grid>
+                <Transition
+                  items={questions}
+                  initial={null}
+                  from={{ opacity: 0, transform: 'translate3d(0,-40px,0)' }}
+                  enter={{ opacity: 1, transform: 'translate3d(0,0px,0)' }}
+                  leave={{ opacity: 0, display: 'none' }}
+                  trail={300}>
+                  {items => questions && (props =>
+                    <AnimatedGrid style={props} item xs={12}>
+                      <Questions email={email}/>
+                    </AnimatedGrid>)
+                  }
+                </Transition>
+                <Transition
+                  items={application}
+                  initial={null}
+                  from={{ opacity: 0, transform: 'translate3d(0,-40px,0)' }}
+                  enter={{ opacity: 1, transform: 'translate3d(0,0px,0)' }}
+                  leave={{ opacity: 0, display: 'none' }}
+                  trail={300}>
+                  {items => application && (props =>
+                    <AnimatedGrid style={props} item xs={12}>
+                      <LoanApplicationForm
+                        firstName={firstName}
+                        email={email}
+                        data={data}
+                        handler={this.showHistory}
+                      />
+                    </AnimatedGrid>)
+                  }
+                </Transition>
+                <Transition
+                  items={showHistory}
+                  initial={null}
+                  from={{ opacity: 0, transform: 'translate3d(0,-40px,0)' }}
+                  enter={{ opacity: 1, transform: 'translate3d(0,0px,0)' }}
+                  leave={{ opacity: 0, display: 'none' }}
+                  trail={300}>
+                  {items => showHistory && (props =>
+
+                    <AnimatedGrid style={props} item xs={12}>
+                      <PreviousLoans loans={loans}/>
+                    </AnimatedGrid>)
+                  }
+                </Transition>
+                <Transition
+                  items={showApprovalDocs}
+                  initial={null}
+                  from={{ opacity: 0, transform: 'translate3d(0,-40px,0)' }}
+                  enter={{ opacity: 1, transform: 'translate3d(0,0px,0)' }}
+                  leave={{ opacity: 0, display: 'none' }}
+                  trail={300}>
+
+                  {items => showApprovalDocs && (props =>
+
+                    <AnimatedGrid style={props} item xs={12}>
+                      <ApprovalDocuments email={email} loans={loans}/>
+                    </AnimatedGrid>)
+                  }
+                </Transition>
+                <Transition
+                  items={newLoanApp}
+                  initial={null}
+                  from={{ opacity: 0, transform: 'translate3d(0,-40px,0)' }}
+                  enter={{ opacity: 1, transform: 'translate3d(0,0px,0)' }}
+                  leave={{ opacity: 0, display: 'none'}}
+                  trail={300}>
+                  {items => newLoanApp && (props =>
+
+                    <AnimatedGrid style={props} item xs={12}>
+                      <NewLoanApplicationForm email={email}/>
+                    </AnimatedGrid>)
+                  }
+                </Transition>
+
               </Grid>
-              <Transition
-                items={questions}
-                initial={null}
-                from={{ opacity: 0, transform: 'translate3d(0,-40px,0)' }}
-                enter={{ opacity: 1, transform: 'translate3d(0,0px,0)' }}
-                leave={{ opacity: 0, display: 'none' }}
-                trail={300}>
-                {items => questions && (props =>
-                  <AnimatedGrid style={props} item xs={12}>
-                    <Questions email={email}/>
-                  </AnimatedGrid>)
-                }
-              </Transition>
-              <Transition
-                items={application}
-                initial={null}
-                from={{ opacity: 0, transform: 'translate3d(0,-40px,0)' }}
-                enter={{ opacity: 1, transform: 'translate3d(0,0px,0)' }}
-                leave={{ opacity: 0, display: 'none' }}
-                trail={300}>
-                {items => application && (props =>
-                  <AnimatedGrid style={props} item xs={12}>
-                    <LoanApplicationForm
-                      firstName={firstName}
-                      email={email}
-                      data={data}
-                      handler={this.showHistory}
-                    />
-                  </AnimatedGrid>)
-                }
-              </Transition>
-              <Transition
-                items={showHistory}
-                initial={null}
-                from={{ opacity: 0, transform: 'translate3d(0,-40px,0)' }}
-                enter={{ opacity: 1, transform: 'translate3d(0,0px,0)' }}
-                leave={{ opacity: 0, display: 'none' }}
-                trail={300}>
-                {items => showHistory && (props =>
-
-                  <AnimatedGrid style={props} item xs={12}>
-                    <PreviousLoans loans={loans}/>
-                  </AnimatedGrid>)
-                }
-              </Transition>
-              <Transition
-                items={showApprovalDocs}
-                initial={null}
-                from={{ opacity: 0, transform: 'translate3d(0,-40px,0)' }}
-                enter={{ opacity: 1, transform: 'translate3d(0,0px,0)' }}
-                leave={{ opacity: 0, display: 'none' }}
-                trail={300}>
-
-                {items => showApprovalDocs && (props =>
-
-                  <AnimatedGrid style={props} item xs={12}>
-                    <ApprovalDocuments email={email} loans={loans}/>
-                  </AnimatedGrid>)
-                }
-              </Transition>
-              <Transition
-                items={newLoanApp}
-                initial={null}
-                from={{ opacity: 0, transform: 'translate3d(0,-40px,0)' }}
-                enter={{ opacity: 1, transform: 'translate3d(0,0px,0)' }}
-                leave={{ opacity: 0, display: 'none'}}
-                trail={300}>
-                {items => newLoanApp && (props =>
-
-                  <AnimatedGrid style={props} item xs={12}>
-                    <NewLoanApplicationForm email={email}/>
-                  </AnimatedGrid>)
-                }
-              </Transition>
-
-            </Grid>
-            <Box pt={4}>
-              <Copyright />
-            </Box>
-          </Container>
-        </main>
-      </div>
+              <Box pt={4}>
+                <Copyright />
+              </Box>
+            </Container>
+          </main>
+        </div>
+      </MuiPickersUtilsProvider>
     )
   }
 }
