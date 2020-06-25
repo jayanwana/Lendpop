@@ -18,4 +18,5 @@ yarn-error.log*
 # Next.js
 /.next
 /e
+/out
 env-config.js
