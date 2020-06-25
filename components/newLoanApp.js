@@ -142,10 +142,9 @@ class NewLoanApplicationForm extends Component {
     delete data.setLoading
     Api.loanApplication(JSON.stringify(data)).then(response => {
       this.setState({loading:false, description: response.data.description})
-      console.log(response.data);
       // return Router.reload()
     }).catch(error => {
-      console.log(error.response );
+      console.log(error);
     })
   }
 

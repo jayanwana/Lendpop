@@ -61,7 +61,7 @@ export default function EmailVerification(props) {
     if (email){
       const postData = {email: email};
       Api.otpGeneration(JSON.stringify(postData))
-      .then(response => console.log(response))
+      .then(response => console.log('sent'))
       .catch(error => console.log(error))
   } else {
     Router.push('/signUp')
@@ -71,23 +71,20 @@ export default function EmailVerification(props) {
   const submit = event => {
     event.preventDefault();
     setLoading(true)
-    console.log(emailCode);
     // Router.push('/dashboard');
     const postData = {
       email: email,
       otp: emailCode
     }
     Api.verification(JSON.stringify(postData)).then(response => {
-      console.log(response)
       return Router.push('/createPassword');
     }).catch(error => {
-      console.log(error)
       if (error.response && error.response.status === 401 || error.response.status === 400){
         setErrorMessage(error.response.data.description);
         setError(true)
         setLoading(false)
       } else {
-        console.log(error.response)
+        console.log(error)
         setLoading(false)
       }
     })

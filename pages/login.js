@@ -69,7 +69,6 @@ export default function Login(props) {
       password: password
     }
     Api.login(JSON.stringify(postData)).then(response => {
-      console.log(response.data)
       sessionStorage.setItem('email', email)
       Router.push('/dashboard',);
     }).catch(error => {

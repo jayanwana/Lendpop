@@ -361,7 +361,7 @@ class LoanApplicationForm extends Component {
           console.log('uploading files...');
           Api.docUpload(formData).then((response)=> {
             return response
-          }).catch(error=>{console.log(error.response)})
+          }).catch(error=>{console.log(error)})
         } else {
           return response
         }
@@ -371,7 +371,7 @@ class LoanApplicationForm extends Component {
           this.clear();
           this.handleNext();
       }).catch(error => {
-        console.log(error.response);
+        console.log(error);
         return this.setState({loading:false})
       })}
   }

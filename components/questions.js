@@ -43,7 +43,7 @@ export default function Questions(props) {
     Api.questions(JSON.stringify(postData)).then((response) => {
       setQuery('success');
     }).catch(error => {
-      console.log(error.response);
+      console.log(error);
       setQuery('fail');
     })
   }

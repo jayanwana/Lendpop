@@ -148,11 +148,9 @@ class SignUp extends Component {
 
   componentDidMount() {
     this.calculateMonthlyPayment()
-    console.log(Router.route);
   }
 
   handleInputChange(event) {
-    console.log(event.value);
     const target = event.target;
     const value = target.value;
     const name = target.name;
@@ -197,7 +195,6 @@ class SignUp extends Component {
       email: this.state.email,
       tenure: `${this.state.period}`
     }
-    console.log(postData)
     Api.register(JSON.stringify(postData)).then(response => {
       for (let key in this.state) {
         if (['monthlyPayment', 'loading', 'error', 'errorMessage'].includes(key)){continue}
@@ -206,7 +203,6 @@ class SignUp extends Component {
       Router.push('/email');
     }).catch(error => {
       if (error.response && (error.response.status === 401 || error.response.status === 400)){
-      console.log(error.response);
       this.setState({loading: false, error: true, errorMessage: error.response.data.description})
     } else {
       this.setState({loading: false, error: true, errorMessage: error.message})

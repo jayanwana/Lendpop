@@ -64,14 +64,12 @@ export default function Login(props) {
   const submit = event => {
     event.preventDefault();
     if (password === password1){
-    console.log(email, password);
     setLoading(true)
     const postData = {
       email: email,
       password: password
     };
     Api.password(JSON.stringify(postData)).then(response => {
-      console.log(response);
       return Router.push('/dashboard');
     }).catch(error => {
       if (error.response && error.response.status === 401 ){
