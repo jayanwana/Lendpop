@@ -35,7 +35,6 @@ import { DatePicker } from "@material-ui/pickers";
 import Back from "./common/Back";
 import numeral from "numeral";
 import Questions from '../components/questions';
-// import Paystack from '../utils/axios.paystack';
 import Api from '../utils/axios.service';
 import regions from './data/saudi_regions_lite.json';
 import indigo from '@material-ui/core/colors/indigo';
@@ -224,13 +223,6 @@ class LoanApplicationForm extends Component {
   };
 
   componentDidMount() {
-    // if (this.source) {
-    //       this.source.cancel('Cancel previous request');
-    //   }
-    // this.source = Paystack.source()
-    // Paystack.banks({ cancelToken: this.source.token }).then(response => {
-    //   this.setState({banks: response.data.data})
-    // }).catch(error => console.log(error))
     const formData = JSON.parse(localStorage('formstate'))
     if (formData){this.setState({...formData})};
   }
@@ -240,7 +232,6 @@ class LoanApplicationForm extends Component {
   }
 
   componentWillUnmount() {
-    // return this.source.cancel('paystack request canceled')
   }
 
   handleNext = () => {
@@ -305,9 +296,8 @@ class LoanApplicationForm extends Component {
     this.setState({files: files,});
   }
 
-  handleDateChange(event) {
-    console.log(event);
-    this.setState({expDate: event})
+  handleDateChange(expDate) {
+    this.setState({expDate})
   }
 
   clear() {
@@ -324,6 +314,7 @@ class LoanApplicationForm extends Component {
     }
     if (this.state.activeStep === 4 ) {
       this.setState({loading:true})
+      const date = this.state.expDate.toLocaleDateString().split('/')
       const kycForm = {
         first_name: this.state.firstName,
         last_name: this.state.lastName,
@@ -342,7 +333,7 @@ class LoanApplicationForm extends Component {
         account_number: this.state.accountNumber ? this.state.accountNumber : '1234567890',
         pan: this.state.cardNumber,
         cvv: this.state.cvv,
-        exp_date: this.state.expDate
+        exp_date: `${date[2].slice(2)}${numeral(date[0]).format('00')}`
       }
       Api.kycUpdate(JSON.stringify(kycForm)).then((response) => {
         return response.data.data
@@ -1077,7 +1068,6 @@ const Form3 = ({classes, handleChange, banks, handleSave, handleDateChange,
                 <TextField
                   fullWidth
                   required
-                  type="number"
                   name="cvv"
                   id="outlined-cvv"
                   label="CVV"
@@ -1088,10 +1078,16 @@ const Form3 = ({classes, handleChange, banks, handleSave, handleDateChange,
                   InputLabelProps={{
                     shrink: true,
                   }}
+                  InputProps={{
+                    inputProps: {
+                      maxLength: 3, minLength: 3
+                    }
+                  }}
                 />
               </Grid>
               <Grid item xs={6} sm={2}>
                 <DatePicker
+                  autoOk
                   variant="inline"
                   inputVariant="outlined"
                   views={["year", "month"]}
@@ -1280,7 +1276,7 @@ const Form5 = ({classes, handleChange, successPaper, state: {description}}) => {
         <Typography className={classes.successText} variant='body1'>
           {description}
         </Typography>
-        <Typography variant="body1" className={classes.formCaption} gutterBottom>
+        <Typography variant="body1" className={classes.successText} gutterBottom>
           You're one step closer to completing your loan application, <br/>
           Instakash would like to get your personal social media details and 5 of your close contacts information.
         </Typography>
