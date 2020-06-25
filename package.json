@@ -29,7 +29,7 @@
   },
   "scripts": {
     "dev": "next",
-    "build": "next build",
+    "build": "next build ",
     "start": "next start -p $PORT",
     "export": "next build && next export",
     "post-update": "echo \"codesandbox preview only, need an update\" && yarn upgrade --latest",
