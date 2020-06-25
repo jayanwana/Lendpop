@@ -11,6 +11,7 @@ export default class MyDocument extends Document {
           {/* PWA primary color */}
           <meta name="theme-color" content={theme.palette.primary.main} />
           <link href="https://fonts.googleapis.com/css2?family=Palanquin:wght@300;400;500;700&display=swap" rel="stylesheet"/>
+          <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"></meta>
           <style>{".page {height: 100vh;}"}</style>
         </Head>
         <body>
