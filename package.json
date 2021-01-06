@@ -7,7 +7,7 @@
     "@material-ui/core": "latest",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/pickers": "^3.2.10",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "clsx": "latest",
     "date-fns": "^2.14.0",
     "local-storage": "^2.0.0",
